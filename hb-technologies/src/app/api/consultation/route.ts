@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 function getBackendApiUrl() {
-  return process.env.API_URL ?? "";
+  return process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "";
 }
 
 export async function POST(req: Request) {
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       {
         error: "API_URL_NOT_CONFIGURED",
         message:
-          "Server is missing API_URL. Set it in your deployment environment.",
+          "Server is missing API_URL. Set API_URL (recommended) or NEXT_PUBLIC_API_URL in your deployment environment.",
       },
       { status: 500 }
     );

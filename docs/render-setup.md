@@ -52,6 +52,11 @@ In the Render service → **Environment**:
 - `NEXT_PUBLIC_SITE_URL=https://<your-frontend-domain>`
 - `API_URL=https://<your-api-domain>`
 
+Important:
+- `.env.example` files are **not** used by Render automatically.
+- You must define environment variables in the Render dashboard for each service.
+- After adding/changing env vars, trigger a redeploy (or at minimum restart) so Next.js picks them up.
+
 Why this works well:
 - The browser submits to `POST /api/consultation` on the same origin.
 - Next.js forwards server-to-server to your Express API using `API_URL`.
