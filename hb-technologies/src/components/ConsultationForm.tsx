@@ -23,7 +23,8 @@ export function ConsultationForm({
     event.preventDefault();
     setStatus({ state: "submitting" });
 
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const payload = {
       name: String(formData.get("name") ?? "").trim(),
       email: String(formData.get("email") ?? "").trim(),
@@ -48,7 +49,12 @@ export function ConsultationForm({
         state: "success",
         message: "Thanks — we’ll get back to you shortly.",
       });
-      event.currentTarget.reset();
+
+      try {
+        form.reset();
+      } catch {
+        // Ignore reset errors; submission already succeeded.
+      }
     } catch {
       setStatus({
         state: "error",
