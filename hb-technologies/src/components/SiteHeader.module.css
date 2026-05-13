@@ -1,0 +1,120 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(7, 11, 22, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.tagline {
+  display: none;
+  color: var(--color-muted);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.desktopNav {
+  display: none;
+}
+
+.navList {
+  list-style: none;
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.navLink {
+  display: inline-flex;
+  padding: 8px 10px;
+  border-radius: 999px;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.navLink:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.mobileNav {
+  display: block;
+}
+
+.summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.03);
+  font-weight: 700;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobilePanel {
+  margin-top: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  background: var(--color-surface);
+  padding: var(--space-2);
+}
+
+.mobileList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.mobileLink {
+  display: inline-flex;
+  padding: 10px 12px;
+  border-radius: var(--radius-1);
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.mobileLink:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (min-width: 880px) {
+  .desktopNav {
+    display: block;
+  }
+
+  .mobileNav {
+    display: none;
+  }
+
+  .tagline {
+    display: inline;
+  }
+}

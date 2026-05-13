@@ -1,0 +1,13 @@
+.status {
+  margin-top: var(--space-2);
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.success {
+  color: rgba(0, 209, 255, 0.92);
+}
+
+.error {
+  color: rgba(255, 120, 120, 0.92);
+}
