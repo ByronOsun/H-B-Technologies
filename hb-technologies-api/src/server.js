@@ -62,6 +62,5 @@ app.use(apiRouter);
 app.use(errorHandler);
 
 app.listen(env.PORT, () => {
-  // eslint-disable-next-line no-console
   console.log(`hb-technologies-api listening on :${env.PORT} (${env.NODE_ENV})`);
 });

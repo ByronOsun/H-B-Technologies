@@ -2,7 +2,6 @@ const { env } = require("../config/env");
 
 function errorHandler(err, req, res, next) {
   // Log the error server-side (keep client response generic).
-  // eslint-disable-next-line no-console
   if (env.isProd) {
     console.error(`[api error] id=${req.id} message=${err?.message || err}`);
   } else {
