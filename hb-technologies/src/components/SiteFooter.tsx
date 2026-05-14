@@ -21,14 +21,8 @@ export function SiteFooter() {
           <Link className={styles.link} href="/services">
             Services
           </Link>
-          <Link className={styles.link} href="/portfolio">
-            Portfolio
-          </Link>
           <Link className={styles.link} href="/blog">
             Blog
-          </Link>
-          <Link className={styles.link} href="/careers">
-            Careers
           </Link>
           <Link className={styles.link} href="/about">
             About

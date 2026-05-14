@@ -1,7 +1,6 @@
 const express = require("express");
 
 const { servicesRouter } = require("./services");
-const { portfolioRouter } = require("./portfolio");
 const { blogRouter } = require("./blog");
 const { consultationRouter } = require("./consultation");
 const { authRouter } = require("./auth");
@@ -17,7 +16,6 @@ router.get("/health", (req, res) => {
 });
 
 router.use("/services", servicesRouter);
-router.use("/portfolio", portfolioRouter);
 router.use("/blog", blogRouter);
 router.use("/consultation", consultationRouter);
 router.use("/auth", authRouter);

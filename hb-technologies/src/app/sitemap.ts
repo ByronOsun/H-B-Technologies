@@ -12,9 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/about",
     "/services",
-    "/portfolio",
     "/blog",
-    "/careers",
     "/contact",
     "/book-consultation",
   ];

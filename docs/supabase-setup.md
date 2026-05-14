@@ -2,7 +2,7 @@
 
 You don’t *strictly* need Supabase to view the site, but you **do** need it for:
 - Storing consultation submissions (`POST /consultation`)
-- Dynamic content from the API (`/services`, `/portfolio`, `/blog`)
+- Dynamic content from the API (`/services`, `/blog`)
 - Custom JWT auth (`POST /auth`) if you choose to use it
 
 This project is set up so that:
@@ -25,7 +25,6 @@ In Supabase, open **SQL Editor** and run these files in order:
 
 Then verify in **Table Editor** that tables exist:
 - `services`
-- `portfolio_projects`
 - `blog_posts`
 - `consultations`
 - `users`
@@ -44,12 +43,11 @@ Restart the API.
 ## 4) (Optional) Seed content
 You can insert initial rows into:
 - services
-- portfolio_projects
 - blog_posts
 
 This is optional because:
 - the current Next.js site already renders static marketing content
-- the API endpoints `/services`, `/portfolio`, `/blog` return empty arrays when Supabase isn’t configured
+- the API endpoints `/services`, `/blog` return empty arrays when Supabase isn’t configured
 
 ## Notes on security
 - Never put the service role key in the frontend.

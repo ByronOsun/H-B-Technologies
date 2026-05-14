@@ -4,6 +4,18 @@ function getBackendApiUrl() {
   return process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "";
 }
 
+function getIncomingOrigin(req: Request) {
+  try {
+    return new URL(req.url).origin;
+  } catch {
+    // Fallback for edge cases.
+    const proto = req.headers.get("x-forwarded-proto") ?? "https";
+    const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+    if (!host) return "";
+    return `${proto}://${host}`;
+  }
+}
+
 export async function POST(req: Request) {
   const backend = getBackendApiUrl();
   if (!backend) {
@@ -32,8 +44,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "INVALID_JSON" }, { status: 400 });
   }
 
-  const siteUrlRaw = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-  const siteOrigin = siteUrlRaw.replace(/\/$/, "");
+  const siteOrigin = getIncomingOrigin(req);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12_000);
 

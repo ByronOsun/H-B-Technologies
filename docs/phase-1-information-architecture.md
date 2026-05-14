@@ -27,18 +27,14 @@
   - Artificial Intelligence (AI) (`/services/artificial-intelligence`)
   - Machine Learning (ML) (`/services/machine-learning`)
   - Natural Language Processing (NLP) (`/services/natural-language-processing`)
-- Portfolio / Case Studies (`/portfolio`)
 - Blog (`/blog` + `/blog/[slug]`)
-- Careers (`/careers`)
 - Contact (`/contact`)
 - Book Consultation (`/book-consultation`)
 
 ## Navigation hierarchy
 **Primary navigation** (header):
 - Services
-- Portfolio
 - Blog
-- Careers
 - About
 - Contact
 - CTA: Book consultation

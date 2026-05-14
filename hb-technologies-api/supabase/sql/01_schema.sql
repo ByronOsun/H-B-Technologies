@@ -9,16 +9,6 @@ create table if not exists public.services (
   created_at timestamptz not null default now()
 );
 
-create table if not exists public.portfolio_projects (
-  id bigserial primary key,
-  slug text not null unique,
-  title text not null,
-  summary text not null,
-  outcomes text[] not null default '{}',
-  stack text[] not null default '{}',
-  created_at timestamptz not null default now()
-);
-
 create table if not exists public.blog_posts (
   id bigserial primary key,
   slug text not null unique,
@@ -38,15 +28,6 @@ create table if not exists public.consultations (
   service text not null,
   message text not null,
   source text not null default 'contact',
-  created_at timestamptz not null default now()
-);
-
-create table if not exists public.careers (
-  id bigserial primary key,
-  title text not null,
-  location text not null default 'Remote',
-  type text not null default 'Full-time',
-  description text not null default '',
   created_at timestamptz not null default now()
 );
 

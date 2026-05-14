@@ -21,6 +21,9 @@ Suggested settings:
 - SUPABASE_SERVICE_ROLE_KEY=<service role key>
 - CORS_ORIGINS=https://<your-frontend-domain>
 
+If you deploy multiple frontends (e.g., Render frontend + Vercel), include them comma-separated:
+- CORS_ORIGINS=https://frontend-a.example.com,https://frontend-b.example.com
+
 Notes:
 - Render will set `PORT` automatically. The API reads it from `process.env.PORT`.
 - The API enforces HTTPS in production via `x-forwarded-proto` (Render sets this behind its proxy).
@@ -52,3 +55,19 @@ If you later decide to call the API directly from the browser (not recommended f
 - Confirm backend logs show POST /consultation
 - Confirm Supabase has a new row in `consultations`
 - Run Lighthouse on the deployed domain
+
+## Frontend (Vercel)
+If you prefer Vercel for the Next.js app:
+
+Project settings:
+- Framework: Next.js
+- Root Directory: `hb-technologies`
+
+### Required env vars (Vercel)
+Set these in Vercel → Project → Settings → Environment Variables (apply to Production, and Preview if you use preview URLs):
+- `NEXT_PUBLIC_SITE_URL=https://<your-vercel-domain>`
+- `API_URL=https://<your-backend-domain>`
+
+Important:
+- Vercel does **not** load `.env.example` automatically.
+- After adding env vars, trigger a redeploy so server route handlers (like `/api/consultation`) can read them.

@@ -4,9 +4,7 @@ import styles from "./SiteHeader.module.css";
 
 const navLinks = [
   { href: "/services", label: "Services" },
-  { href: "/portfolio", label: "Portfolio" },
   { href: "/blog", label: "Blog" },
-  { href: "/careers", label: "Careers" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ] as const;
