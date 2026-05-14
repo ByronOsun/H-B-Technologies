@@ -4,8 +4,13 @@
 create table if not exists public.services (
   id bigserial primary key,
   slug text not null unique,
-  name text not null,
-  summary text not null,
+  title text not null,
+  short_description text not null,
+  full_description text not null default '',
+  technologies text[] not null default '{}',
+  benefits text[] not null default '{}',
+  case_examples text[] not null default '{}',
+  keywords text[] not null default '{}',
   created_at timestamptz not null default now()
 );
 
@@ -13,9 +18,10 @@ create table if not exists public.blog_posts (
   id bigserial primary key,
   slug text not null unique,
   title text not null,
-  description text not null,
-  body text not null default '',
-  published_at timestamptz not null default now(),
+  excerpt text not null,
+  content text not null default '',
+  featured_image text not null default '',
+  author text not null default 'H&B Technologies',
   created_at timestamptz not null default now()
 );
 
@@ -40,4 +46,6 @@ create table if not exists public.users (
 );
 
 create index if not exists consultations_created_at_idx on public.consultations (created_at desc);
-create index if not exists blog_posts_published_at_idx on public.blog_posts (published_at desc);
+create index if not exists blog_posts_created_at_idx on public.blog_posts (created_at desc);
+create index if not exists blog_posts_slug_idx on public.blog_posts (slug);
+create index if not exists services_slug_idx on public.services (slug);
