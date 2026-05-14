@@ -22,6 +22,15 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
+type BlogListItem = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  featured_image?: string;
+  author?: string;
+  created_at?: string | null;
+};
+
 function toDisplayDate(value?: string | null) {
   if (!value) return "";
   const d = new Date(value);
@@ -33,19 +42,38 @@ function toDisplayDate(value?: string | null) {
   });
 }
 
+function mergeBlogPosts(apiPosts: BlogListItem[] | null): BlogListItem[] {
+  const fallbackPosts: BlogListItem[] = staticBlogPosts.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.description,
+    featured_image: "",
+    author: "H&B Technologies",
+    created_at: p.date,
+  }));
+
+  const merged = new Map<string, BlogListItem>();
+
+  for (const post of fallbackPosts) merged.set(post.slug, post);
+  for (const post of apiPosts || []) {
+    merged.set(post.slug, {
+      ...(merged.get(post.slug) || {}),
+      ...post,
+      excerpt: post.excerpt || merged.get(post.slug)?.excerpt || "",
+      title: post.title || merged.get(post.slug)?.title || post.slug,
+    });
+  }
+
+  return Array.from(merged.values()).sort((a, b) => {
+    const left = a.created_at ? new Date(a.created_at).getTime() : 0;
+    const right = b.created_at ? new Date(b.created_at).getTime() : 0;
+    return right - left;
+  });
+}
+
 export default async function BlogIndexPage() {
   const res = await getBlogPosts({ revalidate });
-  const posts = res.ok
-    ? res.data
-    : staticBlogPosts.map((p, idx) => ({
-        id: idx + 1,
-        slug: p.slug,
-        title: p.title,
-        excerpt: p.description,
-        featured_image: "",
-        author: "H&B Technologies",
-        created_at: p.date,
-      }));
+  const posts = mergeBlogPosts(res.ok ? res.data : null);
 
   return (
     <section className="section">

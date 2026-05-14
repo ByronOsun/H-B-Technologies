@@ -40,26 +40,39 @@ function toViewFromStatic(slug: string): ServiceView | null {
   };
 }
 
-function normalizeService(input: {
-  slug: string;
-  title: string;
-  short_description: string;
-  full_description?: string;
-  technologies?: string[];
-  benefits?: string[];
-  case_examples?: string[];
-  keywords?: string[];
-}): ServiceView {
+function mergeServiceView(fallback: ServiceView, apiData?: Partial<ServiceView>): ServiceView {
+  if (!apiData) return fallback;
+
   return {
-    slug: input.slug,
-    title: input.title,
-    short_description: input.short_description,
-    full_description: input.full_description || input.short_description,
-    technologies: input.technologies || [],
-    benefits: input.benefits || [],
-    case_examples: input.case_examples || [],
-    keywords: input.keywords || [],
+    ...fallback,
+    ...apiData,
+    title: apiData.title || fallback.title,
+    short_description: apiData.short_description || fallback.short_description,
+    full_description: apiData.full_description || fallback.full_description,
+    technologies: apiData.technologies?.length ? apiData.technologies : fallback.technologies,
+    benefits: apiData.benefits?.length ? apiData.benefits : fallback.benefits,
+    case_examples: apiData.case_examples?.length ? apiData.case_examples : fallback.case_examples,
+    keywords: apiData.keywords?.length ? apiData.keywords : fallback.keywords,
   };
+}
+
+async function resolveService(slug: string) {
+  const fallback = toViewFromStatic(slug);
+  if (!fallback) return null;
+
+  const apiRes = await getService(slug, { revalidate });
+  if (!apiRes.ok) return fallback;
+
+  return mergeServiceView(fallback, {
+    slug: apiRes.data.slug,
+    title: apiRes.data.title,
+    short_description: apiRes.data.short_description,
+    full_description: apiRes.data.full_description,
+    technologies: apiRes.data.technologies,
+    benefits: apiRes.data.benefits,
+    case_examples: apiRes.data.case_examples,
+    keywords: apiRes.data.keywords,
+  });
 }
 
 export async function generateMetadata({
@@ -67,10 +80,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const apiRes = await getService(params.slug, { revalidate });
-  const service = apiRes.ok
-    ? normalizeService(apiRes.data)
-    : toViewFromStatic(params.slug);
+  const service = await resolveService(params.slug);
   if (!service) return {};
 
   return {
@@ -97,10 +107,7 @@ export default async function ServiceDetailPage({
 }: {
   params: { slug: string };
 }) {
-  const apiRes = await getService(params.slug, { revalidate });
-  const service = apiRes.ok
-    ? normalizeService(apiRes.data)
-    : toViewFromStatic(params.slug);
+  const service = await resolveService(params.slug);
   if (!service) notFound();
 
   const relatedRes = await getServices({ revalidate });
@@ -160,8 +167,7 @@ export default async function ServiceDetailPage({
               </ul>
             ) : (
               <p className="muted">
-                Security-first delivery, improved reliability, and clearer
-                operations.
+                Security-first delivery, improved reliability, and clearer operations.
               </p>
             )}
           </article>
@@ -203,8 +209,7 @@ export default async function ServiceDetailPage({
         <div className={`card ${marketing.pad4} ${marketing.mt4}`}>
           <h2>Talk to an engineer</h2>
           <p className="muted">
-            Get a scoped plan, timeline, and security considerations for this
-            service.
+            Get a scoped plan, timeline, and security considerations for this service.
           </p>
           <div className={marketing.mt2}>
             <Link className="btn btnPrimary" href="/book-consultation">
