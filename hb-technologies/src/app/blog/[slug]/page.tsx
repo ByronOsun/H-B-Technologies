@@ -2,20 +2,86 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
+import { getPostBySlug } from "@/content/blog";
 import { getSiteUrl } from "@/lib/site";
 import { getBlogPost } from "@/lib/api";
 import marketing from "@/styles/marketing.module.css";
 
 export const revalidate = 60;
 
+type BlogPostView = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  featured_image?: string;
+  author?: string;
+  created_at?: string | null;
+  tags: string[];
+  readingTime?: string;
+};
+
+function toViewFromStatic(slug: string): BlogPostView | null {
+  const post = getPostBySlug(slug);
+  if (!post) return null;
+
+  return {
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.description,
+    content: post.body.join("\n\n"),
+    featured_image: undefined,
+    author: "H&B Technologies",
+    created_at: post.date,
+    tags: post.tags,
+    readingTime: post.readingTime,
+  };
+}
+
+function mergeBlogView(fallback: BlogPostView, apiData?: Partial<BlogPostView>): BlogPostView {
+  if (!apiData) return fallback;
+
+  return {
+    ...fallback,
+    ...apiData,
+    title: apiData.title || fallback.title,
+    excerpt: apiData.excerpt || fallback.excerpt,
+    content: apiData.content || fallback.content,
+    featured_image: apiData.featured_image || fallback.featured_image,
+    author: apiData.author || fallback.author,
+    created_at: apiData.created_at || fallback.created_at,
+    tags: apiData.tags?.length ? apiData.tags : fallback.tags,
+    readingTime: apiData.readingTime || fallback.readingTime,
+  };
+}
+
+async function resolvePost(slug: string) {
+  const fallback = toViewFromStatic(slug);
+  if (!fallback) return null;
+
+  const apiRes = await getBlogPost(slug, { revalidate });
+  if (!apiRes.ok) return fallback;
+
+  return mergeBlogView(fallback, {
+    slug: apiRes.data.slug,
+    title: apiRes.data.title,
+    excerpt: apiRes.data.excerpt,
+    content: apiRes.data.content,
+    featured_image: apiRes.data.featured_image,
+    author: apiRes.data.author,
+    created_at: apiRes.data.created_at,
+    tags: [],
+    readingTime: undefined,
+  });
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const res = await getBlogPost(params.slug, { revalidate });
-  if (!res.ok) return {};
-  const post = res.data;
+  const post = await resolvePost(params.slug);
+  if (!post) return {};
 
   return {
     title: post.title,
@@ -60,9 +126,8 @@ export default async function BlogPostPage({
 }: {
   params: { slug: string };
 }) {
-  const res = await getBlogPost(params.slug, { revalidate });
-  if (!res.ok) notFound();
-  const post = res.data;
+  const post = await resolvePost(params.slug);
+  if (!post) notFound();
 
   const paragraphs = splitParagraphs(post.content);
 
@@ -79,6 +144,7 @@ export default async function BlogPostPage({
       "@type": "Organization",
       name: post.author || "H&B Technologies",
     },
+    keywords: post.tags.length ? post.tags.join(", ") : undefined,
   };
 
   return (
@@ -88,6 +154,7 @@ export default async function BlogPostPage({
         <p className="muted">
           {toDisplayDate(post.created_at)}
           {post.author ? ` • ${post.author}` : ""}
+          {post.readingTime ? ` • ${post.readingTime}` : ""}
         </p>
 
         {post.featured_image ? (
@@ -106,10 +173,22 @@ export default async function BlogPostPage({
 
         <p className={`muted ${marketing.mt2}`}>{post.excerpt}</p>
 
+        {post.tags.length ? (
+          <p className="muted">Topics: {post.tags.join(", ")}</p>
+        ) : null}
+
         <div className={marketing.prose}>
           {paragraphs.length > 0
             ? paragraphs.map((p) => <p key={p}>{p}</p>)
             : null}
+        </div>
+
+        <div className={`card ${marketing.pad3} ${marketing.mt4}`}>
+          <h2 className={marketing.sectionTitle}>Why this matters for your business</h2>
+          <p className="muted">
+            This article is written to support secure delivery, search visibility, and
+            practical implementation decisions for teams shipping real products.
+          </p>
         </div>
 
         <script
