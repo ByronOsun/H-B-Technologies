@@ -7,11 +7,10 @@ function requireHttps(req, res, next) {
   const isSecure = req.secure || forwardedProto === "https";
 
   if (!isSecure) {
-    return res.status(403).json({
-      error: "HTTPS_REQUIRED",
-      message: "HTTPS is required.",
-      requestId: req.id,
-    });
+    // Redirect to HTTPS version of the request with 308 Permanent Redirect
+    const host = req.get("host") || "";
+    const url = `https://${host}${req.originalUrl}`;
+    return res.redirect(308, url);
   }
 
   return next();

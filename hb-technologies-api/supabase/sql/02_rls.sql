@@ -4,6 +4,7 @@ alter table public.services enable row level security;
 alter table public.blog_posts enable row level security;
 alter table public.consultations enable row level security;
 alter table public.users enable row level security;
+alter table public.audit_logs enable row level security;
 
 -- Public read access (adjust as needed)
 create policy if not exists "services_read_public"

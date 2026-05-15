@@ -8,9 +8,14 @@ function validate(schema) {
     });
 
     if (!result.success) {
+      const errors = result.error.issues.map((issue) => ({
+        field: issue.path.join("."),
+        message: issue.message,
+      }));
+
       return res.status(400).json({
         error: "VALIDATION_ERROR",
-        issues: result.error.issues,
+        errors,
         requestId: req.id,
       });
     }

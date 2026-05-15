@@ -12,6 +12,7 @@ const { requestId } = require("./utils/requestId");
 const { requestLogger } = require("./middleware/requestLogger");
 const { requireHttps } = require("./middleware/requireHttps");
 const { csrfProtection } = require("./middleware/csrfProtection");
+const { securityHeadersMiddleware } = require("./middleware/securityHeaders");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.disable("x-powered-by");
 app.use(requestId);
 app.use(requestLogger);
 app.use(requireHttps);
+app.use(securityHeadersMiddleware);
 
 app.use(
   helmet({
@@ -50,6 +52,13 @@ app.use(
     limit: 120,
     standardHeaders: true,
     legacyHeaders: false,
+    handler(req, res) {
+      return res.status(429).set("Retry-After", "60").json({
+        error: "RATE_LIMIT_EXCEEDED",
+        message: "Too many requests. Please retry after 60 seconds.",
+        retryAfter: 60,
+      });
+    },
   })
 );
 

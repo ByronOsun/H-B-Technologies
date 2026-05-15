@@ -15,6 +15,10 @@ const envSchema = z.object({
   EMAIL_PORT: z.string().optional().or(z.literal("")),
   EMAIL_USER: z.string().optional().or(z.literal("")),
   EMAIL_PASS: z.string().optional().or(z.literal("")),
+  RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().optional().default(60000),
+  RATE_LIMIT_MAX: z.coerce.number().int().positive().optional().default(120),
+  CONSULTATION_RATE_LIMIT_MAX: z.coerce.number().int().positive().optional().default(5),
+  CONSULTATION_RATE_LIMIT_WINDOW: z.coerce.number().int().positive().optional().default(900000),
 });
 
 function parseOrigins(value) {
@@ -36,6 +40,10 @@ const env = envSchema.parse({
   EMAIL_PORT: process.env.EMAIL_PORT,
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASS: process.env.EMAIL_PASS,
+  RATE_LIMIT_WINDOW_MS: process.env.RATE_LIMIT_WINDOW_MS,
+  RATE_LIMIT_MAX: process.env.RATE_LIMIT_MAX,
+  CONSULTATION_RATE_LIMIT_MAX: process.env.CONSULTATION_RATE_LIMIT_MAX,
+  CONSULTATION_RATE_LIMIT_WINDOW: process.env.CONSULTATION_RATE_LIMIT_WINDOW,
 });
 
 module.exports = {
@@ -43,5 +51,9 @@ module.exports = {
     ...env,
     corsOrigins: parseOrigins(env.CORS_ORIGINS),
     isProd: env.NODE_ENV === "production",
+    rateLimitWindowMs: env.RATE_LIMIT_WINDOW_MS,
+    rateLimitMax: env.RATE_LIMIT_MAX,
+    consultationRateLimitMax: env.CONSULTATION_RATE_LIMIT_MAX,
+    consultationRateLimitWindow: env.CONSULTATION_RATE_LIMIT_WINDOW,
   },
 };
