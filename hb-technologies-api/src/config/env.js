@@ -11,6 +11,10 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().optional().default("15m"),
   SUPABASE_URL: z.string().url().optional().or(z.literal("")),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional().or(z.literal("")),
+  EMAIL_HOST: z.string().optional().or(z.literal("")),
+  EMAIL_PORT: z.string().optional().or(z.literal("")),
+  EMAIL_USER: z.string().optional().or(z.literal("")),
+  EMAIL_PASS: z.string().optional().or(z.literal("")),
 });
 
 function parseOrigins(value) {
@@ -28,6 +32,10 @@ const env = envSchema.parse({
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
   SUPABASE_URL: process.env.SUPABASE_URL,
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  EMAIL_HOST: process.env.EMAIL_HOST,
+  EMAIL_PORT: process.env.EMAIL_PORT,
+  EMAIL_USER: process.env.EMAIL_USER,
+  EMAIL_PASS: process.env.EMAIL_PASS,
 });
 
 module.exports = {

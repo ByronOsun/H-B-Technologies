@@ -3,6 +3,7 @@ const { z } = require("zod");
 
 const { asyncHandler } = require("../utils/asyncHandler");
 const { validate } = require("../middleware/validate");
+const { consultationRateLimiter } = require("../middleware/rateLimit");
 const { createConsultation } = require("../controllers/consultationController");
 
 const router = express.Router();
@@ -27,6 +28,11 @@ const schema = z.object({
   }),
 });
 
-router.post("/", validate(schema), asyncHandler(createConsultation));
+router.post(
+  "/",
+  consultationRateLimiter,
+  validate(schema),
+  asyncHandler(createConsultation)
+);
 
 module.exports = { consultationRouter: router };

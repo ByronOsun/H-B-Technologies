@@ -18,9 +18,19 @@ export function ConsultationForm({
   source: "contact" | "book-consultation";
 }) {
   const [status, setStatus] = useState<FormState>({ state: "idle" });
+  const [consent, setConsent] = useState(false);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!consent) {
+      setStatus({
+        state: "error",
+        message: "Please agree to the privacy statement to proceed.",
+      });
+      return;
+    }
+
     setStatus({ state: "submitting" });
 
     const form = event.currentTarget;
@@ -47,21 +57,29 @@ export function ConsultationForm({
 
       setStatus({
         state: "success",
-        message: "Thanks — we’ll get back to you shortly.",
+        message:
+          "Thanks for reaching out! We've received your inquiry and will respond within 1–2 business days.",
       });
 
+      setConsent(false);
       try {
         form.reset();
       } catch {
         // Ignore reset errors; submission already succeeded.
       }
-    } catch {
+    } catch (error) {
       setStatus({
         state: "error",
-        message: "Network error. Please try again.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Network error. Please try again.",
       });
     }
   }
+
+  const isSubmitting = status.state === "submitting";
+  const isSuccess = status.state === "success";
 
   return (
     <form className={marketing.form} onSubmit={onSubmit} noValidate>
@@ -75,6 +93,7 @@ export function ConsultationForm({
           name="name"
           autoComplete="name"
           required
+          disabled={isSubmitting}
         />
       </div>
 
@@ -89,6 +108,7 @@ export function ConsultationForm({
           type="email"
           autoComplete="email"
           required
+          disabled={isSubmitting}
         />
       </div>
 
@@ -102,6 +122,7 @@ export function ConsultationForm({
           name="phone"
           type="tel"
           autoComplete="tel"
+          disabled={isSubmitting}
         />
       </div>
 
@@ -114,6 +135,7 @@ export function ConsultationForm({
           id={`${source}-company`}
           name="company"
           autoComplete="organization"
+          disabled={isSubmitting}
         />
       </div>
 
@@ -127,6 +149,7 @@ export function ConsultationForm({
           name="service"
           required
           defaultValue=""
+          disabled={isSubmitting}
         >
           <option value="" disabled>
             Select one
@@ -149,7 +172,7 @@ export function ConsultationForm({
           </option>
         </select>
         <div className={marketing.hint}>
-          We’ll scope requirements, risks, and a delivery plan.
+          {"We'll scope requirements, risks, and a delivery plan."}
         </div>
       </div>
 
@@ -162,15 +185,45 @@ export function ConsultationForm({
           id={`${source}-message`}
           name="message"
           required
+          disabled={isSubmitting}
         />
       </div>
 
-      <button className="btn btnPrimary" type="submit" disabled={status.state === "submitting"}>
-        {status.state === "submitting" ? "Submitting…" : "Submit"}
+      <div className={styles.consentField}>
+        <input
+          type="checkbox"
+          id={`${source}-consent`}
+          name="consent"
+          checked={consent}
+          onChange={(e) => setConsent(e.target.checked)}
+          disabled={isSubmitting}
+          className={styles.consentCheckbox}
+        />
+        <label htmlFor={`${source}-consent`} className={styles.consentLabel}>
+          {"I agree to have my information stored for the purpose of responding to my inquiry and providing related updates."}
+        </label>
+      </div>
+
+      <button
+        className="btn btnPrimary"
+        type="submit"
+        disabled={isSubmitting || isSuccess}
+      >
+        {isSubmitting ? (
+          <>
+            <span className={styles.spinner} /> Submitting…
+          </>
+        ) : isSuccess ? (
+          "✓ Submitted"
+        ) : (
+          "Submit"
+        )}
       </button>
 
       {status.state === "success" ? (
-        <div className={`${styles.status} ${styles.success}`}>{status.message}</div>
+        <div className={`${styles.status} ${styles.success}`}>
+          {status.message}
+        </div>
       ) : null}
       {status.state === "error" ? (
         <div className={`${styles.status} ${styles.error}`}>{status.message}</div>

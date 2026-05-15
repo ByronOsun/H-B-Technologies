@@ -4,45 +4,126 @@ import Link from "next/link";
 import { ConsultationForm } from "@/components/ConsultationForm";
 import marketing from "@/styles/marketing.module.css";
 
+const WHATSAPP_NUMBER = "254724121679";
+const WHATSAPP_MESSAGE = "Hello H&B Technologies, I would like to inquire about your services.";
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+
+const CONTACT_PHONES = [
+  "+254 113 747 654",
+  "+254 724 121 679",
+  "+254 797 749 346",
+  "+254 785 773 554",
+];
+
+const CONTACT_EMAIL = "htechnob@gmail.com";
+
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact H&B Technologies | Consultation & Support",
   description:
-    "Contact H&B Technologies — secure engineering, AI automation, and enterprise infrastructure.",
+    "Get in touch with H&B Technologies for AI, cybersecurity, web development, and enterprise IT solutions. Email us or book a consultation.",
   alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {
   return (
-    <section className="section">
-      <div className="container">
-        <h1>Contact</h1>
-        <p className={`muted ${marketing.lead}`}>
-          Tell us what you’re building. We’ll respond with next steps and a
-          scoping plan.
-        </p>
+    <>
+      <section className="section">
+        <div className="container">
+          <h1>Contact H&B Technologies</h1>
+          <p className={`muted ${marketing.lead}`}>
+            Reach out to discuss your project requirements. We respond within
+            1–2 business days.
+          </p>
 
-        <div className={marketing.twoCol}>
-          <div className={`card ${marketing.pad3}`}>
-            <h2 className={marketing.sectionTitle}>Send a message</h2>
-            <ConsultationForm source="contact" />
-          </div>
+          {/* Contact Details Section */}
+          <div className={marketing.contactGrid}>
+            <div className={`card ${marketing.pad3}`}>
+              <h2 className={marketing.sectionTitle}>Email & Phone</h2>
+              <div className={marketing.contactDetails}>
+                <div className={marketing.contactItem}>
+                  <p className={marketing.contactLabel}>Email</p>
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className={marketing.contactValue}
+                  >
+                    {CONTACT_EMAIL}
+                  </a>
+                </div>
 
-          <div className={`card ${marketing.pad3}`}>
-            <h2 className={marketing.sectionTitle}>What happens next</h2>
-            <ol>
-              <li>We confirm goals, constraints, and timelines</li>
-              <li>We identify security and performance requirements</li>
-              <li>We deliver a scoped plan and delivery roadmap</li>
-            </ol>
-            <p className={`muted ${marketing.mt2}`}>
-              Prefer a scheduled call? Use the consultation page.
-            </p>
-            <Link className="btn" href="/book-consultation">
-              Book consultation
-            </Link>
+                <div className={marketing.contactItem}>
+                  <p className={marketing.contactLabel}>Phone</p>
+                  <ul className={marketing.phoneList}>
+                    {CONTACT_PHONES.map((phone) => (
+                      <li key={phone}>
+                        <a href={`tel:${phone.replace(/\s+/g, "")}`} className={marketing.contactValue}>
+                          {phone}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className={marketing.contactItem}>
+                  <p className={marketing.contactLabel}>WhatsApp</p>
+                  <a
+                    href={WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`btn btnPrimary ${marketing.mt1}`}
+                  >
+                    Chat on WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className={`card ${marketing.pad3}`}>
+              <h2 className={marketing.sectionTitle}>Response Time</h2>
+              <ul className={marketing.responseList}>
+                <li>
+                  <strong>Email inquiries:</strong> 24–48 hours
+                </li>
+                <li>
+                  <strong>Consultation requests:</strong> Same business day
+                </li>
+                <li>
+                  <strong>Phone support:</strong> During business hours (Mon–Fri,
+                  9 AM–6 PM EAT)
+                </li>
+              </ul>
+              <p className={`muted ${marketing.mt3}`}>
+                For urgent matters, please call us directly or use WhatsApp.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section className="section" style={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}>
+        <div className="container">
+          <div className={marketing.twoCol}>
+            <div className={`card ${marketing.pad3}`}>
+              <h2 className={marketing.sectionTitle}>Send a message</h2>
+              <ConsultationForm source="contact" />
+            </div>
+
+            <div className={`card ${marketing.pad3}`}>
+              <h2 className={marketing.sectionTitle}>What happens next</h2>
+              <ol>
+                <li>We confirm goals, constraints, and timelines</li>
+                <li>We identify security and performance requirements</li>
+                <li>We deliver a scoped plan and delivery roadmap</li>
+              </ol>
+              <p className={`muted ${marketing.mt2}`}>
+                Prefer a scheduled call? Use the consultation page.
+              </p>
+              <Link className="btn" href="/book-consultation">
+                Book consultation
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

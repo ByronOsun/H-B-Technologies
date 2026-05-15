@@ -146,3 +146,94 @@
     align-items: start;
   }
 }
+
+/* Contact Section Styles */
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.contactDetails {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.contactItem {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.contactItem:last-child {
+  border-bottom: none;
+}
+
+.contactLabel {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  margin-bottom: 6px;
+}
+
+.contactValue {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.contactValue:hover {
+  color: var(--color-primary, #0066cc);
+  text-decoration: underline;
+}
+
+.phoneList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.phoneList li {
+  margin: 0;
+}
+
+.phoneList a {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.phoneList a:hover {
+  color: var(--color-primary, #0066cc);
+  text-decoration: underline;
+}
+
+.responseList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.responseList li {
+  margin: 0;
+  padding-left: 0;
+}
+
+.responseList strong {
+  color: var(--color-text);
+}
+
+@media (min-width: 880px) {
+  .contactGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

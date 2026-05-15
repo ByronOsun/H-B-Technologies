@@ -12,6 +12,19 @@ export function SiteFooter() {
             Secure-by-design engineering, AI-driven automation, and
             enterprise-grade infrastructure.
           </p>
+
+          <div className={styles.contact}>
+            <p className={styles.contactLabel}>Get in touch</p>
+            <div className={styles.contactLinks}>
+              <a href="mailto:htechnob@gmail.com" className={styles.contactLink}>
+                htechnob@gmail.com
+              </a>
+              <a href="tel:+254113747654" className={styles.contactLink}>
+                +254 113 747 654
+              </a>
+            </div>
+          </div>
+
           <p className={styles.meta}>
             © {new Date().getFullYear()} H&B Technologies. All rights reserved.
           </p>
