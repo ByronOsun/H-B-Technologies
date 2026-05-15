@@ -18,7 +18,7 @@ const consultationRateLimiter = rateLimit({
       code: "RATE_LIMIT_EXCEEDED",
       message: options.message,
       retryAfter: Math.ceil(options.windowMs / 1000),
-      requestId: req.id,
+      requestId: _req.id,
     });
   },
   skip: (_req) => {

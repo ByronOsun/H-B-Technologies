@@ -13,6 +13,7 @@ function sanitizeString(str) {
   str = str.trim();
 
   // Remove control characters except newlines/tabs
+  // eslint-disable-next-line no-control-regex
   str = str.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/gu, "");
 
   return str;
