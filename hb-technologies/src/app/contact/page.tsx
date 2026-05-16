@@ -32,8 +32,38 @@ export default function ContactPage() {
             Reach out to discuss your project requirements. We respond within
             1–2 business days.
           </p>
+        </div>
+      </section>
 
-          {/* Contact Details Section */}
+      <section className="section" style={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}>
+        <div className="container">
+          <div className={marketing.twoCol}>
+            <div className={`card ${marketing.pad3}`}>
+              <h2 className={marketing.sectionTitle}>Send a message</h2>
+              <ConsultationForm source="contact" />
+            </div>
+
+            <div className={`card ${marketing.pad3}`}>
+              <h2 className={marketing.sectionTitle}>What happens next</h2>
+              <ol>
+                <li>We confirm goals, constraints, and timelines</li>
+                <li>We identify security and performance requirements</li>
+                <li>We deliver a scoped plan and delivery roadmap</li>
+              </ol>
+              <p className={`muted ${marketing.mt2}`}>
+                Prefer a scheduled call? Use the consultation page.
+              </p>
+              <Link className="btn" href="/book-consultation">
+                Book consultation
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Details Section */}
+      <section className="section">
+        <div className="container">
           <div className={marketing.contactGrid}>
             <div className={`card ${marketing.pad3}`}>
               <h2 className={marketing.sectionTitle}>Email & Phone</h2>
@@ -90,32 +120,6 @@ export default function ContactPage() {
               <p className={`muted ${marketing.mt3}`}>
                 For urgent matters, please call us directly or use WhatsApp.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section" style={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}>
-        <div className="container">
-          <div className={marketing.twoCol}>
-            <div className={`card ${marketing.pad3}`}>
-              <h2 className={marketing.sectionTitle}>Send a message</h2>
-              <ConsultationForm source="contact" />
-            </div>
-
-            <div className={`card ${marketing.pad3}`}>
-              <h2 className={marketing.sectionTitle}>What happens next</h2>
-              <ol>
-                <li>We confirm goals, constraints, and timelines</li>
-                <li>We identify security and performance requirements</li>
-                <li>We deliver a scoped plan and delivery roadmap</li>
-              </ol>
-              <p className={`muted ${marketing.mt2}`}>
-                Prefer a scheduled call? Use the consultation page.
-              </p>
-              <Link className="btn" href="/book-consultation">
-                Book consultation
-              </Link>
             </div>
           </div>
         </div>

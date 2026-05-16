@@ -3,6 +3,15 @@ import Link from "next/link";
 import styles from "./SiteFooter.module.css";
 import { WhatsAppLink } from "./WhatsAppLink";
 
+const CONTACT_PHONES = [
+  "+254 113 747 654",
+  "+254 724 121 679",
+  "+254 797 749 346",
+  "+254 785 773 554",
+];
+
+const CONTACT_EMAIL = "htechnob@gmail.com";
+
 export function SiteFooter() {
   return (
     <footer className={styles.footer}>
@@ -17,12 +26,20 @@ export function SiteFooter() {
           <div className={styles.contact}>
             <p className={styles.contactLabel}>Get in touch</p>
             <div className={styles.contactLinks}>
-              <a href="mailto:htechnob@gmail.com" className={styles.contactLink}>
-                htechnob@gmail.com
+              <a href={`mailto:${CONTACT_EMAIL}`} className={styles.contactLink}>
+                {CONTACT_EMAIL}
               </a>
-              <a href="tel:+254113747654" className={styles.contactLink}>
-                +254 113 747 654
-              </a>
+
+              {CONTACT_PHONES.map((phone) => (
+                <a
+                  key={phone}
+                  href={`tel:${phone.replace(/\s+/g, "")}`}
+                  className={styles.contactLink}
+                >
+                  {phone}
+                </a>
+              ))}
+
               <WhatsAppLink
                 label="Chat on WhatsApp"
                 ariaLabel="Chat with H&B Technologies on WhatsApp"

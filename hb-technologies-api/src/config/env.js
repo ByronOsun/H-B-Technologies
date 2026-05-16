@@ -15,6 +15,7 @@ const envSchema = z.object({
   EMAIL_PORT: z.string().optional().or(z.literal("")),
   EMAIL_USER: z.string().optional().or(z.literal("")),
   EMAIL_PASS: z.string().optional().or(z.literal("")),
+  EMAIL_FROM: z.string().optional().or(z.literal("")).default("noreply@hbtechnologies.com"),
   WHATSAPP_ACCESS_TOKEN: z.string().optional().or(z.literal("")),
   WHATSAPP_PHONE_NUMBER_ID: z.string().optional().or(z.literal("")),
   WHATSAPP_RECIPIENT_NUMBER: z.string().optional().or(z.literal("")),
@@ -46,6 +47,7 @@ const env = envSchema.parse({
   EMAIL_PORT: process.env.EMAIL_PORT,
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASS: process.env.EMAIL_PASS,
+  EMAIL_FROM: process.env.EMAIL_FROM || "noreply@hbtechnologies.com",
   WHATSAPP_ACCESS_TOKEN: process.env.WHATSAPP_ACCESS_TOKEN,
   WHATSAPP_PHONE_NUMBER_ID: process.env.WHATSAPP_PHONE_NUMBER_ID,
   WHATSAPP_RECIPIENT_NUMBER: process.env.WHATSAPP_RECIPIENT_NUMBER,
@@ -67,5 +69,6 @@ module.exports = {
     rateLimitMax: env.RATE_LIMIT_MAX,
     consultationRateLimitMax: env.CONSULTATION_RATE_LIMIT_MAX,
     consultationRateLimitWindow: env.CONSULTATION_RATE_LIMIT_WINDOW,
+    emailFrom: env.EMAIL_FROM,
   },
 };
