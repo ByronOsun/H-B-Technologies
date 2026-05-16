@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import styles from "./SiteFooter.module.css";
+import { WhatsAppLink } from "./WhatsAppLink";
 
 export function SiteFooter() {
   return (
@@ -22,6 +23,12 @@ export function SiteFooter() {
               <a href="tel:+254113747654" className={styles.contactLink}>
                 +254 113 747 654
               </a>
+              <WhatsAppLink
+                label="Chat on WhatsApp"
+                ariaLabel="Chat with H&B Technologies on WhatsApp"
+                className={styles.contactLink}
+                variant="inline"
+              />
             </div>
           </div>
 

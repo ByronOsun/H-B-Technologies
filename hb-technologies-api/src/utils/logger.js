@@ -66,6 +66,27 @@ function logEmailEvent(type, recipientEmail, metadata = {}) {
 }
 
 /**
+ * Log WhatsApp notification events
+ * @param {string} type - 'sent', 'failed', 'retry'
+ * @param {string} recipientNumber - WhatsApp recipient phone number
+ * @param {Object} metadata - Additional context
+ */
+function logWhatsAppEvent(type, recipientNumber, metadata = {}) {
+  ensureLogDir();
+  const logFile = getLogFile("whatsapp");
+  const entry = formatLogEntry("INFO", `WhatsApp ${type}`, {
+    recipient: recipientNumber,
+    ...metadata,
+  });
+
+  fs.appendFileSync(logFile, entry + "\n");
+  persistAuditLog("INFO", `WhatsApp ${type}`, "whatsapp", {
+    recipient: recipientNumber,
+    ...metadata,
+  });
+}
+
+/**
  * Log API errors
  * @param {string} endpoint - API endpoint
  * @param {Error} error - Error object
@@ -157,6 +178,7 @@ function logRequestEvent(req, res, durationMs) {
 
 module.exports = {
   logEmailEvent,
+  logWhatsAppEvent,
   logApiError,
   logConsultationEvent,
   logSecurityEvent,

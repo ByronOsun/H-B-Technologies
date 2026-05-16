@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ConsultationForm } from "@/components/ConsultationForm";
+import { WhatsAppLink } from "@/components/WhatsAppLink";
+import { WHATSAPP_DEFAULT_MESSAGE } from "@/lib/whatsapp";
 import marketing from "@/styles/marketing.module.css";
-
-const WHATSAPP_NUMBER = "254724121679";
-const WHATSAPP_MESSAGE = "Hello H&B Technologies, I would like to inquire about your services.";
-const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 const CONTACT_PHONES = [
   "+254 113 747 654",
@@ -65,14 +63,12 @@ export default function ContactPage() {
 
                 <div className={marketing.contactItem}>
                   <p className={marketing.contactLabel}>WhatsApp</p>
-                  <a
-                    href={WHATSAPP_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`btn btnPrimary ${marketing.mt1}`}
-                  >
-                    Chat on WhatsApp
-                  </a>
+                  <WhatsAppLink
+                    label="Chat with Us on WhatsApp"
+                    message={WHATSAPP_DEFAULT_MESSAGE}
+                    ariaLabel="Chat with H&B Technologies on WhatsApp"
+                    className={marketing.mt1}
+                  />
                 </div>
               </div>
             </div>

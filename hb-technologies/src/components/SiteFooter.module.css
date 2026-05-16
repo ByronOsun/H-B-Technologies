@@ -46,6 +46,10 @@
   font-size: 14px;
 }
 
+.contactLink[class] {
+  display: inline-flex;
+}
+
 .contactLink:hover {
   color: var(--color-primary, #0066cc);
   text-decoration: underline;

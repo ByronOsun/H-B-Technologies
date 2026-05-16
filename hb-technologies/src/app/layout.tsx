@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getSiteUrl, siteConfig } from "@/lib/site";
@@ -49,6 +50,7 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
+        <FloatingWhatsAppButton />
 
         <script
           type="application/ld+json"

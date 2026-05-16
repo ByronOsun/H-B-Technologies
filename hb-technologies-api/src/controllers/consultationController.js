@@ -1,7 +1,9 @@
 const { supabaseAdmin } = require("../config/supabase");
 const { sendConsultationEmail } = require("../config/email");
+const { sendConsultationWhatsAppNotification } = require("../config/whatsapp");
 const {
   logEmailEvent,
+  logWhatsAppEvent,
   logApiError,
   logConsultationEvent,
   logSecurityEvent,
@@ -174,6 +176,42 @@ async function createConsultation(req, res) {
           requestId: req.id,
         });
         // Log but don't fail the submission
+      });
+
+    // Send WhatsApp notification to the business (fire-and-forget, don't block response)
+    sendConsultationWhatsAppNotification(
+      {
+        name: payload.name,
+        email: payload.email,
+        phone: payload.phone,
+        company: payload.company,
+        service: payload.service,
+        message: payload.message,
+        source: payload.source,
+      },
+      clientIp,
+      req.id
+    )
+      .then((result) => {
+        if (result.sent) {
+          logWhatsAppEvent("sent", process.env.WHATSAPP_RECIPIENT_NUMBER || "", {
+            messageId: result.messageId,
+            consultationId: data?.[0]?.id,
+            requestId: req.id,
+          });
+        } else if (!result.skipped) {
+          logWhatsAppEvent("failed", process.env.WHATSAPP_RECIPIENT_NUMBER || "", {
+            error: result.error,
+            consultationId: data?.[0]?.id,
+            requestId: req.id,
+          });
+        }
+      })
+      .catch((error) => {
+        logApiError("/consultation (whatsapp notification)", error, {
+          email: payload.email,
+          requestId: req.id,
+        });
       });
 
     return res.status(201).json({

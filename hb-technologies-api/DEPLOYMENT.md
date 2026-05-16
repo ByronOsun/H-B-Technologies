@@ -339,6 +339,32 @@ npm run migrate
    EMAIL_FROM=your-email@gmail.com
    ```
 
+## WhatsApp Configuration
+
+The API can send consultation alerts to a Meta WhatsApp Business number.
+
+### Meta WhatsApp Cloud API
+
+1. Create or open your Meta app and add the WhatsApp product.
+2. Connect your business phone number in WhatsApp Manager.
+3. Generate a long-lived access token for the app or system user.
+4. Configure the environment:
+   ```bash
+   WHATSAPP_ACCESS_TOKEN=EAAG...
+   WHATSAPP_PHONE_NUMBER_ID=123456789012345
+   WHATSAPP_RECIPIENT_NUMBER=254700000000
+   WHATSAPP_API_VERSION=v22.0
+   ```
+
+Optional template mode for business-initiated messages:
+
+```bash
+WHATSAPP_TEMPLATE_NAME=consultation_alert
+WHATSAPP_TEMPLATE_LANGUAGE=en_US
+```
+
+If you use template mode, create an approved WhatsApp template with one body placeholder so the alert text can be inserted into the template message.
+
 ## Security Hardening
 
 ### HTTPS/TLS
