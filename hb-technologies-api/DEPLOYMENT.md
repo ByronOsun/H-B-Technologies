@@ -313,31 +313,291 @@ npm run migrate
 
 ## Email Configuration
 
-### SendGrid (Recommended)
+### Overview
 
-1. Create SendGrid account
-2. Generate API key
-3. Configure environment:
+The consultation form sends transactional emails to **htechnob@gmail.com** whenever a user submits a consultation request. The system uses **Nodemailer** with configurable SMTP providers.
+
+**Features:**
+- ✅ Secure TLS encryption (port 587 recommended)
+- ✅ Professional HTML + plain-text email templates
+- ✅ Fire-and-forget async pattern (doesn't block form response)
+- ✅ Graceful degradation (email failure doesn't lose consultation data)
+- ✅ Email send status tracked in database
+- ✅ Comprehensive error logging
+
+### Email Flow
+
+```
+User submits form
+    ↓
+[Frontend validation]
+    ↓
+POST /api/consultation
+    ↓
+[Backend validation + sanitization]
+    ↓
+Insert consultation into Supabase
+    ↓
+Send notification email (async, non-blocking)
+    ↓
+Return 200 to frontend
+    ↓
+✅ Data stored + Email sent (or queued for retry)
+```
+
+If the email fails, the consultation **remains stored** in the database and is flagged for manual review.
+
+### Supported Email Providers
+
+#### 1. Gmail with App Password (Free, Development/Small Scale)
+
+**Setup Instructions:**
+
+1. Go to [https://myaccount.google.com/security](https://myaccount.google.com/security)
+2. Enable "2-Step Verification" (if not already enabled)
+3. In Security settings, find "App passwords"
+4. Select "Mail" and "Windows Computer" (or your device)
+5. Copy the generated 16-character password
+6. Configure environment:
+   ```bash
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_USER=htechnob@gmail.com
+   EMAIL_PASS=xxxx xxxx xxxx xxxx  # 16-character app password
+   EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
+   ```
+
+**Important:**
+- ⚠️ Use App Password, NOT your Gmail password
+- ⚠️ Never commit EMAIL_PASS to git
+- ✅ Rotate App Password every 3 months
+- ✅ Create separate app password for production
+
+#### 2. SendGrid (Recommended for Production)
+
+**Setup Instructions:**
+
+1. Create SendGrid account at [https://sendgrid.com](https://sendgrid.com)
+2. Verify sender email (use htechnob@gmail.com)
+3. Generate API key from Settings → API Keys
+4. Configure environment:
    ```bash
    EMAIL_HOST=smtp.sendgrid.net
    EMAIL_PORT=587
    EMAIL_USER=apikey
-   EMAIL_PASS=SG.xxxxx
-   EMAIL_FROM=noreply@hb-technologies.com
+   EMAIL_PASS=SG.xxxxxxxxxxxxxxxxxxxxxxxxxxx  # API key starts with SG.
+   EMAIL_FROM="H&B Technologies <noreply@hb-technologies.com>"
    ```
 
-### Gmail (Development)
+**Advantages:**
+- ✅ 100,000 free emails/month
+- ✅ Webhook deliverability tracking
+- ✅ Built-in spam monitoring
+- ✅ Easy IP reputation management
+- ✅ Advanced analytics
 
-1. Enable 2-factor authentication
-2. Generate App Password
-3. Configure environment:
+#### 3. Brevo (Sendinblue) - EU-Friendly
+
+**Setup Instructions:**
+
+1. Create Brevo account at [https://www.brevo.com](https://www.brevo.com)
+2. Verify sender domain and email
+3. Generate SMTP credentials from Settings → SMTP & API
+4. Configure environment:
    ```bash
-   EMAIL_HOST=smtp.gmail.com
+   EMAIL_HOST=smtp-relay.brevo.com
    EMAIL_PORT=587
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASS=your-app-password
-   EMAIL_FROM=your-email@gmail.com
+   EMAIL_USER=your-brevo-email@example.com
+   EMAIL_PASS=xxxxxxxxxxxxxxxxxxx  # SMTP password (not API key)
+   EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
    ```
+
+**Advantages:**
+- ✅ Free tier: 300 emails/day
+- ✅ EU GDPR compliant
+- ✅ No monthly sending limits on free tier
+- ✅ Good email deliverability
+
+#### 4. AWS SES (Enterprise)
+
+**Setup Instructions:**
+
+1. Go to AWS SES console
+2. Request production access (if in sandbox mode)
+3. Verify sender identity (htechnob@gmail.com)
+4. Create SMTP credentials
+5. Configure environment:
+   ```bash
+   EMAIL_HOST=email-smtp.region.amazonaws.com  # e.g., email-smtp.us-east-1.amazonaws.com
+   EMAIL_PORT=587
+   EMAIL_USER=AKIA...  # Your SMTP username
+   EMAIL_PASS=xxxxx...  # Your SMTP password
+   EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
+   ```
+
+### Email Template
+
+Consultations receive a professional HTML email with:
+
+```
+📋 Submission Details
+   - Submitted at: [timestamp in East Africa Time]
+
+👤 Contact Information
+   - Full Name
+   - Email (with mailto: link)
+   - Phone (with tel: link)
+   - Company (if provided)
+
+💼 Service Interest
+   - Service requested
+
+💬 Message
+   - Full consultation message (quoted)
+
+Next Steps Note:
+   "Please follow up with the client within 24 hours..."
+```
+
+Both HTML and plain-text versions are sent for maximum compatibility.
+
+### Environment Variables Reference
+
+```bash
+# Email transport configuration
+EMAIL_HOST=smtp.gmail.com                          # SMTP server hostname
+EMAIL_PORT=587                                      # SMTP port (587=TLS, 465=SSL)
+EMAIL_USER=htechnob@gmail.com                      # SMTP username
+EMAIL_PASS=your-app-password                       # SMTP password (use app password for Gmail)
+EMAIL_FROM="H&B Technologies <htechnob@gmail.com>" # Sender name and email
+
+# Optional: rate limiting for consultations
+CONSULTATION_RATE_LIMIT_MAX=5          # Max 5 submissions per window
+CONSULTATION_RATE_LIMIT_WINDOW=900000  # Per 15 minutes (900000 ms)
+```
+
+### Testing Email Configuration
+
+**Local Testing:**
+
+```bash
+# 1. Set up .env with test credentials
+# 2. Start the API server
+npm start
+
+# 3. Send test consultation
+curl -X POST http://localhost:4000/api/consultation \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test User",
+    "email": "test@example.com",
+    "phone": "+254 700 000 000",
+    "company": "Test Company",
+    "service": "Web Development",
+    "message": "This is a test consultation request.",
+    "source": "contact"
+  }'
+
+# 4. Check htechnob@gmail.com for the email
+# 5. Monitor server logs for email send status
+```
+
+**Production Verification:**
+
+1. Deploy API with production email credentials
+2. Submit a test consultation from the contact form
+3. Verify email arrives within 60 seconds
+4. Check database for email_sent=true and email_sent_at timestamp
+5. Monitor email deliverability (check spam folder)
+
+### Troubleshooting
+
+#### Email Not Being Sent
+
+**Check 1: Environment Variables**
+```bash
+# Verify all email vars are set in your hosting environment
+# Render: Settings → Environment → Verify EMAIL_HOST, EMAIL_USER, EMAIL_PASS
+```
+
+**Check 2: Gmail App Password**
+```bash
+# If using Gmail, ensure you're using App Password, not your regular password
+# Regular Gmail password will fail with: 534 Application-specific password required
+```
+
+**Check 3: Firewall/Network**
+```bash
+# Verify SMTP port 587 is open (outbound)
+# AWS SES might require port 2587 or 25
+# Contact your hosting provider if blocked
+```
+
+**Check 4: Logs**
+```bash
+# Check server logs for email send errors
+# Render: Logs → Search for "Failed to send email"
+# Check audit_logs table in Supabase with category="email"
+```
+
+#### Email Going to Spam
+
+**Solutions:**
+
+1. **Add SPF Record**
+   ```
+   v=spf1 include:sendgrid.net ~all
+   # Or for Gmail: include:google.com ~all
+   ```
+
+2. **Add DKIM Record**
+   - Follow provider's DKIM setup instructions
+   - Usually found in email service dashboard
+
+3. **Add DMARC Policy**
+   ```
+   v=DMARC1; p=quarantine; rua=mailto:admin@hb-technologies.com
+   ```
+
+4. **Use Recognized Sender**
+   - Send from your own domain, not a free email service
+   - Keep reply-to consistent
+
+#### High Email Bounce Rate
+
+1. Verify email addresses in consultation form before inserting
+2. Enable double opt-in verification (if applicable)
+3. Monitor SendGrid/Brevo bounce reports
+4. Clean up bounced emails from database
+
+### Monitoring & Analytics
+
+**SendGrid Dashboard:**
+- Click rate, open rate, bounce rate
+- Detailed delivery logs
+- Link tracking
+
+**Brevo Analytics:**
+- Campaign performance
+- Subscriber engagement
+- Deliverability metrics
+
+**Database Monitoring:**
+```sql
+-- Check email send status
+SELECT 
+  COUNT(*) as total,
+  COUNT(CASE WHEN email_sent = true THEN 1 END) as sent,
+  COUNT(CASE WHEN email_sent = false THEN 1 END) as failed
+FROM consultations
+WHERE created_at > NOW() - INTERVAL '24 hours';
+
+-- Check email errors
+SELECT email, email_error, COUNT(*) 
+FROM consultations 
+WHERE email_sent = false
+GROUP BY email, email_error;
+```
 
 ## WhatsApp Configuration
 
