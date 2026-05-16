@@ -31,7 +31,7 @@ function formatLogEntry(level, message, metadata = {}) {
 function persistAuditLog(level, message, category, metadata = {}) {
   if (!supabaseAdmin) return;
 
-  void supabaseAdmin
+  supabaseAdmin
     .from(AUDIT_TABLE)
     .insert({
       level,
@@ -39,6 +39,7 @@ function persistAuditLog(level, message, category, metadata = {}) {
       category,
       metadata,
     })
+    .then(() => {})
     .catch(() => {
       // Logging must never break the request flow.
     });
