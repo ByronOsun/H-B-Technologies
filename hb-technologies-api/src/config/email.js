@@ -105,10 +105,16 @@ async function sendEmailViaWebhook(payload) {
       headers["x-email-webhook-secret"] = env.EMAIL_WEBHOOK_SECRET;
     }
 
+    // Include shared secret in body for platforms (like Google Apps Script)
+    // that do not expose request headers to the script environment.
+    const bodyPayload = Object.assign({}, payload, {
+      secret: env.EMAIL_WEBHOOK_SECRET || "",
+    });
+
     const response = await globalThis.fetch(env.EMAIL_WEBHOOK_URL, {
       method: "POST",
       headers,
-      body: JSON.stringify(payload),
+      body: JSON.stringify(bodyPayload),
       signal: controller.signal,
     });
 
@@ -121,9 +127,26 @@ async function sendEmailViaWebhook(payload) {
       };
     }
 
+    let parsed = null;
+    if (responseText) {
+      try {
+        parsed = JSON.parse(responseText);
+      } catch {
+        parsed = null;
+      }
+    }
+
+    if (parsed && Object.prototype.hasOwnProperty.call(parsed, "ok") && parsed.ok !== true) {
+      return {
+        sent: false,
+        error: parsed.error || "Webhook response indicated failure",
+      };
+    }
+
     return {
       sent: true,
-      messageId: responseText || null,
+      messageId:
+        (parsed && (parsed.messageId || parsed.message || null)) || responseText || null,
     };
   } catch (error) {
     return {
