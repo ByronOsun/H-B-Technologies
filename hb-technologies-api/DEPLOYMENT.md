@@ -375,6 +375,23 @@ If the email fails, the consultation **remains stored** in the database and is f
 - ✅ If the host cannot reach IPv6 SMTP endpoints, set `EMAIL_FORCE_IPV4=true`
 - ✅ If SMTP responses are slow, tune `EMAIL_CONNECTION_TIMEOUT_MS`, `EMAIL_GREETING_TIMEOUT_MS`, and `EMAIL_SOCKET_TIMEOUT_MS`
 
+### Diagnostic Email Test on Render
+
+Set a shared secret so you can verify the Gmail SMTP path from the deployed API:
+
+```bash
+EMAIL_TEST_TOKEN=some-long-random-secret
+```
+
+Call the endpoint with the header:
+
+```bash
+curl -H "x-email-test-token: some-long-random-secret" \
+   https://your-render-service.onrender.com/api/debug/email-test
+```
+
+If the request succeeds, the API returns a JSON response and the Gmail inbox should receive a test email.
+
 **Why this works without a domain:**
 - Uses a Gmail sender address you already own
 - No custom domain verification needed

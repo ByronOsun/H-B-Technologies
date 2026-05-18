@@ -170,6 +170,72 @@ async function sendConsultationEmail(consultation, clientIp = null) {
   };
 }
 
+async function sendDiagnosticEmail() {
+  const transporter = getEmailTransporter();
+
+  if (!transporter) {
+    const errorMsg = "Email service not configured";
+    logEmailEvent("failed", env.EMAIL_USER || "unknown", { error: errorMsg, diagnostic: true });
+    return {
+      sent: false,
+      error: errorMsg,
+    };
+  }
+
+  const subject = "H&B Technologies Email Diagnostic Test";
+  const text = [
+    "This is a diagnostic email from the H&B Technologies API.",
+    "If you received this, the Gmail SMTP path is working.",
+    `Timestamp: ${new Date().toISOString()}`,
+  ].join("\n");
+
+  const html = `
+    <html>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #222;">
+        <h2>Email Diagnostic Test</h2>
+        <p>This is a diagnostic email from the H&amp;B Technologies API.</p>
+        <p>If you received this, the Gmail SMTP path is working.</p>
+        <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+      </body>
+    </html>
+  `;
+
+  try {
+    const result = await transporter.sendMail({
+      from: env.EMAIL_FROM || env.EMAIL_USER,
+      to: env.EMAIL_USER,
+      subject,
+      text,
+      html,
+    });
+
+    logEmailEvent("sent", env.EMAIL_USER, {
+      messageId: result.messageId,
+      diagnostic: true,
+    });
+
+    return {
+      sent: true,
+      messageId: result.messageId,
+    };
+  } catch (error) {
+    logEmailEvent("failed", env.EMAIL_USER, {
+      error: error.message,
+      diagnostic: true,
+    });
+    logApiError("email.sendDiagnosticEmail", error, {
+      to: env.EMAIL_USER,
+      from: env.EMAIL_FROM || env.EMAIL_USER,
+      diagnostic: true,
+    });
+
+    return {
+      sent: false,
+      error: error.message,
+    };
+  }
+}
+
 function buildConsultationEmailHtml(consultation, clientIp) {
   const timestamp = new Date().toLocaleString("en-KE", {
     timeZone: "Africa/Nairobi",
@@ -306,5 +372,6 @@ function escapeHtml(text) {
 
 module.exports = {
   sendConsultationEmail,
+  sendDiagnosticEmail,
   getEmailTransporter,
 };

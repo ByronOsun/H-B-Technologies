@@ -4,6 +4,7 @@ const { servicesRouter } = require("./services");
 const { blogRouter } = require("./blog");
 const { consultationRouter } = require("./consultation");
 const { authRouter } = require("./auth");
+const { debugRouter } = require("./debug");
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.use("/services", servicesRouter);
 router.use("/blog", blogRouter);
 router.use("/consultation", consultationRouter);
 router.use("/auth", authRouter);
+router.use("/debug", debugRouter);
 
 module.exports = { apiRouter: router };
