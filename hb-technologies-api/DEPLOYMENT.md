@@ -382,7 +382,7 @@ Render can block or time out outbound SMTP. If Gmail SMTP still fails, switch to
 ```bash
 EMAIL_PROVIDER=sendgrid
 SENDGRID_API_KEY=SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-SENDGRID_FROM="H&B Technologies <noreply@hb-technologies.com>"
+SENDGRID_FROM="H&B Technologies <htechnob@gmail.com>"
 ```
 
 **Why this helps:**
@@ -395,7 +395,7 @@ SENDGRID_FROM="H&B Technologies <noreply@hb-technologies.com>"
 **Setup Instructions:**
 
 1. Create SendGrid account at [https://sendgrid.com](https://sendgrid.com)
-2. Verify sender email (use htechnob@gmail.com)
+2. Verify sender email address (use htechnob@gmail.com)
 3. Generate API key from Settings → API Keys
 4. Configure environment:
    ```bash
@@ -403,7 +403,7 @@ SENDGRID_FROM="H&B Technologies <noreply@hb-technologies.com>"
    EMAIL_PORT=587
    EMAIL_USER=apikey
    EMAIL_PASS=SG.xxxxxxxxxxxxxxxxxxxxxxxxxxx  # API key starts with SG.
-   EMAIL_FROM="H&B Technologies <noreply@hb-technologies.com>"
+   EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
    ```
 
 **Advantages:**
@@ -418,7 +418,7 @@ SENDGRID_FROM="H&B Technologies <noreply@hb-technologies.com>"
 **Setup Instructions:**
 
 1. Create Brevo account at [https://www.brevo.com](https://www.brevo.com)
-2. Verify sender domain and email
+2. Verify sender email address
 3. Generate SMTP credentials from Settings → SMTP & API
 4. Configure environment:
    ```bash

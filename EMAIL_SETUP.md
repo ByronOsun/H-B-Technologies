@@ -47,7 +47,7 @@ EMAIL_HOST=smtp.sendgrid.net
 EMAIL_PORT=587
 EMAIL_USER=apikey
 EMAIL_PASS=SG.xxxxx...
-EMAIL_FROM="H&B Technologies <noreply@hb-technologies.com>"
+EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
 ```
 
 ### 3. Deploy & Test
@@ -78,7 +78,7 @@ Email sent to htechnob@gmail.com (async, doesn't block response)
 | `EMAIL_PORT` | 587 | 587=TLS, 465=SSL |
 | `EMAIL_USER` | htechnob@gmail.com | SMTP login |
 | `EMAIL_PASS` | xxxx xxxx xxxx xxxx | App password for Gmail |
-| `EMAIL_FROM` | H&B Tech <email@domain.com> | Display name + email |
+| `EMAIL_FROM` | H&B Technologies <htechnob@gmail.com> | Display name + email |
 
 ## Troubleshooting
 
