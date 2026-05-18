@@ -21,6 +21,11 @@ function createEmailTransporter(port = env.EMAIL_PORT) {
 
   try {
     const numericPort = parseInt(port, 10);
+    const forceIpv4 =
+      process.env.EMAIL_FORCE_IPV4 !== undefined
+        ? String(process.env.EMAIL_FORCE_IPV4).toLowerCase() === "true"
+        : env.isProd;
+
     const transportOptions = {
       host: env.EMAIL_HOST,
       port: numericPort,
@@ -35,8 +40,8 @@ function createEmailTransporter(port = env.EMAIL_PORT) {
       },
     };
 
-    // Optionally force IPv4 DNS lookups when environment lacks IPv6
-    if (String(process.env.EMAIL_FORCE_IPV4 || "false").toLowerCase() === "true") {
+    // Force IPv4 by default in production; Render often lacks outbound IPv6.
+    if (forceIpv4) {
       transportOptions.lookup = (hostname, options, callback) => {
         return dns.lookup(hostname, { family: 4 }, callback);
       };
