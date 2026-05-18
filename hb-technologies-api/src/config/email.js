@@ -3,9 +3,11 @@ const { env } = require("./env");
 const { logEmailEvent, logApiError } = require("../utils/logger");
 const dns = require("dns");
 
+const DEFAULT_SMTP_TIMEOUT_MS = 10000;
+
 let emailTransporter = null;
 
-function createEmailTransporter() {
+function createEmailTransporter(port = env.EMAIL_PORT) {
   if (!env.EMAIL_HOST || !env.EMAIL_PORT || !env.EMAIL_USER || !env.EMAIL_PASS) {
     logEmailEvent("failed", env.EMAIL_USER || "unknown", {
       error: "Email configuration incomplete. Email notifications disabled.",
@@ -14,10 +16,15 @@ function createEmailTransporter() {
   }
 
   try {
+    const numericPort = parseInt(port, 10);
     const transportOptions = {
       host: env.EMAIL_HOST,
-      port: parseInt(env.EMAIL_PORT, 10),
-      secure: parseInt(env.EMAIL_PORT, 10) === 465,
+      port: numericPort,
+      secure: numericPort === 465,
+      requireTLS: numericPort !== 465,
+      connectionTimeout: Number(process.env.EMAIL_CONNECTION_TIMEOUT_MS || DEFAULT_SMTP_TIMEOUT_MS),
+      greetingTimeout: Number(process.env.EMAIL_GREETING_TIMEOUT_MS || DEFAULT_SMTP_TIMEOUT_MS),
+      socketTimeout: Number(process.env.EMAIL_SOCKET_TIMEOUT_MS || DEFAULT_SMTP_TIMEOUT_MS),
       auth: {
         user: env.EMAIL_USER,
         pass: env.EMAIL_PASS,
@@ -57,6 +64,17 @@ function getEmailTransporter() {
   return emailTransporter;
 }
 
+function buildFallbackPorts() {
+  const primaryPort = String(env.EMAIL_PORT || "587");
+  const fallbackPorts = [primaryPort];
+
+  if (primaryPort === "587") {
+    fallbackPorts.push("465");
+  }
+
+  return [...new Set(fallbackPorts)];
+}
+
 /**
  * Send consultation notification email
  * @param {Object} consultation - Consultation data
@@ -71,9 +89,9 @@ function getEmailTransporter() {
  * @returns {Promise<Object>} Send result
  */
 async function sendConsultationEmail(consultation, clientIp = null) {
-  const transporter = getEmailTransporter();
+  const baseTransporter = getEmailTransporter();
 
-  if (!transporter) {
+  if (!baseTransporter) {
     const errorMsg = "Email service not configured";
     logEmailEvent("failed", consultation.email, { error: errorMsg });
     return {
@@ -84,31 +102,67 @@ async function sendConsultationEmail(consultation, clientIp = null) {
 
   const htmlContent = buildConsultationEmailHtml(consultation, clientIp);
   const textContent = buildConsultationEmailText(consultation, clientIp);
+  const attemptedPorts = buildFallbackPorts();
+  let lastError = null;
 
-  try {
-    const result = await transporter.sendMail({
-      from: env.EMAIL_FROM || env.EMAIL_USER,
-      to: "htechnob@gmail.com",
-      replyTo: consultation.email,
-      subject: `New Consultation Request – H&B Technologies`,
-      html: htmlContent,
-      text: textContent,
-    });
+  for (const port of attemptedPorts) {
+    const transporter = port === String(env.EMAIL_PORT) ? baseTransporter : createEmailTransporter(port);
 
-    logEmailEvent("sent", consultation.email, { messageId: result.messageId });
+    if (!transporter) {
+      continue;
+    }
 
-    return {
-      sent: true,
-      messageId: result.messageId,
-    };
-  } catch (error) {
-    logEmailEvent("failed", consultation.email, { error: error.message });
-    logApiError("email.sendConsultationEmail", error, { to: "htechnob@gmail.com", from: env.EMAIL_USER });
-    return {
-      sent: false,
-      error: error.message,
-    };
+    try {
+      const result = await transporter.sendMail({
+        from: env.EMAIL_FROM || env.EMAIL_USER,
+        to: "htechnob@gmail.com",
+        replyTo: consultation.email,
+        subject: `New Consultation Request – H&B Technologies`,
+        html: htmlContent,
+        text: textContent,
+      });
+
+      logEmailEvent("sent", consultation.email, {
+        messageId: result.messageId,
+        smtpPort: port,
+      });
+
+      return {
+        sent: true,
+        messageId: result.messageId,
+      };
+    } catch (error) {
+      lastError = error;
+      logEmailEvent("failed", consultation.email, {
+        error: error.message,
+        smtpPort: port,
+      });
+
+      // Retry once on the alternate SMTP port when the first connection times out or fails to connect.
+      const retryable =
+        /timeout|ETIMEDOUT|ENETUNREACH|ECONNRESET|ECONNREFUSED/i.test(error.message || "");
+
+      if (retryable && port !== "465" && attemptedPorts.includes("465")) {
+        continue;
+      }
+
+      // If the error was non-retryable, no point trying more ports.
+      if (!retryable) {
+        break;
+      }
+    }
   }
+
+  logApiError("email.sendConsultationEmail", lastError || new Error("Unknown email failure"), {
+    to: "htechnob@gmail.com",
+    from: env.EMAIL_USER,
+    attemptedPorts,
+  });
+
+  return {
+    sent: false,
+    error: lastError ? lastError.message : "Email send failed",
+  };
 }
 
 function buildConsultationEmailHtml(consultation, clientIp) {

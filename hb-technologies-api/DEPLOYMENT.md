@@ -372,6 +372,8 @@ If the email fails, the consultation **remains stored** in the database and is f
 - ⚠️ Never commit EMAIL_PASS to git
 - ✅ Rotate App Password every 3 months
 - ✅ Create separate app password for production
+- ✅ If the host cannot reach IPv6 SMTP endpoints, set `EMAIL_FORCE_IPV4=true`
+- ✅ If SMTP responses are slow, tune `EMAIL_CONNECTION_TIMEOUT_MS`, `EMAIL_GREETING_TIMEOUT_MS`, and `EMAIL_SOCKET_TIMEOUT_MS`
 
 #### 2. SendGrid (Recommended for Production)
 
