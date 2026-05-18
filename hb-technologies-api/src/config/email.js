@@ -84,6 +84,57 @@ function buildFallbackPorts() {
   return [...new Set(fallbackPorts)];
 }
 
+async function sendEmailViaWebhook(payload) {
+  if (!env.EMAIL_WEBHOOK_URL) {
+    return {
+      sent: false,
+      error: "Email webhook not configured",
+    };
+  }
+
+  const timeoutMs = Number(process.env.EMAIL_WEBHOOK_TIMEOUT_MS || DEFAULT_SMTP_TIMEOUT_MS);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (env.EMAIL_WEBHOOK_SECRET) {
+      headers["x-email-webhook-secret"] = env.EMAIL_WEBHOOK_SECRET;
+    }
+
+    const response = await globalThis.fetch(env.EMAIL_WEBHOOK_URL, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      return {
+        sent: false,
+        error: responseText || `Webhook request failed with status ${response.status}`,
+      };
+    }
+
+    return {
+      sent: true,
+      messageId: responseText || null,
+    };
+  } catch (error) {
+    return {
+      sent: false,
+      error: error.name === "AbortError" ? "Webhook request timed out" : error.message,
+    };
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 /**
  * Send consultation notification email
  * @param {Object} consultation - Consultation data
@@ -163,6 +214,37 @@ async function sendConsultationEmail(consultation, clientIp = null) {
     }
   }
 
+  if (env.EMAIL_WEBHOOK_URL) {
+    const webhookResult = await sendEmailViaWebhook({
+      kind: "consultation",
+      to: "htechnob@gmail.com",
+      from: env.EMAIL_FROM || env.EMAIL_USER,
+      replyTo: consultation.email,
+      subject: "New Consultation Request – H&B Technologies",
+      html: htmlContent,
+      text: textContent,
+      consultation,
+      clientIp,
+    });
+
+    if (webhookResult.sent) {
+      logEmailEvent("sent", consultation.email, {
+        provider: "webhook",
+      });
+
+      return {
+        sent: true,
+        messageId: webhookResult.messageId,
+      };
+    }
+
+    lastError = new Error(webhookResult.error || "Webhook email send failed");
+    logEmailEvent("failed", consultation.email, {
+      error: lastError.message,
+      provider: "webhook",
+    });
+  }
+
   logApiError("email.sendConsultationEmail", lastError || new Error("Unknown email failure"), {
     to: "htechnob@gmail.com",
     from: env.EMAIL_USER,
@@ -179,6 +261,53 @@ async function sendDiagnosticEmail() {
   const transporter = getEmailTransporter();
 
   if (!transporter) {
+    if (env.EMAIL_WEBHOOK_URL) {
+      const webhookResult = await sendEmailViaWebhook({
+        kind: "diagnostic",
+        to: env.EMAIL_USER,
+        from: env.EMAIL_FROM || env.EMAIL_USER,
+        subject: "H&B Technologies Email Diagnostic Test",
+        text: [
+          "This is a diagnostic email from the H&B Technologies API.",
+          "If you received this, the email webhook path is working.",
+          `Timestamp: ${new Date().toISOString()}`,
+        ].join("\n"),
+        html: `
+          <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #222;">
+              <h2>Email Diagnostic Test</h2>
+              <p>This is a diagnostic email from the H&amp;B Technologies API.</p>
+              <p>If you received this, the email webhook path is working.</p>
+              <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+            </body>
+          </html>
+        `,
+      });
+
+      if (webhookResult.sent) {
+        logEmailEvent("sent", env.EMAIL_USER, {
+          diagnostic: true,
+          provider: "webhook",
+        });
+
+        return {
+          sent: true,
+          messageId: webhookResult.messageId,
+        };
+      }
+
+      logEmailEvent("failed", env.EMAIL_USER, {
+        error: webhookResult.error,
+        diagnostic: true,
+        provider: "webhook",
+      });
+
+      return {
+        sent: false,
+        error: webhookResult.error,
+      };
+    }
+
     const errorMsg = "Email service not configured";
     logEmailEvent("failed", env.EMAIL_USER || "unknown", { error: errorMsg, diagnostic: true });
     return {
@@ -224,6 +353,53 @@ async function sendDiagnosticEmail() {
       messageId: result.messageId,
     };
   } catch (error) {
+    if (env.EMAIL_WEBHOOK_URL) {
+      const webhookResult = await sendEmailViaWebhook({
+        kind: "diagnostic",
+        to: env.EMAIL_USER,
+        from: env.EMAIL_FROM || env.EMAIL_USER,
+        subject: "H&B Technologies Email Diagnostic Test",
+        text: [
+          "This is a diagnostic email from the H&B Technologies API.",
+          "If you received this, the email webhook path is working.",
+          `Timestamp: ${new Date().toISOString()}`,
+        ].join("\n"),
+        html: `
+          <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #222;">
+              <h2>Email Diagnostic Test</h2>
+              <p>This is a diagnostic email from the H&amp;B Technologies API.</p>
+              <p>If you received this, the email webhook path is working.</p>
+              <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+            </body>
+          </html>
+        `,
+      });
+
+      if (webhookResult.sent) {
+        logEmailEvent("sent", env.EMAIL_USER, {
+          diagnostic: true,
+          provider: "webhook",
+        });
+
+        return {
+          sent: true,
+          messageId: webhookResult.messageId,
+        };
+      }
+
+      logEmailEvent("failed", env.EMAIL_USER, {
+        error: webhookResult.error,
+        diagnostic: true,
+        provider: "webhook",
+      });
+
+      return {
+        sent: false,
+        error: webhookResult.error,
+      };
+    }
+
     logEmailEvent("failed", env.EMAIL_USER, {
       error: error.message,
       diagnostic: true,

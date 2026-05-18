@@ -401,6 +401,17 @@ If the request succeeds, the API returns a JSON response and the Gmail inbox sho
 
 Keep the Gmail sender address in Render and avoid provider-specific sender domains.
 
+### If SMTP times out on Render
+
+If Render keeps returning `Connection timeout`, the host may be blocking outbound SMTP. In that case, configure an HTTPS relay instead:
+
+```bash
+EMAIL_WEBHOOK_URL=https://script.google.com/macros/s/your-script-id/exec
+EMAIL_WEBHOOK_SECRET=some-long-random-secret
+```
+
+The API will attempt SMTP first and then fall back to the relay when it is available.
+
 ```bash
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587

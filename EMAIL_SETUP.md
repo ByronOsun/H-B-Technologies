@@ -14,6 +14,8 @@ EMAIL_PORT=587
 EMAIL_USER=htechnob@gmail.com
 EMAIL_PASS=xxxx xxxx xxxx xxxx
 EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
+EMAIL_WEBHOOK_URL=
+EMAIL_WEBHOOK_SECRET=
 ```
 
 ### 3. Test Locally
@@ -46,6 +48,19 @@ EMAIL_PASS=your-gmail-app-password
 EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
 ```
 
+## Production Option: HTTPS Email Relay
+
+If Render times out on SMTP, use an HTTPS relay endpoint instead of direct SMTP. A simple option is a Google Apps Script web app that receives a JSON payload and sends the Gmail message server-side.
+
+Set these environment variables in Render:
+
+```bash
+EMAIL_WEBHOOK_URL=https://script.google.com/macros/s/your-script-id/exec
+EMAIL_WEBHOOK_SECRET=some-long-random-secret
+```
+
+The backend will first try SMTP, then fall back to the webhook automatically when configured.
+
 Push changes → Render auto-deploys → Send test form submission
 
 ## Email Workflow
@@ -74,6 +89,8 @@ Email sent to htechnob@gmail.com (async, doesn't block response)
 | `EMAIL_USER` | htechnob@gmail.com | SMTP login |
 | `EMAIL_PASS` | xxxx xxxx xxxx xxxx | App password for Gmail |
 | `EMAIL_FROM` | H&B Technologies <htechnob@gmail.com> | Display name + email |
+| `EMAIL_WEBHOOK_URL` | https://script.google.com/macros/s/.../exec | HTTPS relay fallback |
+| `EMAIL_WEBHOOK_SECRET` | some-long-random-secret | Shared secret for the relay |
 
 ## Troubleshooting
 
@@ -82,9 +99,10 @@ Email sent to htechnob@gmail.com (async, doesn't block response)
 - Check spam folder
 - Verify EMAIL_PASS is correct (use App Password, not Gmail password)
 
-**Port blocked?**
-- Most hosts allow port 587 (TLS)
-- Contact provider if blocked
+**Port blocked or timing out?**
+- Some hosts block outbound SMTP or make it unreliable
+- Set `EMAIL_FORCE_IPV4=true` first
+- If SMTP still times out, configure `EMAIL_WEBHOOK_URL` and `EMAIL_WEBHOOK_SECRET`
 
 **Rate limiting?**
 - Gmail: 100 emails/min per account
@@ -106,7 +124,8 @@ Emails include:
 
 | Provider | Price | Setup Time | Notes |
 |----------|-------|-----------|-------|
-| Gmail | Free | 5 min | Great for dev and production, no domain needed |
+| Gmail SMTP | Free | 5 min | Works when outbound SMTP is allowed |
+| HTTPS relay (Google Apps Script) | Free | 15-30 min | Works over HTTPS and does not need a domain |
 
 ## For More Details
 
