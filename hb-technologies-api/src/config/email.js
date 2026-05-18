@@ -1,23 +1,40 @@
 const nodemailer = require("nodemailer");
 const { env } = require("./env");
+const { logEmailEvent, logApiError } = require("../utils/logger");
 
 let emailTransporter = null;
 
 function createEmailTransporter() {
   if (!env.EMAIL_HOST || !env.EMAIL_PORT || !env.EMAIL_USER || !env.EMAIL_PASS) {
-    console.warn("Email configuration incomplete. Email notifications disabled.");
+    logEmailEvent("failed", env.EMAIL_USER || "unknown", {
+      error: "Email configuration incomplete. Email notifications disabled.",
+    });
     return null;
   }
 
-  return nodemailer.createTransport({
-    host: env.EMAIL_HOST,
-    port: parseInt(env.EMAIL_PORT, 10),
-    secure: parseInt(env.EMAIL_PORT, 10) === 465, // true for 465, false for other ports
-    auth: {
-      user: env.EMAIL_USER,
-      pass: env.EMAIL_PASS,
-    },
-  });
+  try {
+    const transport = nodemailer.createTransport({
+      host: env.EMAIL_HOST,
+      port: parseInt(env.EMAIL_PORT, 10),
+      secure: parseInt(env.EMAIL_PORT, 10) === 465,
+      auth: {
+        user: env.EMAIL_USER,
+        pass: env.EMAIL_PASS,
+      },
+    });
+
+    // Verify transporter connectivity (non-blocking, but useful for diagnostics)
+    transport.verify().then(() => {
+      logEmailEvent("sent", env.EMAIL_USER, { info: "SMTP transporter verified" });
+    }).catch((err) => {
+      logEmailEvent("failed", env.EMAIL_USER, { error: `Transport verify failed: ${err.message}` });
+    });
+
+    return transport;
+  } catch (err) {
+    logApiError("email.createTransporter", err, { host: env.EMAIL_HOST });
+    return null;
+  }
 }
 
 function getEmailTransporter() {
@@ -44,9 +61,11 @@ async function sendConsultationEmail(consultation, clientIp = null) {
   const transporter = getEmailTransporter();
 
   if (!transporter) {
+    const errorMsg = "Email service not configured";
+    logEmailEvent("failed", consultation.email, { error: errorMsg });
     return {
       sent: false,
-      error: "Email service not configured",
+      error: errorMsg,
     };
   }
 
@@ -55,7 +74,7 @@ async function sendConsultationEmail(consultation, clientIp = null) {
 
   try {
     const result = await transporter.sendMail({
-      from: env.EMAIL_USER,
+      from: env.EMAIL_FROM || env.EMAIL_USER,
       to: "htechnob@gmail.com",
       replyTo: consultation.email,
       subject: `New Consultation Request – H&B Technologies`,
@@ -63,12 +82,15 @@ async function sendConsultationEmail(consultation, clientIp = null) {
       text: textContent,
     });
 
+    logEmailEvent("sent", consultation.email, { messageId: result.messageId });
+
     return {
       sent: true,
       messageId: result.messageId,
     };
   } catch (error) {
-    console.error("Failed to send consultation email:", error.message);
+    logEmailEvent("failed", consultation.email, { error: error.message });
+    logApiError("email.sendConsultationEmail", error, { to: "htechnob@gmail.com", from: env.EMAIL_USER });
     return {
       sent: false,
       error: error.message,
