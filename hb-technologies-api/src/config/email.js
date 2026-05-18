@@ -7,8 +7,53 @@ const DEFAULT_SMTP_TIMEOUT_MS = 10000;
 
 let emailTransporter = null;
 
+function hasSendGridConfig() {
+  return Boolean(env.SENDGRID_API_KEY);
+}
+
+function hasSmtpConfig() {
+  return Boolean(env.EMAIL_HOST && env.EMAIL_PORT && env.EMAIL_USER && env.EMAIL_PASS);
+}
+
+async function sendViaSendGrid({ to, subject, html, text, from, replyTo }) {
+  if (!hasSendGridConfig()) {
+    return {
+      sent: false,
+      error: "SendGrid is not configured",
+    };
+  }
+
+  const response = await globalThis.fetch("https://api.sendgrid.com/v3/mail/send", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.SENDGRID_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      personalizations: [{ to: [{ email: to }], subject }],
+      from: { email: from || env.SENDGRID_FROM || env.EMAIL_FROM || env.EMAIL_USER },
+      reply_to: replyTo ? { email: replyTo } : undefined,
+      content: [
+        { type: "text/plain", value: text },
+        { type: "text/html", value: html },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`SendGrid API error (${response.status}): ${body}`);
+  }
+
+  return {
+    sent: true,
+    messageId: response.headers.get("x-message-id") || null,
+    provider: "sendgrid",
+  };
+}
+
 function createEmailTransporter(port = env.EMAIL_PORT) {
-  if (!env.EMAIL_HOST || !env.EMAIL_PORT || !env.EMAIL_USER || !env.EMAIL_PASS) {
+  if (!hasSmtpConfig()) {
     logEmailEvent("failed", env.EMAIL_USER || "unknown", {
       error: "Email configuration incomplete. Email notifications disabled.",
     });
@@ -89,6 +134,45 @@ function buildFallbackPorts() {
  * @returns {Promise<Object>} Send result
  */
 async function sendConsultationEmail(consultation, clientIp = null) {
+  const htmlContent = buildConsultationEmailHtml(consultation, clientIp);
+  const textContent = buildConsultationEmailText(consultation, clientIp);
+
+  // Prefer HTTPS-based SendGrid delivery when configured because Render can block SMTP.
+  if (String(env.EMAIL_PROVIDER || "").toLowerCase() === "sendgrid" || hasSendGridConfig()) {
+    try {
+      const result = await sendViaSendGrid({
+        to: "htechnob@gmail.com",
+        subject: "New Consultation Request – H&B Technologies",
+        html: htmlContent,
+        text: textContent,
+        from: env.EMAIL_FROM || env.SENDGRID_FROM || env.EMAIL_USER,
+        replyTo: consultation.email,
+      });
+
+      logEmailEvent("sent", consultation.email, {
+        messageId: result.messageId,
+        provider: "sendgrid",
+      });
+
+      return {
+        sent: true,
+        messageId: result.messageId,
+      };
+    } catch (error) {
+      logEmailEvent("failed", consultation.email, {
+        error: error.message,
+        provider: "sendgrid",
+      });
+      logApiError("email.sendConsultationEmail", error, {
+        to: "htechnob@gmail.com",
+        from: env.EMAIL_FROM || env.SENDGRID_FROM || env.EMAIL_USER,
+        provider: "sendgrid",
+      });
+
+      // If SendGrid is configured but fails, we still allow the SMTP fallback below if available.
+    }
+  }
+
   const baseTransporter = getEmailTransporter();
 
   if (!baseTransporter) {
@@ -100,8 +184,6 @@ async function sendConsultationEmail(consultation, clientIp = null) {
     };
   }
 
-  const htmlContent = buildConsultationEmailHtml(consultation, clientIp);
-  const textContent = buildConsultationEmailText(consultation, clientIp);
   const attemptedPorts = buildFallbackPorts();
   let lastError = null;
 

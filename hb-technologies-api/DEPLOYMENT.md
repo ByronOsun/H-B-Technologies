@@ -375,6 +375,21 @@ If the email fails, the consultation **remains stored** in the database and is f
 - ✅ If the host cannot reach IPv6 SMTP endpoints, set `EMAIL_FORCE_IPV4=true`
 - ✅ If SMTP responses are slow, tune `EMAIL_CONNECTION_TIMEOUT_MS`, `EMAIL_GREETING_TIMEOUT_MS`, and `EMAIL_SOCKET_TIMEOUT_MS`
 
+### Recommended for Render: SendGrid API Mode
+
+Render can block or time out outbound SMTP. If Gmail SMTP still fails, switch to the HTTPS-based SendGrid path:
+
+```bash
+EMAIL_PROVIDER=sendgrid
+SENDGRID_API_KEY=SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SENDGRID_FROM="H&B Technologies <noreply@hb-technologies.com>"
+```
+
+**Why this helps:**
+- Uses HTTPS instead of SMTP sockets
+- Avoids `Connection timeout` errors from blocked outbound SMTP
+- Keeps the consultation flow non-blocking and reliable on PaaS hosts
+
 #### 2. SendGrid (Recommended for Production)
 
 **Setup Instructions:**
