@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const { env } = require("./env");
 const { logEmailEvent, logApiError } = require("../utils/logger");
+const dns = require("dns");
 
 let emailTransporter = null;
 
@@ -13,7 +14,7 @@ function createEmailTransporter() {
   }
 
   try {
-    const transport = nodemailer.createTransport({
+    const transportOptions = {
       host: env.EMAIL_HOST,
       port: parseInt(env.EMAIL_PORT, 10),
       secure: parseInt(env.EMAIL_PORT, 10) === 465,
@@ -21,14 +22,26 @@ function createEmailTransporter() {
         user: env.EMAIL_USER,
         pass: env.EMAIL_PASS,
       },
-    });
+    };
+
+    // Optionally force IPv4 DNS lookups when environment lacks IPv6
+    if (String(process.env.EMAIL_FORCE_IPV4 || "false").toLowerCase() === "true") {
+      transportOptions.lookup = (hostname, options, callback) => {
+        return dns.lookup(hostname, { family: 4 }, callback);
+      };
+    }
+
+    const transport = nodemailer.createTransport(transportOptions);
 
     // Verify transporter connectivity (non-blocking, but useful for diagnostics)
-    transport.verify().then(() => {
-      logEmailEvent("sent", env.EMAIL_USER, { info: "SMTP transporter verified" });
-    }).catch((err) => {
-      logEmailEvent("failed", env.EMAIL_USER, { error: `Transport verify failed: ${err.message}` });
-    });
+    transport
+      .verify()
+      .then(() => {
+        logEmailEvent("sent", env.EMAIL_USER, { info: "SMTP transporter verified" });
+      })
+      .catch((err) => {
+        logEmailEvent("failed", env.EMAIL_USER, { error: `Transport verify failed: ${err.message}` });
+      });
 
     return transport;
   } catch (err) {
