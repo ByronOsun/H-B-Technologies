@@ -375,65 +375,22 @@ If the email fails, the consultation **remains stored** in the database and is f
 - ✅ If the host cannot reach IPv6 SMTP endpoints, set `EMAIL_FORCE_IPV4=true`
 - ✅ If SMTP responses are slow, tune `EMAIL_CONNECTION_TIMEOUT_MS`, `EMAIL_GREETING_TIMEOUT_MS`, and `EMAIL_SOCKET_TIMEOUT_MS`
 
-### Recommended for Render: SendGrid API Mode
+**Why this works without a domain:**
+- Uses a Gmail sender address you already own
+- No custom domain verification needed
+- Keeps the consultation flow simple for Render deployments
 
-Render can block or time out outbound SMTP. If Gmail SMTP still fails, switch to the HTTPS-based SendGrid path:
+#### 2. No custom domain required
+
+Keep the Gmail sender address in Render and avoid provider-specific sender domains.
 
 ```bash
-EMAIL_PROVIDER=sendgrid
-SENDGRID_API_KEY=SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-SENDGRID_FROM="H&B Technologies <htechnob@gmail.com>"
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=htechnob@gmail.com
+EMAIL_PASS=your-gmail-app-password
+EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
 ```
-
-**Why this helps:**
-- Uses HTTPS instead of SMTP sockets
-- Avoids `Connection timeout` errors from blocked outbound SMTP
-- Keeps the consultation flow non-blocking and reliable on PaaS hosts
-
-#### 2. SendGrid (Recommended for Production)
-
-**Setup Instructions:**
-
-1. Create SendGrid account at [https://sendgrid.com](https://sendgrid.com)
-2. Verify sender email address (use htechnob@gmail.com)
-3. Generate API key from Settings → API Keys
-4. Configure environment:
-   ```bash
-   EMAIL_HOST=smtp.sendgrid.net
-   EMAIL_PORT=587
-   EMAIL_USER=apikey
-   EMAIL_PASS=SG.xxxxxxxxxxxxxxxxxxxxxxxxxxx  # API key starts with SG.
-   EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
-   ```
-
-**Advantages:**
-- ✅ 100,000 free emails/month
-- ✅ Webhook deliverability tracking
-- ✅ Built-in spam monitoring
-- ✅ Easy IP reputation management
-- ✅ Advanced analytics
-
-#### 3. Brevo (Sendinblue) - EU-Friendly
-
-**Setup Instructions:**
-
-1. Create Brevo account at [https://www.brevo.com](https://www.brevo.com)
-2. Verify sender email address
-3. Generate SMTP credentials from Settings → SMTP & API
-4. Configure environment:
-   ```bash
-   EMAIL_HOST=smtp-relay.brevo.com
-   EMAIL_PORT=587
-   EMAIL_USER=your-brevo-email@example.com
-   EMAIL_PASS=xxxxxxxxxxxxxxxxxxx  # SMTP password (not API key)
-   EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
-   ```
-
-**Advantages:**
-- ✅ Free tier: 300 emails/day
-- ✅ EU GDPR compliant
-- ✅ No monthly sending limits on free tier
-- ✅ Good email deliverability
 
 #### 4. AWS SES (Enterprise)
 

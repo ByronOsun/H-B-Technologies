@@ -34,23 +34,18 @@ curl -X POST http://localhost:4000/api/consultation \
   }'
 ```
 
-## For Production (Use SendGrid)
+## For Production (Still Gmail Only)
 
-### 1. Create SendGrid Account
-1. Sign up at [sendgrid.com](https://sendgrid.com)
-2. Verify htechnob@gmail.com as sender
-3. Generate API key (starts with `SG.`)
+Use the same Gmail account in production. No custom domain or additional email provider is needed.
 
-### 2. Add to Environment (Render)
 ```
-EMAIL_HOST=smtp.sendgrid.net
+EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_USER=apikey
-EMAIL_PASS=SG.xxxxx...
+EMAIL_USER=htechnob@gmail.com
+EMAIL_PASS=your-gmail-app-password
 EMAIL_FROM="H&B Technologies <htechnob@gmail.com>"
 ```
 
-### 3. Deploy & Test
 Push changes → Render auto-deploys → Send test form submission
 
 ## Email Workflow
@@ -111,10 +106,7 @@ Emails include:
 
 | Provider | Price | Setup Time | Notes |
 |----------|-------|-----------|-------|
-| Gmail | Free | 5 min | Great for dev, limit 100/min |
-| SendGrid | Free 100k/mo | 10 min | Recommended for production |
-| Brevo | Free 300/day | 10 min | EU-friendly, GDPR compliant |
-| AWS SES | $0.10/1k | 15 min | Requires Amazon account |
+| Gmail | Free | 5 min | Great for dev and production, no domain needed |
 
 ## For More Details
 
