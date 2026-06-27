@@ -48,6 +48,28 @@
   object-position: center;
 }
 
+/* YouTube full-bleed background */
+.ytWrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ytFrame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Cover any viewport by keeping 16:9 ratio and being large enough */
+  width: 177.78vh;   /* 16/9 × 100vh */
+  height: 100vh;
+  min-width: 100%;
+  min-height: 56.25vw; /* 9/16 × 100vw */
+  border: none;
+  pointer-events: none;
+}
+
 .overlay {
   position: absolute;
   inset: 0;

@@ -6,7 +6,7 @@ import styles from "./HeroSection.module.css";
 
 export interface HeroSlide {
   id: string;
-  type: "image" | "video";
+  type: "image" | "video" | "youtube";
   mediaUrl: string;
   poster?: string;
   overlayOpacity?: number;
@@ -73,7 +73,18 @@ export default function HeroSection({ config }: Props) {
     <section className={styles.hero} aria-label="Hero">
       {/* ── Media background ── */}
       <div className={`${styles.media} ${animating ? styles.mediaOut : styles.mediaIn}`}>
-        {slide.type === "video" ? (
+        {slide.type === "youtube" ? (
+          <div className={styles.ytWrap}>
+            <iframe
+              key={slide.id}
+              className={styles.ytFrame}
+              src={`https://www.youtube-nocookie.com/embed/${slide.mediaUrl}?autoplay=1&mute=1&loop=1&playlist=${slide.mediaUrl}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3`}
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              title="Hero background video"
+            />
+          </div>
+        ) : slide.type === "video" ? (
           <video
             ref={videoRef}
             className={styles.video}
