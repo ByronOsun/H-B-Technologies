@@ -16,6 +16,7 @@ import type {
 type AdminPage = "home" | "services" | "service-detail" | "about" | "contact";
 import type { HeroSlide } from "@/components/HeroSection";
 import { EditableText, EditableImage, SectionShell } from "./EditorComponents";
+import SupabaseUploader from "@/components/SupabaseUploader";
 import pageStyles from "../page.module.css";
 import heroStyles from "@/components/HeroSection.module.css";
 import s from "./admin.module.css";
@@ -327,13 +328,25 @@ export default function AdminPage() {
         >
           {/* Background image / video */}
           {slide && (
-            <EditableImage
-              src={slide.mediaUrl}
-              alt="Hero background"
-              onChange={url => patchSlide(activeSlide, { mediaUrl: url })}
-              onTypeChange={type => patchSlide(activeSlide, { type })}
-              style={{ position: "absolute", inset: 0, borderRadius: 0 }}
-            />
+            <>
+              <EditableImage
+                src={slide.mediaUrl}
+                alt="Hero background"
+                onChange={url => patchSlide(activeSlide, { mediaUrl: url })}
+                onTypeChange={type => patchSlide(activeSlide, { type })}
+                style={{ position: "absolute", inset: 0, borderRadius: 0 }}
+              />
+              {/* Supabase upload panel — floats bottom-left in edit mode */}
+              <div style={{ position: "absolute", bottom: 12, left: 12, zIndex: 20, width: 300, background: "rgba(8,1,2,.88)", borderRadius: 10, padding: 12, border: "1px solid rgba(200,16,46,.3)", backdropFilter: "blur(12px)" }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(200,16,46,.9)", textTransform: "uppercase", letterSpacing: ".1em", margin: "0 0 8px" }}>Splash background</p>
+                <SupabaseUploader
+                  folder="hero"
+                  currentUrl={slide.mediaUrl}
+                  label="Hero slide"
+                  onUploaded={url => patchSlide(activeSlide, { mediaUrl: url })}
+                />
+              </div>
+            </>
           )}
           <div className={heroStyles.overlay} />
           <div className={heroStyles.blob1} />
@@ -1038,11 +1051,16 @@ export default function AdminPage() {
                       >
                         <article className={`card ${pageStyles.teamCard}`}>
                           <div className={pageStyles.teamPhotoWrap}>
-                            <EditableImage
-                              src={m.photo}
-                              alt={m.name}
-                              onChange={v => patchTeamMember(i, { photo: v })}
-                              style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+                            {m.photo
+                              ? <img src={m.photo} alt={m.name} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
+                              : <div className={pageStyles.teamPhotoPlaceholder}>{m.name.charAt(0)}</div>}
+                          </div>
+                          <div style={{ marginTop: 8 }}>
+                            <SupabaseUploader
+                              folder="team"
+                              currentUrl={m.photo}
+                              label={m.name}
+                              onUploaded={v => patchTeamMember(i, { photo: v })}
                             />
                           </div>
                           <EditableText
