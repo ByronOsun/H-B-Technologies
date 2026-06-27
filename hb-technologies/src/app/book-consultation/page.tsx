@@ -6,7 +6,7 @@ import marketing from "@/styles/marketing.module.css";
 export const metadata: Metadata = {
   title: "Book Consultation",
   description:
-    "Book a consultation with H&B Technologies for secure-by-design engineering and delivery planning.",
+    "Book a consultation with VIZIA Technologies for secure-by-design engineering and delivery planning.",
   alternates: { canonical: "/book-consultation" },
 };
 

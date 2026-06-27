@@ -1,0 +1,289 @@
+/* ─── Inline editor primitives ──────────────────────────────────── */
+
+/* EditableText */
+
+.editableText {
+  cursor: pointer;
+  border-radius: 3px;
+  transition: outline .15s, background .15s;
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+  position: relative;
+  min-width: 20px;
+  display: inline-block;
+}
+
+.editableText:hover {
+  outline-color: rgba(200, 16, 46, 0.45);
+  background: rgba(200, 16, 46, 0.04);
+}
+
+.editableText.editing {
+  cursor: text;
+  outline-color: var(--red) !important;
+  background: rgba(200, 16, 46, 0.07) !important;
+  outline-offset: 4px;
+}
+
+.placeholder {
+  color: var(--color-subtle);
+  font-style: italic;
+  pointer-events: none;
+}
+
+/* EditableImage */
+
+.editableImgWrap {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: inherit;
+}
+
+.editableImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter .2s;
+}
+
+.editableImgWrap:hover .editableImg {
+  filter: brightness(.75);
+}
+
+.imgOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .2s;
+  background: rgba(0,0,0,.25);
+}
+
+.editableImgWrap:hover .imgOverlay {
+  opacity: 1;
+}
+
+.imgOverlayBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: rgba(200,16,46,.85);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.imgDialog {
+  position: absolute;
+  inset: 0;
+  background: rgba(8,8,8,.92);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  z-index: 10;
+}
+
+.imgDialogLabel {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--color-muted);
+}
+
+.imgDialogInput {
+  width: 100%;
+  max-width: 520px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--red-border);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  font-family: var(--font-sans);
+}
+
+.imgDialogInput:focus { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-glow); }
+
+.imgDialogPreview {
+  max-width: 240px;
+  max-height: 120px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.imgDialogActions {
+  display: flex;
+  gap: 10px;
+}
+
+.applyBtn {
+  padding: 9px 22px;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background .15s;
+}
+.applyBtn:hover { background: var(--red-light); }
+
+.cancelBtn {
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background .15s, color .15s;
+}
+.cancelBtn:hover { background: rgba(255,255,255,.14); color: #fff; }
+
+/* EditableList */
+
+.editableList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.editableListItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.editableListText {
+  flex: 1;
+  font-size: 14px;
+}
+
+.removeItemBtn {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(200,16,46,.3);
+  background: rgba(200,16,46,.08);
+  color: var(--red);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+  opacity: 0;
+}
+
+.editableListItem:hover .removeItemBtn { opacity: 1; }
+.removeItemBtn:hover { background: rgba(200,16,46,.25); }
+
+.addItemBtn {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px dashed rgba(200,16,46,.35);
+  background: transparent;
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background .15s, border-color .15s;
+  margin-top: 4px;
+}
+.addItemBtn:hover { background: rgba(200,16,46,.08); border-style: solid; }
+
+/* SectionShell */
+
+.sectionShell {
+  position: relative;
+}
+
+.sectionShellLabel {
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .10em;
+  color: var(--red);
+  background: var(--color-bg);
+  padding: 0 6px;
+  border-radius: 3px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sectionRemoveBtn {
+  pointer-events: all;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(200,16,46,.4);
+  background: rgba(200,16,46,.12);
+  color: var(--red);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+}
+.sectionRemoveBtn:hover { background: rgba(200,16,46,.3); }
+
+.sectionShell:hover .sectionShellLabel {
+  opacity: 1;
+}
+
+.sectionShell:hover {
+  outline: 1px dashed rgba(200,16,46,.25);
+  outline-offset: 8px;
+  border-radius: 4px;
+}
+
+.sectionAddBtn {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-3);
+  padding: 10px;
+  border: 1px dashed rgba(200,16,46,.35);
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background .15s, border-color .15s;
+}
+.sectionAddBtn:hover { background: rgba(200,16,46,.06); border-style: solid; }

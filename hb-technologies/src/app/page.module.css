@@ -1,67 +1,315 @@
-.heroSubcopy {
-  margin-top: var(--space-2);
-  font-size: 18px;
+.page {
+  /* The hero is full-screen; we don't add top padding here */
 }
 
-.heroMission {
-  margin-top: var(--space-2);
-  font-size: 16px;
+/* ─── Stats Bar ──────────────────────────────────────────────────── */
+
+.statsBar {
+  background: var(--color-surface);
+  border-top: 1px solid var(--red-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-5) 0;
 }
 
-.heroCtas {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  margin-top: var(--space-3);
-}
-
-.grid3 {
+.statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--space-3);
-  margin-top: var(--space-3);
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-2);
+}
+
+.statValue {
+  font-family: var(--font-heading);
+  font-size: clamp(36px, 4.5vw, 52px);
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+
+.statLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* ─── Section Typography ─────────────────────────────────────────── */
+
+.sectionHeading {
+  margin: var(--space-2) 0 0 0;
 }
 
 .sectionIntro {
-  margin-top: var(--space-1);
-  font-size: 16px;
+  margin-top: var(--space-2);
+  font-size: 18px;
+  max-width: 60ch;
 }
 
-.stackGrid {
+/* ─── Shared Card Styles ─────────────────────────────────────────── */
+
+.cardTitle {
+  font-size: clamp(17px, 1.8vw, 20px);
+  font-weight: 700;
+  margin: var(--space-2) 0 0 0;
+  line-height: 1.2;
+}
+
+.cardDesc {
+  margin-top: var(--space-1);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ─── Grids ──────────────────────────────────────────────────────── */
+
+.grid3 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: var(--space-3);
-  margin-top: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.grid5 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+/* ─── "What we deliver" cards ────────────────────────────────────── */
+
+.deliverCard {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4);
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.deliverCard:hover {
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.deliverIcon {
+  font-size: 36px;
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.cardArrow {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .02em;
+  transition: gap .2s;
+}
+
+.deliverCard:hover .cardArrow {
+  color: var(--red-light);
+}
+
+/* ─── Differentiator cards ───────────────────────────────────────── */
+
+.diffCard {
+  padding: var(--space-3) var(--space-3) var(--space-4);
+}
+
+.diffIcon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+/* ─── Industry cards ─────────────────────────────────────────────── */
+
+.industryCard {
+  padding: var(--space-3) var(--space-3) var(--space-4);
+}
+
+.industryIcon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+/* ─── Stack section ──────────────────────────────────────────────── */
+
+.stackGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.stackCard {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+
+.stackTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--space-3) 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--red-border);
 }
 
 .stackList {
-  margin-top: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
 }
 
-.quote {
+.stackItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--color-muted);
+  transition: color .2s;
+}
+
+.stackItem:hover {
+  color: var(--color-text);
+}
+
+.stackDot {
+  display: block;
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  background: var(--red);
+  border-radius: 50%;
+}
+
+/* ─── Testimonials ───────────────────────────────────────────────── */
+
+.testimonialCard {
+  padding: var(--space-4);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.quoteIcon {
+  font-family: Georgia, serif;
+  font-size: 80px;
+  line-height: .7;
+  color: var(--red);
+  opacity: .35;
+  margin-bottom: var(--space-2);
+  user-select: none;
+}
+
+.quoteText {
+  font-size: 15px;
+  line-height: 1.65;
+  font-style: italic;
   margin: 0;
 }
 
 .testimonialMeta {
-  margin-top: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
 }
 
-.cardPad {
-  padding: var(--space-3);
+.avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--red-subtle);
+  border: 1px solid var(--red-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
 }
 
-.cardCopy {
-  margin-top: var(--space-1);
+.testimonialName {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
 }
+
+.testimonialOrg {
+  display: block;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+/* ─── CTA section ────────────────────────────────────────────────── */
 
 .ctaCard {
-  padding: var(--space-4);
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--red-border);
+  border-radius: var(--radius-3);
+  padding: clamp(var(--space-6), 6vw, var(--space-10));
+  text-align: center;
+}
+
+.ctaGlow {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(200,16,46,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ctaHeading {
+  margin: var(--space-3) auto var(--space-2);
+  max-width: 600px;
 }
 
 .ctaCopy {
-  margin-top: var(--space-1);
+  margin: 0 auto;
+  font-size: 17px;
+  max-width: 52ch;
+  line-height: 1.65;
 }
 
 .ctaActions {
-  margin-top: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--space-4);
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────── */
+
+@media (min-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .grid3 {
+    grid-template-columns: 1fr;
+  }
 }

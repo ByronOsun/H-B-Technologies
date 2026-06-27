@@ -14,7 +14,7 @@ export function WhatsAppLink({
   className = "",
   label,
   message = WHATSAPP_DEFAULT_MESSAGE,
-  ariaLabel = "Chat with H&B Technologies on WhatsApp",
+  ariaLabel = "Chat with VIZIA Technologies on WhatsApp",
   target = "_blank",
   variant = "button",
 }: WhatsAppLinkProps) {

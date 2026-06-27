@@ -5,11 +5,11 @@
 }
 
 .success {
-  color: rgba(0, 209, 255, 0.92);
+  color: #4ade80;
 }
 
 .error {
-  color: rgba(255, 120, 120, 0.92);
+  color: var(--red-light);
 }
 
 .consentField {
@@ -26,7 +26,7 @@
   margin-top: 2px;
   flex-shrink: 0;
   cursor: pointer;
-  accent-color: var(--color-primary, #0066cc);
+  accent-color: var(--red);
 }
 
 .consentLabel {
@@ -37,7 +37,7 @@
 }
 
 .consentLabel:hover {
-  color: var(--color-primary, #0066cc);
+  color: var(--red-light);
 }
 
 .spinner {

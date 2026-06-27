@@ -31,7 +31,7 @@ function toViewFromStatic(slug: string): BlogPostView | null {
     excerpt: post.description,
     content: post.body.join("\n\n"),
     featured_image: undefined,
-    author: "H&B Technologies",
+    author: "VIZIA Technologies",
     created_at: post.date,
     tags: post.tags,
     readingTime: post.readingTime,
@@ -142,7 +142,7 @@ export default async function BlogPostPage({
     image: post.featured_image || undefined,
     author: {
       "@type": "Organization",
-      name: post.author || "H&B Technologies",
+      name: post.author || "VIZIA Technologies",
     },
     keywords: post.tags.length ? post.tags.join(", ") : undefined,
   };

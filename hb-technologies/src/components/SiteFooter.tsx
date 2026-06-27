@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import styles from "./SiteFooter.module.css";
 import { WhatsAppLink } from "./WhatsAppLink";
 
@@ -12,15 +11,41 @@ const CONTACT_PHONES = [
 
 const CONTACT_EMAIL = "htechnob@gmail.com";
 
+const footerLinks = [
+  { href: "/services", label: "Services" },
+  { href: "/blog", label: "Blog" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/book-consultation", label: "Book Consultation" },
+];
+
+const serviceLinks = [
+  { href: "/services/web-development", label: "Web Development" },
+  { href: "/services/cyber-security", label: "Cyber Security" },
+  { href: "/services/artificial-intelligence", label: "AI & ML" },
+  { href: "/services/iot-solutions", label: "IoT Solutions" },
+  { href: "/services/smart-cctv-installation", label: "Smart CCTV" },
+  { href: "/services/network-engineering", label: "Network Engineering" },
+];
+
 export function SiteFooter() {
   return (
     <footer className={styles.footer}>
+      {/* Red accent line */}
+      <div className={styles.accentLine} />
+
       <div className={`container ${styles.grid}`}>
-        <div>
-          <div className={styles.brand}>H&B Technologies</div>
-          <p className={`muted ${styles.subcopy}`}>
+        {/* ── Brand column ── */}
+        <div className={styles.brandCol}>
+          <Link href="/" className={styles.brand}>
+            <span className={styles.brandV}>V</span>
+            <span>IZIA</span>
+            <span className={styles.brandTag}>Technologies</span>
+          </Link>
+
+          <p className={styles.tagline}>
             Secure-by-design engineering, AI-driven automation, and
-            enterprise-grade infrastructure.
+            enterprise-grade infrastructure — built for teams that cannot afford downtime.
           </p>
 
           <div className={styles.contact}>
@@ -29,7 +54,6 @@ export function SiteFooter() {
               <a href={`mailto:${CONTACT_EMAIL}`} className={styles.contactLink}>
                 {CONTACT_EMAIL}
               </a>
-
               {CONTACT_PHONES.map((phone) => (
                 <a
                   key={phone}
@@ -39,10 +63,9 @@ export function SiteFooter() {
                   {phone}
                 </a>
               ))}
-
               <WhatsAppLink
                 label="Chat on WhatsApp"
-                ariaLabel="Chat with H&B Technologies on WhatsApp"
+                ariaLabel="Chat with VIZIA Technologies on WhatsApp"
                 className={styles.contactLink}
                 variant="inline"
               />
@@ -50,27 +73,33 @@ export function SiteFooter() {
           </div>
 
           <p className={styles.meta}>
-            © {new Date().getFullYear()} H&B Technologies. All rights reserved.
+            © {new Date().getFullYear()} VIZIA Technologies. All rights reserved.
           </p>
         </div>
 
-        <nav aria-label="Footer" className={styles.links}>
-          <Link className={styles.link} href="/services">
-            Services
-          </Link>
-          <Link className={styles.link} href="/blog">
-            Blog
-          </Link>
-          <Link className={styles.link} href="/about">
-            About
-          </Link>
-          <Link className={styles.link} href="/contact">
-            Contact
-          </Link>
-          <Link className={styles.link} href="/book-consultation">
-            Book consultation
-          </Link>
-        </nav>
+        {/* ── Company links ── */}
+        <div>
+          <h4 className={styles.colHeading}>Company</h4>
+          <nav aria-label="Footer company" className={styles.linkList}>
+            {footerLinks.map((l) => (
+              <Link key={l.href} href={l.href} className={styles.link}>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        {/* ── Services links ── */}
+        <div>
+          <h4 className={styles.colHeading}>Services</h4>
+          <nav aria-label="Footer services" className={styles.linkList}>
+            {serviceLinks.map((l) => (
+              <Link key={l.href} href={l.href} className={styles.link}>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
     </footer>
   );

@@ -1,10 +1,25 @@
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 20;
-  background: rgba(7, 11, 22, 0.92);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--color-border);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background .4s var(--ease-out),
+    border-color .4s var(--ease-out),
+    box-shadow .4s var(--ease-out),
+    backdrop-filter .4s var(--ease-out);
+  will-change: background, box-shadow;
+}
+
+.header.scrolled {
+  background: rgba(8, 8, 8, 0.92);
+  border-color: rgba(200, 16, 46, 0.15);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .inner {
@@ -12,24 +27,55 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
+  padding: var(--space-3) 0;
+  transition: padding .4s var(--ease-out);
+}
+
+.scrolled .inner {
   padding: var(--space-2) 0;
 }
+
+/* ── Brand ─────────────────────────────────────────────────── */
 
 .brand {
   display: inline-flex;
   align-items: baseline;
-  gap: var(--space-1);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  gap: 2px;
   text-decoration: none;
+  letter-spacing: .01em;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(22px, 2.5vw, 28px);
+  line-height: 1;
+  transition: opacity .2s;
+}
+
+.brand:hover {
+  opacity: .85;
+  text-decoration: none;
+}
+
+.brandV {
+  color: var(--red);
+  font-size: 1.1em;
+}
+
+.brandFull {
+  color: var(--color-text);
 }
 
 .tagline {
   display: none;
   color: var(--color-muted);
-  font-weight: 600;
+  font-family: var(--font-sans);
+  font-weight: 500;
   font-size: 13px;
+  margin-left: 8px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
 }
+
+/* ── Desktop Nav ────────────────────────────────────────────── */
 
 .desktopNav {
   display: none;
@@ -38,50 +84,115 @@
 .navList {
   list-style: none;
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-1);
   margin: 0;
   padding: 0;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 .navLink {
   display: inline-flex;
-  padding: 8px 10px;
-  border-radius: 999px;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--radius-1);
   text-decoration: none;
-  border: 1px solid transparent;
+  font-weight: 500;
+  font-size: 15px;
+  color: rgba(255,255,255,.80);
+  position: relative;
+  transition: color .25s var(--ease-out);
+  overflow: hidden;
 }
 
 .navLink:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  text-decoration: none;
 }
 
-.mobileNav {
-  display: block;
+.navUnderline {
+  position: absolute;
+  bottom: 4px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: var(--red);
+  border-radius: 1px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s var(--ease-out);
 }
 
-.summary {
-  list-style: none;
-  cursor: pointer;
-  user-select: none;
-  padding: 10px 12px;
-  border-radius: 999px;
+.navLink:hover .navUnderline {
+  transform: scaleX(1);
+}
+
+.ctaBtn {
+  padding: 10px 20px !important;
+  font-size: 14px !important;
+  margin-left: var(--space-1);
+}
+
+/* ── Hamburger ──────────────────────────────────────────────── */
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: rgba(255,255,255,.05);
   border: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.03);
-  font-weight: 700;
+  border-radius: var(--radius-1);
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
 }
 
-.summary::-webkit-details-marker {
-  display: none;
+.hamburger:hover {
+  background: rgba(200,16,46,.12);
+  border-color: var(--red-border);
 }
+
+.hamburger span {
+  display: block;
+  height: 2px;
+  background: var(--color-text);
+  border-radius: 2px;
+  transition: transform .3s var(--ease-out), opacity .3s var(--ease-out);
+  transform-origin: center;
+}
+
+.hamburgerOpen span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburgerOpen span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburgerOpen span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Mobile Panel ───────────────────────────────────────────── */
 
 .mobilePanel {
-  margin-top: var(--space-2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-2);
-  background: var(--color-surface);
-  padding: var(--space-2);
+  background: rgba(10, 10, 10, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--red-border);
+  padding: 0 var(--space-3);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .4s var(--ease-out), padding .4s var(--ease-out);
+}
+
+.mobilePanelOpen {
+  max-height: 420px;
+  padding: var(--space-3);
 }
 
 .mobileList {
@@ -92,25 +203,56 @@
   gap: var(--space-1);
 }
 
+.mobileItem {
+  opacity: 0;
+  transform: translateX(-12px);
+  transition:
+    opacity .35s var(--ease-out),
+    transform .35s var(--ease-out);
+}
+
+.mobilePanelOpen .mobileItem {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .mobileLink {
-  display: inline-flex;
-  padding: 10px 12px;
+  display: block;
+  padding: 12px 16px;
   border-radius: var(--radius-1);
   text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  color: rgba(255,255,255,.80);
   border: 1px solid transparent;
+  transition: background .2s, border-color .2s, color .2s;
 }
 
 .mobileLink:hover {
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(200,16,46,.08);
+  border-color: var(--red-border);
+  color: #fff;
+  text-decoration: none;
 }
+
+.mobileCta {
+  width: 100%;
+  justify-content: center;
+  margin-top: var(--space-1);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
 
 @media (min-width: 880px) {
   .desktopNav {
     display: block;
   }
 
-  .mobileNav {
+  .hamburger {
+    display: none;
+  }
+
+  .mobilePanel {
     display: none;
   }
 

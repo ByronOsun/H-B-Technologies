@@ -5,11 +5,11 @@ import marketing from "@/styles/marketing.module.css";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "H&B Technologies is a software engineering company delivering security-first product development, AI-powered innovation, and compliance-driven engineering standards.",
+    "VIZIA Technologies is a software engineering company delivering security-first product development, AI-powered innovation, and compliance-driven engineering standards.",
   alternates: { canonical: "/about" },
   openGraph: {
     type: "website",
-    title: "About H&B Technologies",
+    title: "About VIZIA Technologies",
     description:
       "Security-first engineering, AI development, and enterprise-grade technology delivery.",
     url: "/about",
@@ -27,7 +27,7 @@ export default function AboutPage() {
   return (
     <section className="section">
       <div className="container">
-        <h1>About H&B Technologies</h1>
+        <h1>About VIZIA Technologies</h1>
         <p className={`muted ${marketing.lead}`}>
           We’re a software engineering company and technology partner focused on
           security-first delivery, AI-powered automation, and enterprise-grade
@@ -38,7 +38,7 @@ export default function AboutPage() {
           <article className={`card ${marketing.pad3}`}>
             <h2 className={marketing.sectionTitle}>Company overview</h2>
             <p className="muted">
-              H&B Technologies builds secure web and mobile products, modern data
+              VIZIA Technologies builds secure web and mobile products, modern data
               platforms, and resilient infrastructure. We combine disciplined
               engineering practices with a pragmatic approach to delivery — from
               discovery to maintenance.
@@ -53,7 +53,7 @@ export default function AboutPage() {
           <article className={`card ${marketing.pad3}`}>
             <h2 className={marketing.sectionTitle}>Founding story</h2>
             <p className="muted">
-              H&B was founded to solve a common delivery problem: teams need to
+              VIZIA was founded to solve a common delivery problem: teams need to
               move fast, but they can’t afford security shortcuts, performance
               regressions, or fragile infrastructure. Our work focuses on
               building systems that withstand real production constraints.

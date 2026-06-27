@@ -8,11 +8,11 @@ import marketing from "@/styles/marketing.module.css";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Explore H&B Technologies services: web and mobile development, cyber security, data & AI, network engineering, automation, IoT, and Smart CCTV.",
+    "Explore VIZIA Technologies services: web and mobile development, cyber security, data & AI, network engineering, automation, IoT, and Smart CCTV.",
   alternates: { canonical: "/services" },
   openGraph: {
     type: "website",
-    title: "H&B Technologies Services",
+    title: "VIZIA Technologies Services",
     description:
       "Security-first engineering services across web, mobile, AI, infrastructure, and cyber security.",
     url: "/services",

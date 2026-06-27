@@ -3,6 +3,7 @@ import "./globals.css";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import ScrollProgress from "@/components/ScrollProgress";
 import { getSiteUrl, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -45,6 +46,7 @@ export default function RootLayout({
         <a className="skipLink" href="#main-content">
           Skip to content
         </a>
+        <ScrollProgress />
         <SiteHeader />
         <main id="main-content" className="main">
           {children}

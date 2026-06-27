@@ -55,7 +55,7 @@ export default function ServiceDetailPage({ slug }: Props) {
           </article>
 
           <article className={`card ${marketing.pad3}`}>
-            <h2 className={marketing.sectionTitle}>Why clients choose H&B Technologies</h2>
+            <h2 className={marketing.sectionTitle}>Why clients choose VIZIA Technologies</h2>
             <ul>
               {service.benefits.map((item) => (
                 <li key={item}>{item}</li>

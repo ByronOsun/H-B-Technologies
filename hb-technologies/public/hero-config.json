@@ -1,0 +1,42 @@
+{
+  "slides": [
+    {
+      "id": "slide-1",
+      "type": "image",
+      "mediaUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=80",
+      "poster": "",
+      "overlayOpacity": 0.80,
+      "badge": "Security-first · AI-powered · Enterprise-grade",
+      "heading": "Build Secure, Scalable Systems That Outperform in Production.",
+      "subheading": "VIZIA Technologies delivers security-first product development, AI-powered automation, and resilient enterprise infrastructure.",
+      "ctaPrimary": { "label": "Request Consultation", "href": "/book-consultation" },
+      "ctaSecondary": { "label": "View Services", "href": "/services" }
+    },
+    {
+      "id": "slide-2",
+      "type": "image",
+      "mediaUrl": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80",
+      "poster": "",
+      "overlayOpacity": 0.80,
+      "badge": "Cyber Security · Network Engineering",
+      "heading": "Enterprise Cyber Security & Network Solutions.",
+      "subheading": "Protect your infrastructure with OWASP-aligned controls, threat modelling, and 24/7 incident response.",
+      "ctaPrimary": { "label": "Explore Security", "href": "/services/cyber-security" },
+      "ctaSecondary": { "label": "Contact Us", "href": "/contact" }
+    },
+    {
+      "id": "slide-3",
+      "type": "image",
+      "mediaUrl": "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1920&q=80",
+      "poster": "",
+      "overlayOpacity": 0.80,
+      "badge": "AI · Machine Learning · Automation",
+      "heading": "AI-Powered Innovation for the Modern Enterprise.",
+      "subheading": "Applied machine learning, NLP, and intelligent automation designed for measurable outcomes and safe data boundaries.",
+      "ctaPrimary": { "label": "Explore AI Services", "href": "/services/artificial-intelligence" },
+      "ctaSecondary": { "label": "Learn More", "href": "/about" }
+    }
+  ],
+  "autoPlay": true,
+  "interval": 6000
+}

@@ -1,0 +1,716 @@
+/* ─── VIZIA Admin Panel ─────────────────────────────────────────── */
+
+/* ── Login ── */
+
+.loginWrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--color-bg);
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-surface);
+  border: 1px solid var(--red-border);
+  border-radius: var(--radius-3);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(200,16,46,.08);
+}
+
+.loginLogo {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+  letter-spacing: .01em;
+}
+
+.logoV {
+  color: var(--red);
+}
+
+.loginTitle {
+  font-size: 22px;
+  margin: 0 0 var(--space-1) 0;
+}
+
+.loginSub {
+  color: var(--color-muted);
+  font-size: 14px;
+  margin: 0 0 var(--space-4) 0;
+}
+
+.loginField {
+  display: grid;
+  gap: 8px;
+  margin-bottom: var(--space-3);
+}
+
+.loginLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.loginInput {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-1);
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,.04);
+  color: var(--color-text);
+  font-size: 15px;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.loginInput:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(200,16,46,.12);
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+  font-family: var(--font-sans);
+}
+
+.loginBtn:hover {
+  background: var(--red-light);
+  transform: translateY(-1px);
+}
+
+.loginBtn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loginHint {
+  margin-top: var(--space-3);
+  font-size: 13px;
+  color: var(--color-subtle);
+  line-height: 1.7;
+}
+
+.loginHint code {
+  background: rgba(255,255,255,.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #FF8080;
+}
+
+.error {
+  margin-top: var(--space-2);
+  color: var(--red-light);
+  font-size: 14px;
+}
+
+/* ── Admin layout ── */
+
+.admin {
+  min-height: 100vh;
+  background: #050505;
+}
+
+.adminHeader {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(8,8,8,.95);
+  border-bottom: 1px solid var(--red-border);
+  backdrop-filter: blur(12px);
+}
+
+.adminHeaderInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.adminTitle {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.adminSub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.previewBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color .2s, border-color .2s;
+}
+
+.previewBtn:hover {
+  color: var(--color-text);
+  border-color: rgba(255,255,255,.2);
+  text-decoration: none;
+}
+
+.saveBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .2s;
+  font-family: var(--font-sans);
+}
+
+.saveBtn:hover {
+  background: var(--red-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-red);
+}
+
+.saveBtn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.statusBar {
+  padding: var(--space-2) var(--space-4);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.statusOk    { background: rgba(0,200,80,.12); color: #00c850; }
+.statusError { background: rgba(200,16,46,.12); color: var(--red-light); }
+
+/* ── Body ── */
+
+.adminBody {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+}
+
+/* ── Section ── */
+
+.section {
+  margin-bottom: var(--space-6);
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--space-3) 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--red-border);
+  font-family: var(--font-sans);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.checkLabel input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--red);
+  cursor: pointer;
+}
+
+/* ── Slides ── */
+
+.slidesHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.addBtn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--red-border);
+  background: var(--red-subtle);
+  color: var(--red-light);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  font-family: var(--font-sans);
+}
+
+.addBtn:hover {
+  background: rgba(200,16,46,.2);
+  color: #fff;
+}
+
+.slideCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  transition: border-color .2s;
+}
+
+.slideCard:hover {
+  border-color: var(--red-border);
+}
+
+.slideHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.slideNum {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--red);
+}
+
+.slideActions {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.iconBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-1);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, color .2s;
+}
+
+.iconBtn:hover {
+  background: rgba(255,255,255,.08);
+  color: var(--color-text);
+}
+
+.deleteBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-1);
+  border: 1px solid rgba(200,16,46,.25);
+  background: rgba(200,16,46,.08);
+  color: var(--red);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s;
+}
+
+.deleteBtn:hover {
+  background: rgba(200,16,46,.25);
+}
+
+.slideGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+/* ── Form fields ── */
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--color-muted);
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-1);
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,.04);
+  color: var(--color-text);
+  font-size: 14px;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(200,16,46,.12);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.select option {
+  background: var(--color-surface);
+}
+
+.range {
+  width: 100%;
+  accent-color: var(--red);
+  cursor: pointer;
+}
+
+.preview {
+  margin-top: 8px;
+  border-radius: var(--radius-1);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  max-height: 180px;
+}
+
+.previewImg {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── FAB save ── */
+
+.saveFab {
+  position: fixed;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  z-index: 40;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 600px) {
+  .slideGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .adminHeaderInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   WYSIWYG Visual Admin
+══════════════════════════════════════════════════════════════════ */
+
+/* ── Wrapper ── */
+
+.adminWrap {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+/* ── Admin bar ── */
+
+.adminBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(8, 8, 8, .97);
+  border-bottom: 1px solid var(--red-border);
+  backdrop-filter: blur(12px);
+}
+
+.adminBarInner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.adminLogo {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  white-space: nowrap;
+}
+
+.unsaved {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e0a800;
+  flex-shrink: 0;
+  animation: adminPulse 2s ease-in-out infinite;
+}
+
+@keyframes adminPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+.adminBarActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── Site canvas ── */
+
+.adminCanvas {
+  padding-top: 52px; /* height of admin bar */
+}
+
+/* ── Hero slide toolbar ── */
+
+.slideToolbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgba(8, 8, 8, .88);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--red-border);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.slideLabel {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--red);
+  flex-shrink: 0;
+}
+
+.slideControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.slideSelect {
+  padding: 4px 10px;
+  border-radius: var(--radius-1);
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,.06);
+  color: var(--color-text);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  outline: none;
+  cursor: pointer;
+}
+
+.slideSelect:focus { border-color: var(--red); }
+
+.slideRange {
+  width: 80px;
+  accent-color: var(--red);
+  cursor: pointer;
+}
+
+.addSlideBtn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--red-border);
+  background: rgba(200,16,46,.12);
+  color: var(--red-light);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  font-family: var(--font-sans);
+  flex-shrink: 0;
+}
+.addSlideBtn:hover { background: rgba(200,16,46,.25); color: #fff; }
+
+.removeSlideBtn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(200,16,46,.25);
+  background: transparent;
+  color: rgba(200,16,46,.65);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  font-family: var(--font-sans);
+  flex-shrink: 0;
+}
+.removeSlideBtn:hover { background: rgba(200,16,46,.18); color: var(--red); }
+
+/* ── Inline array controls ── */
+
+.inlineRemoveBtn {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(200,16,46,.25);
+  background: transparent;
+  color: rgba(200,16,46,.5);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, color .15s;
+  opacity: 0;
+}
+
+/* Make remove buttons visible on parent hover — the parent is the stackItem li */
+li:hover .inlineRemoveBtn,
+.phoneRow:hover .inlineRemoveBtn { opacity: 1; }
+.inlineRemoveBtn:hover { background: rgba(200,16,46,.2); color: var(--red); opacity: 1; }
+
+.inlineAddBtn {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px dashed rgba(200,16,46,.35);
+  background: transparent;
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background .15s, border-style .15s;
+}
+.inlineAddBtn:hover { background: rgba(200,16,46,.08); border-style: solid; }
+
+/* ── Contact section ── */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 640px) {
+  .contactGrid { grid-template-columns: 1fr; }
+}
+
+.contactField {
+  display: grid;
+  gap: 10px;
+}
+
+.contactLabel {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--color-muted);
+}
+
+.contactValue {
+  font-size: 16px;
+  color: var(--color-text);
+}
+
+.phoneList {
+  display: grid;
+  gap: 8px;
+}
+
+.phoneRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

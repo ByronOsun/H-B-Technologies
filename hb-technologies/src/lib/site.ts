@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "H&B Technologies",
+  name: "VIZIA Technologies",
   description:
     "Secure-by-design software engineering and technology solutions: web & mobile development, cyber security, data & AI, network engineering, automation, IoT, and Smart CCTV.",
   keywords: [
@@ -17,7 +17,7 @@ export const siteConfig = {
   jsonLdOrganization: {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "H&B Technologies",
+    name: "VIZIA Technologies",
     url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
     description:
       "Secure-by-design software engineering and technology solutions for startups, SMEs, enterprises, and government institutions.",

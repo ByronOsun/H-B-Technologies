@@ -16,9 +16,9 @@ const CONTACT_PHONES = [
 const CONTACT_EMAIL = "htechnob@gmail.com";
 
 export const metadata: Metadata = {
-  title: "Contact H&B Technologies | Consultation & Support",
+  title: "Contact VIZIA Technologies | Consultation & Support",
   description:
-    "Get in touch with H&B Technologies for AI, cybersecurity, web development, and enterprise IT solutions. Email us or book a consultation.",
+    "Get in touch with VIZIA Technologies for AI, cybersecurity, web development, and enterprise IT solutions. Email us or book a consultation.",
   alternates: { canonical: "/contact" },
 };
 
@@ -27,7 +27,7 @@ export default function ContactPage() {
     <>
       <section className="section">
         <div className="container">
-          <h1>Contact H&B Technologies</h1>
+          <h1>Contact VIZIA Technologies</h1>
           <p className={`muted ${marketing.lead}`}>
             Reach out to discuss your project requirements. We respond within
             1–2 business days.
@@ -96,7 +96,7 @@ export default function ContactPage() {
                   <WhatsAppLink
                     label="Chat with Us on WhatsApp"
                     message={WHATSAPP_DEFAULT_MESSAGE}
-                    ariaLabel="Chat with H&B Technologies on WhatsApp"
+                    ariaLabel="Chat with VIZIA Technologies on WhatsApp"
                     className={marketing.mt1}
                   />
                 </div>

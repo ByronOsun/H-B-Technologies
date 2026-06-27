@@ -1,0 +1,186 @@
+{
+  "hero": {
+    "autoPlay": true,
+    "interval": 6000,
+    "slides": [
+      {
+        "id": "slide-1",
+        "type": "image",
+        "mediaUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=80",
+        "poster": "",
+        "overlayOpacity": 0.80,
+        "badge": "Security-first · AI-powered · Enterprise-grade",
+        "heading": "Build Secure, Scalable Systems That Outperform in Production.",
+        "subheading": "VIZIA Technologies delivers security-first product development, AI-powered automation, and resilient enterprise infrastructure.",
+        "ctaPrimary": { "label": "Request Consultation", "href": "/book-consultation" },
+        "ctaSecondary": { "label": "View Services", "href": "/services" }
+      },
+      {
+        "id": "slide-2",
+        "type": "image",
+        "mediaUrl": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80",
+        "poster": "",
+        "overlayOpacity": 0.80,
+        "badge": "Cyber Security · Network Engineering",
+        "heading": "Enterprise Cyber Security & Network Solutions.",
+        "subheading": "Protect your infrastructure with OWASP-aligned controls, threat modelling, and 24/7 incident response.",
+        "ctaPrimary": { "label": "Explore Security", "href": "/services/cyber-security" },
+        "ctaSecondary": { "label": "Contact Us", "href": "/contact" }
+      },
+      {
+        "id": "slide-3",
+        "type": "image",
+        "mediaUrl": "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1920&q=80",
+        "poster": "",
+        "overlayOpacity": 0.80,
+        "badge": "AI · Machine Learning · Automation",
+        "heading": "AI-Powered Innovation for the Modern Enterprise.",
+        "subheading": "Applied machine learning, NLP, and intelligent automation designed for measurable outcomes and safe data boundaries.",
+        "ctaPrimary": { "label": "Explore AI Services", "href": "/services/artificial-intelligence" },
+        "ctaSecondary": { "label": "Learn More", "href": "/about" }
+      }
+    ]
+  },
+  "stats": [
+    { "value": 50, "suffix": "+", "label": "Projects Delivered" },
+    { "value": 12, "suffix": "+", "label": "Services Offered" },
+    { "value": 98, "suffix": "%", "label": "Client Satisfaction" },
+    { "value": 24, "suffix": "/7", "label": "Support Coverage" }
+  ],
+  "deliver": {
+    "badge": "What we deliver",
+    "heading": "End-to-End Engineering Solutions",
+    "intro": "From secure product engineering to AI automation — we cover every layer of your technology stack.",
+    "cards": [
+      {
+        "icon": "🔐",
+        "title": "Secure Product Engineering",
+        "desc": "Web, mobile, and API development with OWASP-aligned controls and security-by-default architecture.",
+        "href": "/services/web-development"
+      },
+      {
+        "icon": "🧠",
+        "title": "Data & AI Systems",
+        "desc": "Data science, machine learning, and NLP pipelines to automate decisions and unlock business intelligence.",
+        "href": "/services/artificial-intelligence"
+      },
+      {
+        "icon": "🌐",
+        "title": "Infrastructure & IoT",
+        "desc": "Networks, automation systems, IoT solutions, and Smart CCTV for connected enterprise environments.",
+        "href": "/services/iot-solutions"
+      }
+    ]
+  },
+  "why": {
+    "badge": "Why VIZIA",
+    "heading": "Built for Security, Reliability & Speed",
+    "intro": "A software engineering company built for security, reliability, and delivery speed — without sacrificing compliance or quality.",
+    "items": [
+      {
+        "icon": "🔒",
+        "title": "Security-first Engineering",
+        "copy": "Secure coding standards, threat modelling, and OWASP-aligned defaults built into every delivery — not added as an afterthought."
+      },
+      {
+        "icon": "🤖",
+        "title": "AI-powered Innovation",
+        "copy": "Applied AI and automation focused on measurable outcomes, safe data boundaries, and observability in production environments."
+      },
+      {
+        "icon": "⚡",
+        "title": "Scalable Enterprise Systems",
+        "copy": "Architecture that stays maintainable as your product grows: clean interfaces, reliable APIs, and resilient infrastructure."
+      },
+      {
+        "icon": "🏆",
+        "title": "Certified Professionals",
+        "copy": "Experienced engineers who ship production systems with governance, documentation, and predictable delivery practices."
+      },
+      {
+        "icon": "🕐",
+        "title": "24/7 Support",
+        "copy": "Operational readiness, incident response workflows, and maintenance plans designed for uptime and business continuity."
+      }
+    ]
+  },
+  "industries": {
+    "badge": "Industries served",
+    "heading": "Experience Across Regulated Sectors",
+    "intro": "Deep expertise in regulated and high-availability environments — where quality is not negotiable.",
+    "items": [
+      { "name": "Finance", "icon": "💳", "desc": "Secure payment systems and regulatory compliance solutions." },
+      { "name": "Healthcare", "icon": "🏥", "desc": "HIPAA-compliant platforms and health data management." },
+      { "name": "Government", "icon": "🏛️", "desc": "Enterprise systems built for public-sector governance." },
+      { "name": "Retail", "icon": "🛒", "desc": "E-commerce platforms and supply-chain automation." },
+      { "name": "Telecommunications", "icon": "📡", "desc": "Network infrastructure and IoT connectivity." },
+      { "name": "Education", "icon": "🎓", "desc": "Learning management and digital transformation." }
+    ]
+  },
+  "stack": {
+    "badge": "Technology stack",
+    "heading": "Modern Tooling, Proven in Production",
+    "intro": "Selected for performance, maintainability, and security-by-default across every layer.",
+    "items": [
+      {
+        "title": "Frontend Technologies",
+        "items": ["Next.js", "React", "TypeScript", "Performance & SEO best practices"]
+      },
+      {
+        "title": "Backend Technologies",
+        "items": ["Node.js", "Express", "PostgreSQL", "Supabase (RLS + Storage)"]
+      },
+      {
+        "title": "Cloud Infrastructure",
+        "items": ["Vercel", "Render", "Cloud-ready architecture", "Secure networking"]
+      },
+      {
+        "title": "AI / ML Tools",
+        "items": ["Model evaluation", "NLP workflows", "Data pipelines", "Automation systems"]
+      },
+      {
+        "title": "DevOps Practices",
+        "items": ["CI/CD", "Observability", "Secrets management", "Infrastructure hardening"]
+      }
+    ]
+  },
+  "testimonials": {
+    "badge": "Testimonials",
+    "heading": "What Clients Say",
+    "intro": "Real feedback from clients who trust VIZIA Technologies to deliver production-ready systems.",
+    "items": [
+      {
+        "quote": "VIZIA Technologies delivered a secure, scalable platform with clear milestones and practical security controls. Communication was crisp and outcomes were measurable.",
+        "name": "Operations Lead",
+        "org": "SME Client",
+        "initials": "OL"
+      },
+      {
+        "quote": "Their security-first approach helped us ship faster by removing uncertainty. The architecture and documentation made handover easy.",
+        "name": "CTO",
+        "org": "Startup Team",
+        "initials": "CT"
+      },
+      {
+        "quote": "We needed enterprise-grade reliability and governance. VIZIA brought disciplined engineering, strong testing practices, and dependable delivery.",
+        "name": "Program Manager",
+        "org": "Enterprise Client",
+        "initials": "PM"
+      }
+    ]
+  },
+  "cta": {
+    "badge": "Ready to build?",
+    "heading": "Ready to Scope a Secure Build?",
+    "copy": "Get a clear plan, timeline, and risk assessment — from a team that treats compliance-driven engineering as a default, not an add-on."
+  },
+  "contact": {
+    "email": "htechnob@gmail.com",
+    "phones": [
+      "+254 113 747 654",
+      "+254 724 121 679",
+      "+254 797 749 346",
+      "+254 785 773 554"
+    ]
+  }
+}

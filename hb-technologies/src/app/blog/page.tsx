@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
   openGraph: {
     type: "website",
-    title: "H&B Technologies Blog",
+    title: "VIZIA Technologies Blog",
     description:
       "Practical notes on secure engineering, performance, Supabase RLS, and AI delivery.",
     url: "/blog",
@@ -53,7 +53,7 @@ function mergeBlogPosts(apiPosts: BlogListItem[] | null): BlogListItem[] {
     title: p.title,
     excerpt: p.description,
     featured_image: "",
-    author: "H&B Technologies",
+    author: "VIZIA Technologies",
     created_at: p.date,
   }));
 

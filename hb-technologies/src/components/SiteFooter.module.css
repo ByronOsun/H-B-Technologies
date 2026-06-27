@@ -1,85 +1,193 @@
 .footer {
-  border-top: 1px solid var(--color-border);
-  padding: var(--space-5) 0;
-  background: rgba(255, 255, 255, 0.02);
+  background: #090909;
+  border-top: 1px solid rgba(200, 16, 46, 0.15);
+  padding: var(--space-10) 0 var(--space-6);
+  position: relative;
+  overflow: hidden;
 }
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 200px;
+  background: radial-gradient(ellipse at center top, rgba(200,16,46,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.accentLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--red) 40%, var(--red-light) 60%, transparent 100%);
+}
+
+/* ── Grid ─────────────────────────────────────────────────────── */
 
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-3);
+  gap: var(--space-8);
+}
+
+/* ── Brand Column ─────────────────────────────────────────────── */
+
+.brandCol {
+  max-width: 380px;
 }
 
 .brand {
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: .01em;
+  transition: opacity .2s;
 }
 
-.subcopy {
-  margin-top: var(--space-1);
+.brand:hover {
+  opacity: .8;
+  text-decoration: none;
 }
+
+.brandV {
+  color: var(--red);
+}
+
+.brandTag {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--color-muted);
+  margin-left: 8px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  align-self: center;
+}
+
+.tagline {
+  margin-top: var(--space-2);
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.65;
+  max-width: 340px;
+}
+
+/* ── Contact ──────────────────────────────────────────────────── */
 
 .contact {
-  margin-top: var(--space-3);
-  padding-top: var(--space-3);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
 }
 
 .contactLabel {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-muted);
-  margin-bottom: var(--space-1);
+  letter-spacing: .10em;
+  color: var(--red);
+  margin-bottom: var(--space-2);
 }
 
 .contactLinks {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 8px;
 }
 
 .contactLink {
-  color: var(--color-text);
+  color: var(--color-muted);
   text-decoration: none;
   font-size: 14px;
-}
-
-.contactLink[class] {
-  display: inline-flex;
+  transition: color .2s;
 }
 
 .contactLink:hover {
-  color: var(--color-primary, #0066cc);
-  text-decoration: underline;
+  color: var(--color-text);
+  text-decoration: none;
 }
 
-.links {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
+.meta {
+  margin-top: var(--space-5);
+  color: var(--color-subtle);
+  font-size: 13px;
+}
+
+/* ── Navigation columns ───────────────────────────────────────── */
+
+.colHeading {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .10em;
+  color: var(--red);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .link {
   color: var(--color-muted);
   text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  transition: color .2s, transform .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.link::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: var(--red);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity .2s, transform .2s;
 }
 
 .link:hover {
   color: var(--color-text);
-  text-decoration: underline;
+  text-decoration: none;
+  transform: translateX(4px);
 }
 
-.meta {
-  margin-top: var(--space-3);
-  color: var(--color-muted);
-  font-size: 14px;
+.link:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: var(--space-6);
+    align-items: start;
+  }
 }
 
 @media (min-width: 880px) {
   .grid {
-    grid-template-columns: 1.2fr 0.8fr;
-    align-items: start;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: var(--space-8);
   }
 }

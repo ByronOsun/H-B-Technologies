@@ -6,7 +6,7 @@ export function FloatingWhatsAppButton() {
     <div className={styles.floatingWrap} aria-hidden="false">
       <WhatsAppLink
         label="WhatsApp"
-        ariaLabel="Chat with H&B Technologies on WhatsApp"
+        ariaLabel="Chat with VIZIA Technologies on WhatsApp"
         className={styles.floatingButton}
       />
     </div>

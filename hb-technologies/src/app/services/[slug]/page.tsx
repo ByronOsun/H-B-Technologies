@@ -121,14 +121,14 @@ export default async function ServiceDetailPage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    name: `H&B Technologies — ${service.title}`,
+    name: `VIZIA Technologies — ${service.title}`,
     url: new URL(`/services/${service.slug}`, getSiteUrl()).toString(),
     serviceType: service.title,
     description: service.short_description,
     areaServed: "Global",
     provider: {
       "@type": "Organization",
-      name: "H&B Technologies",
+      name: "VIZIA Technologies",
     },
   };
 
