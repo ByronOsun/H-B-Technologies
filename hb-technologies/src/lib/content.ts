@@ -2,6 +2,32 @@ import type { HeroConfig } from "@/components/HeroSection";
 
 /* ── Types ────────────────────────────────────────────────────────── */
 
+export interface NavLink {
+  label: string;
+  href: string;
+}
+
+export interface NavSection {
+  links: NavLink[];
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+export interface TeamMember {
+  name: string;
+  role: string;
+  photo: string;
+  bio: string;
+}
+
+export interface TeamSection {
+  enabled: boolean;
+  badge: string;
+  heading: string;
+  intro: string;
+  members: TeamMember[];
+}
+
 export interface StatItem {
   value: number;
   suffix: string;
@@ -40,6 +66,7 @@ export interface TestimonialItem {
 }
 
 export interface SiteContent {
+  nav: NavSection;
   hero: HeroConfig;
   stats: StatItem[];
   deliver: {
@@ -81,6 +108,7 @@ export interface SiteContent {
     email: string;
     phones: string[];
   };
+  team: TeamSection;
 }
 
 /* ── Server-side loader ───────────────────────────────────────────── */

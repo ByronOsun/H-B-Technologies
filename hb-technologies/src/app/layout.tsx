@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import ScrollProgress from "@/components/ScrollProgress";
 import { getSiteUrl, siteConfig } from "@/lib/site";
+import { loadSiteContent } from "@/lib/content";
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
@@ -35,11 +36,12 @@ export const metadata: Metadata = {
   keywords: [...siteConfig.keywords],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteContent = await loadSiteContent();
   return (
     <html lang="en">
       <body>
@@ -47,7 +49,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <ScrollProgress />
-        <SiteHeader />
+        <SiteHeader nav={siteContent.nav} />
         <main id="main-content" className="main">
           {children}
         </main>

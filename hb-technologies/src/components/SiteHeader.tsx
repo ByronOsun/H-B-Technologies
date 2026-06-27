@@ -3,15 +3,21 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import styles from "./SiteHeader.module.css";
+import type { NavSection } from "@/lib/content";
 
-const navLinks = [
-  { href: "/services", label: "Services" },
-  { href: "/blog", label: "Blog" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-] as const;
+const DEFAULT_NAV: NavSection = {
+  links: [
+    { label: "Services", href: "/services" },
+    { label: "Blog", href: "/blog" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
+  ],
+  ctaLabel: "Book consultation",
+  ctaHref: "/book-consultation",
+};
 
-export function SiteHeader() {
+export function SiteHeader({ nav = DEFAULT_NAV }: { nav?: NavSection }) {
+  const navLinks = nav.links;
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -57,8 +63,8 @@ export function SiteHeader() {
               </li>
             ))}
             <li>
-              <Link className={`btn btnPrimary ${styles.ctaBtn}`} href="/book-consultation">
-                Book consultation
+              <Link className={`btn btnPrimary ${styles.ctaBtn}`} href={nav.ctaHref}>
+                {nav.ctaLabel}
               </Link>
             </li>
           </ul>
@@ -105,10 +111,10 @@ export function SiteHeader() {
             >
               <Link
                 className={`btn btnPrimary ${styles.mobileCta}`}
-                href="/book-consultation"
+                href={nav.ctaHref}
                 onClick={() => setMobileOpen(false)}
               >
-                Book consultation
+                {nav.ctaLabel}
               </Link>
             </li>
           </ul>

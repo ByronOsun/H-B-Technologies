@@ -169,6 +169,35 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ── Team ── */}
+      {c.team?.enabled && (
+        <section className="section" aria-labelledby="team-heading">
+          <div className="container">
+            <AnimateIn variant="up">
+              <span className="pill">{c.team.badge}</span>
+              <h2 id="team-heading" className={styles.sectionHeading}>{c.team.heading}</h2>
+              <p className={`muted ${styles.sectionIntro}`}>{c.team.intro}</p>
+            </AnimateIn>
+            <div className={styles.teamGrid}>
+              {c.team.members.map((m, i) => (
+                <AnimateIn key={m.name} delay={i * 100} variant="up">
+                  <article className={`card ${styles.teamCard}`}>
+                    <div className={styles.teamPhotoWrap}>
+                      {m.photo
+                        ? <img src={m.photo} alt={m.name} className={styles.teamPhoto} />
+                        : <div className={styles.teamPhotoPlaceholder}>{m.name.charAt(0)}</div>}
+                    </div>
+                    <h3 className={styles.teamName}>{m.name}</h3>
+                    <p className={styles.teamRole}>{m.role}</p>
+                    <p className={`muted ${styles.teamBio}`}>{m.bio}</p>
+                  </article>
+                </AnimateIn>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ── CTA ── */}
       <section className="section">
         <div className="container">

@@ -673,6 +673,117 @@ li:hover .inlineRemoveBtn,
 }
 .inlineAddBtn:hover { background: rgba(200,16,46,.08); border-style: solid; }
 
+/* ── Nav editor ── */
+
+.adminNavEditor {
+  background: rgba(8,8,8,.96);
+  border-bottom: 1px solid var(--red-border);
+  backdrop-filter: blur(10px);
+  padding: 0 24px;
+}
+
+.adminNavEditorInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.adminNavBrand {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-right: var(--space-3);
+}
+
+.adminNavLinks {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.adminNavLinkWrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: var(--radius-1);
+  border: 1px dashed transparent;
+  transition: border-color .15s;
+}
+
+.adminNavLinkWrap:hover {
+  border-color: rgba(200,16,46,.25);
+  background: rgba(200,16,46,.04);
+}
+
+.adminNavLinkLabel {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,.85);
+}
+
+.adminNavLinkHref {
+  font-size: 11px;
+  color: var(--color-subtle);
+  font-family: monospace;
+}
+
+.adminNavCtaWrap {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.adminNavToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px dashed rgba(200,16,46,.35);
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all .15s;
+  white-space: nowrap;
+}
+.adminNavToggle:hover { background: rgba(200,16,46,.08); color: var(--red); }
+
+/* ── Team section toggle ── */
+
+.sectionToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all .2s;
+  margin-bottom: var(--space-4);
+}
+
+.sectionToggleOn {
+  border-color: rgba(0,200,100,.3);
+  background: rgba(0,200,100,.08);
+  color: #00c864;
+}
+
+.sectionToggle:hover { border-color: rgba(200,16,46,.3); }
+
 /* ── Contact section ── */
 
 .contactGrid {

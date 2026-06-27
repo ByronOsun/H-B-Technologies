@@ -3,11 +3,13 @@
 import { useState, useCallback, useEffect } from "react";
 import type {
   SiteContent,
+  NavLink,
   DeliverCard,
   WhyItem,
   IndustryItem,
   StackCategory,
   TestimonialItem,
+  TeamMember,
 } from "@/lib/content";
 import type { HeroSlide } from "@/components/HeroSection";
 import { EditableText, EditableImage, SectionShell } from "./EditorComponents";
@@ -141,6 +143,20 @@ export default function AdminPage() {
       return { ...c, testimonials: { ...c.testimonials, items } };
     });
 
+  const patchNavLink = (i: number, patch: Partial<NavLink>) =>
+    mutate(c => {
+      const links = [...c.nav.links];
+      links[i] = { ...links[i], ...patch };
+      return { ...c, nav: { ...c.nav, links } };
+    });
+
+  const patchTeamMember = (i: number, patch: Partial<TeamMember>) =>
+    mutate(c => {
+      const members = [...c.team.members];
+      members[i] = { ...members[i], ...patch };
+      return { ...c, team: { ...c.team, members } };
+    });
+
   /* ── Login ── */
   const login = async () => {
     setSaveState("saving");
@@ -267,6 +283,71 @@ export default function AdminPage() {
 
       {/* ── Site canvas ── */}
       <div className={s.adminCanvas}>
+
+        {/* ══ NAV ═══════════════════════════════════════════════ */}
+        <div className={s.adminNavEditor}>
+          <div className={s.adminNavEditorInner}>
+            {/* Brand — not editable (it's the logo) */}
+            <span className={s.adminNavBrand}>
+              <span className={s.logoV}>V</span>IZIA Technologies
+            </span>
+
+            {/* Nav links */}
+            <div className={s.adminNavLinks}>
+              {c.nav.links.map((link, i) => (
+                <SectionShell
+                  key={i}
+                  label={link.href}
+                  onRemove={() =>
+                    mutate(c => ({
+                      ...c,
+                      nav: { ...c.nav, links: c.nav.links.filter((_, idx) => idx !== i) },
+                    }))
+                  }
+                >
+                  <div className={s.adminNavLinkWrap}>
+                    <EditableText
+                      value={link.label}
+                      onChange={v => patchNavLink(i, { label: v })}
+                      className={s.adminNavLinkLabel}
+                      placeholder="Label"
+                    />
+                    <EditableText
+                      value={link.href}
+                      onChange={v => patchNavLink(i, { href: v })}
+                      className={s.adminNavLinkHref}
+                      placeholder="/path"
+                    />
+                  </div>
+                </SectionShell>
+              ))}
+              <button
+                className={s.adminNavToggle}
+                onClick={() =>
+                  mutate(c => ({
+                    ...c,
+                    nav: {
+                      ...c.nav,
+                      links: [...c.nav.links, { label: "New Link", href: "/new" }],
+                    },
+                  }))
+                }
+              >
+                + Add link
+              </button>
+            </div>
+
+            {/* CTA button */}
+            <div className={s.adminNavCtaWrap}>
+              <EditableText
+                value={c.nav.ctaLabel}
+                onChange={v => ps("nav", { ctaLabel: v })}
+                className={`btn btnPrimary ${s.ctaBtn ?? ""}`}
+                placeholder="CTA label"
+              />
+            </div>
+          </div>
+        </div>
 
         {/* ══ HERO ══════════════════════════════════════════════ */}
         <section
@@ -896,6 +977,110 @@ export default function AdminPage() {
                 ))}
               </div>
             </SectionShell>
+          </div>
+        </section>
+
+        {/* ══ TEAM ══════════════════════════════════════════════ */}
+        <section className={c.team.enabled ? "section" : "section sectionAlt"}>
+          <div className="container">
+            {/* Toggle */}
+            <button
+              className={`${s.sectionToggle} ${c.team.enabled ? s.sectionToggleOn : ""}`}
+              onClick={() => ps("team", { enabled: !c.team.enabled })}
+            >
+              {c.team.enabled ? "✓ Team section ON" : "○ Team section OFF"} — click to toggle
+            </button>
+
+            {c.team.enabled && (
+              <>
+                <span className="pill">
+                  <EditableText value={c.team.badge} onChange={v => ps("team", { badge: v })} />
+                </span>
+                <EditableText
+                  value={c.team.heading}
+                  onChange={v => ps("team", { heading: v })}
+                  tag="h2"
+                  className={pageStyles.sectionHeading}
+                  multiline
+                />
+                <EditableText
+                  value={c.team.intro}
+                  onChange={v => ps("team", { intro: v })}
+                  tag="p"
+                  className={`muted ${pageStyles.sectionIntro}`}
+                  multiline
+                />
+                <SectionShell
+                  label="Team Members"
+                  onAdd={() =>
+                    mutate(c => ({
+                      ...c,
+                      team: {
+                        ...c.team,
+                        members: [
+                          ...c.team.members,
+                          { name: "New Member", role: "Role", photo: "", bio: "Short bio." },
+                        ],
+                      },
+                    }))
+                  }
+                  addLabel="Add member"
+                >
+                  <div className={pageStyles.teamGrid}>
+                    {c.team.members.map((m, i) => (
+                      <SectionShell
+                        key={i}
+                        label={`Member ${i + 1}`}
+                        onRemove={() =>
+                          mutate(c => ({
+                            ...c,
+                            team: {
+                              ...c.team,
+                              members: c.team.members.filter((_, idx) => idx !== i),
+                            },
+                          }))
+                        }
+                      >
+                        <article className={`card ${pageStyles.teamCard}`}>
+                          <div className={pageStyles.teamPhotoWrap}>
+                            <EditableImage
+                              src={m.photo}
+                              alt={m.name}
+                              onChange={v => patchTeamMember(i, { photo: v })}
+                              style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+                            />
+                          </div>
+                          <EditableText
+                            value={m.name}
+                            onChange={v => patchTeamMember(i, { name: v })}
+                            tag="h3"
+                            className={pageStyles.teamName}
+                          />
+                          <EditableText
+                            value={m.role}
+                            onChange={v => patchTeamMember(i, { role: v })}
+                            tag="p"
+                            className={pageStyles.teamRole}
+                          />
+                          <EditableText
+                            value={m.bio}
+                            onChange={v => patchTeamMember(i, { bio: v })}
+                            tag="p"
+                            className={`muted ${pageStyles.teamBio}`}
+                            multiline
+                          />
+                        </article>
+                      </SectionShell>
+                    ))}
+                  </div>
+                </SectionShell>
+              </>
+            )}
+            {!c.team.enabled && (
+              <p className="muted" style={{ marginTop: 0, fontSize: 14 }}>
+                Enable the Team section above to add and edit team members.
+              </p>
+            )}
           </div>
         </section>
 
