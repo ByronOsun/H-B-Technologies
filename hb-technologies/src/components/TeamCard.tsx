@@ -1,0 +1,64 @@
+'use client';
+import { useState, useCallback } from 'react';
+import styles from './teamCard.module.css';
+
+interface Props {
+  member: {
+    name: string;
+    role: string;
+    bio: string;
+    photo?: string;
+  };
+}
+
+export default function TeamCard({ member }: Props) {
+  const [flipped, setFlipped] = useState(false);
+
+  const flip   = useCallback(() => setFlipped(true),  []);
+  const unflip = useCallback(() => setFlipped(false), []);
+  const toggle = useCallback((e: React.MouseEvent) => {
+    // Only toggle on click for touch devices (hover handles desktop)
+    if (window.matchMedia('(hover: none)').matches) {
+      e.preventDefault();
+      setFlipped(f => !f);
+    }
+  }, []);
+
+  return (
+    <div
+      className={`${styles.outer} ${flipped ? styles.flipped : ''}`}
+      onMouseEnter={flip}
+      onMouseLeave={unflip}
+      onClick={toggle}
+      role="button"
+      tabIndex={0}
+      aria-label={`${member.name} — ${member.role}`}
+    >
+      <div className={styles.inner}>
+
+        {/* ── Front: full-cover photo + name bar ── */}
+        <div className={styles.front}>
+          <div className={styles.imgWrap}>
+            {member.photo
+              ? <img src={member.photo} alt={member.name} className={styles.img} />
+              : <div className={styles.initial}>{member.name.charAt(0)}</div>}
+          </div>
+          <div className={styles.nameBar}>
+            <span className={styles.name}>{member.name}</span>
+            <span className={styles.role}>{member.role}</span>
+          </div>
+        </div>
+
+        {/* ── Back: bio reveal ── */}
+        <div className={styles.back}>
+          <div className={styles.backInner}>
+            <span className={styles.backName}>{member.name}</span>
+            <span className={styles.backRole}>{member.role}</span>
+            <p className={styles.bio}>{member.bio}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}

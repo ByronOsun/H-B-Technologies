@@ -4,16 +4,10 @@ import Link from "next/link";
 import { ConsultationForm } from "@/components/ConsultationForm";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { WHATSAPP_DEFAULT_MESSAGE } from "@/lib/whatsapp";
+import { loadSiteContent } from "@/lib/content";
 import marketing from "@/styles/marketing.module.css";
 
-const CONTACT_PHONES = [
-  "+254 113 747 654",
-  "+254 724 121 679",
-  "+254 797 749 346",
-  "+254 785 773 554",
-];
-
-const CONTACT_EMAIL = "htechnob@gmail.com";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Contact VIZIA Technologies | Consultation & Support",
@@ -22,7 +16,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const c = await loadSiteContent();
+  const CONTACT_EMAIL = c.contact.email;
+  const CONTACT_PHONES = c.contact.phones;
+
   return (
     <>
       <section className="section">

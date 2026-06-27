@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getServiceBySlug, services as staticServices } from "@/content/services";
-import { getService, getServices } from "@/lib/api";
+import { services as staticServices } from "@/content/services";
+import { loadSiteContent } from "@/lib/content";
 import marketing from "@/styles/marketing.module.css";
 import { getSiteUrl } from "@/lib/site";
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 type ServiceView = {
   slug: string;
@@ -20,67 +20,44 @@ type ServiceView = {
   keywords: string[];
 };
 
-function toViewFromStatic(slug: string): ServiceView | null {
-  const s = getServiceBySlug(slug);
-  if (!s) return null;
+async function resolveService(slug: string): Promise<ServiceView | null> {
+  const c = await loadSiteContent();
+  const jsonItem = c.services_page.items.find(s => s.slug === slug);
 
+  if (jsonItem) {
+    return {
+      slug: jsonItem.slug,
+      title: jsonItem.name,
+      short_description: jsonItem.summary,
+      full_description: jsonItem.full_description,
+      technologies: jsonItem.technologies,
+      benefits: jsonItem.benefits,
+      case_examples: jsonItem.case_examples,
+      keywords: [],
+    };
+  }
+
+  const staticItem = staticServices.find(s => s.slug === slug);
+  if (!staticItem) return null;
   return {
-    slug: s.slug,
-    title: s.name,
-    short_description: s.summary,
-    full_description: s.summary,
-    technologies: s.technologies,
-    benefits: s.benefits,
-    case_examples: [
-      "Discovery and architecture workshop",
-      "Secure API + data model implementation",
-      "Deployment, monitoring, and maintenance plan",
-    ],
-    keywords: s.keywords,
+    slug: staticItem.slug,
+    title: staticItem.name,
+    short_description: staticItem.summary,
+    full_description: staticItem.summary,
+    technologies: staticItem.technologies,
+    benefits: staticItem.benefits,
+    case_examples: ["Discovery and architecture workshop", "Implementation and security review", "Deployment and handover"],
+    keywords: staticItem.keywords,
   };
-}
-
-function mergeServiceView(fallback: ServiceView, apiData?: Partial<ServiceView>): ServiceView {
-  if (!apiData) return fallback;
-
-  return {
-    ...fallback,
-    ...apiData,
-    title: apiData.title || fallback.title,
-    short_description: apiData.short_description || fallback.short_description,
-    full_description: apiData.full_description || fallback.full_description,
-    technologies: apiData.technologies?.length ? apiData.technologies : fallback.technologies,
-    benefits: apiData.benefits?.length ? apiData.benefits : fallback.benefits,
-    case_examples: apiData.case_examples?.length ? apiData.case_examples : fallback.case_examples,
-    keywords: apiData.keywords?.length ? apiData.keywords : fallback.keywords,
-  };
-}
-
-async function resolveService(slug: string) {
-  const fallback = toViewFromStatic(slug);
-  if (!fallback) return null;
-
-  const apiRes = await getService(slug, { revalidate });
-  if (!apiRes.ok) return fallback;
-
-  return mergeServiceView(fallback, {
-    slug: apiRes.data.slug,
-    title: apiRes.data.title,
-    short_description: apiRes.data.short_description,
-    full_description: apiRes.data.full_description,
-    technologies: apiRes.data.technologies,
-    benefits: apiRes.data.benefits,
-    case_examples: apiRes.data.case_examples,
-    keywords: apiRes.data.keywords,
-  });
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const service = await resolveService(params.slug);
+  const { slug } = await params;
+  const service = await resolveService(slug);
   if (!service) return {};
 
   return {
@@ -105,18 +82,17 @@ export async function generateMetadata({
 export default async function ServiceDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const service = await resolveService(params.slug);
+  const { slug } = await params;
+  const service = await resolveService(slug);
   if (!service) notFound();
 
-  const relatedRes = await getServices({ revalidate });
-  const related = (relatedRes.ok
-    ? relatedRes.data.map((s) => ({ slug: s.slug, title: s.title }))
-    : staticServices.map((s) => ({ slug: s.slug, title: s.name }))
-  )
+  const siteContent = await loadSiteContent();
+  const related = siteContent.services_page.items
     .filter((s) => s.slug !== service.slug)
-    .slice(0, 3);
+    .slice(0, 3)
+    .map((s) => ({ slug: s.slug, title: s.name }));
 
   const jsonLd = {
     "@context": "https://schema.org",

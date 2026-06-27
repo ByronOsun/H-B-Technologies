@@ -46,9 +46,11 @@ export function SiteHeader({ nav = DEFAULT_NAV }: { nav?: NavSection }) {
       <div className={`container ${styles.inner}`}>
         {/* ── Brand ── */}
         <Link className={styles.brand} href="/">
-          <span className={styles.brandV}>V</span>
-          <span className={styles.brandFull}>IZIA</span>
-          <span className={styles.tagline}>Technologies</span>
+          <img src="/vizia-logo.png" alt="VIZIA Technologies" className={styles.logoImg} />
+          <span className={styles.brandLabel}>
+            <span className={styles.brandName}><span className={styles.brandV}>V</span>IZIA</span>
+            <span className={styles.brandSub}>Technologies</span>
+          </span>
         </Link>
 
         {/* ── Desktop Nav ── */}

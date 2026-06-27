@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, ReactNode, CSSProperties } from "react";
+import React, { useEffect, useRef, ReactNode, CSSProperties, type JSX } from "react";
 
 interface Props {
   children: ReactNode;
@@ -21,7 +21,7 @@ export default function AnimateIn({
   threshold = 0.15,
   tag: Tag = "div",
 }: Props) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -47,14 +47,14 @@ export default function AnimateIn({
     : variant === "scale" ? "revealScale"
     : "reveal";
 
+  const AnyTag = Tag as "div";
   return (
-    // @ts-expect-error – dynamic tag is fine
-    <Tag
-      ref={ref}
+    <AnyTag
+      ref={ref as React.RefObject<HTMLDivElement>}
       className={`${variantClass} ${className}`}
       style={style}
     >
       {children}
-    </Tag>
+    </AnyTag>
   );
 }

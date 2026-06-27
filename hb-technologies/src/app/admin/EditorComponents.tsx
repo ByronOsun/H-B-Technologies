@@ -4,12 +4,13 @@
  * Lightweight inline-editing primitives used only inside the visual admin.
  */
 
-import {
+import React, {
   useRef,
   useEffect,
   useState,
   type ReactNode,
   type KeyboardEvent,
+  type JSX,
 } from "react";
 import s from "./editor.module.css";
 
@@ -37,12 +38,10 @@ export function EditableText({
   const ref = useRef<HTMLElement>(null);
   const [editing, setEditing] = useState(false);
 
-  /* Sync external value into the DOM when not editing */
-  useEffect(() => {
-    if (!editing && ref.current) {
-      ref.current.textContent = value;
-    }
-  }, [value, editing]);
+  /* Keep DOM text in sync — never let React render children inside contentEditable */
+  React.useLayoutEffect(() => {
+    if (ref.current) ref.current.textContent = value;
+  }, [value]);
 
   const commit = () => {
     setEditing(false);
@@ -55,77 +54,163 @@ export function EditableText({
     if (e.key === "Escape") { if (ref.current) ref.current.textContent = value; setEditing(false); }
   };
 
+  const AnyTag = Tag as React.ElementType;
   return (
-    // @ts-expect-error dynamic tag
-    <Tag
+    <AnyTag
       ref={ref}
       contentEditable={editing}
       suppressContentEditableWarning
       spellCheck={editing}
-      className={`${s.editableText} ${editing ? s.editing : ""} ${className}`}
+      className={`${s.editableText} ${editing ? s.editing : ""} ${!value ? s.empty : ""} ${className}`}
       data-placeholder={placeholder}
       onClick={() => { if (!editing) { setEditing(true); setTimeout(() => ref.current?.focus(), 0); } }}
       onBlur={commit}
       onKeyDown={onKeyDown}
-    >
-      {value || <span className={s.placeholder}>{placeholder}</span>}
-    </Tag>
+    />
   );
 }
 
 /* ── EditableImage ─────────────────────────────────────────────────
-   Shows the image with a "Change" overlay on hover.
-   Clicking opens an inline URL input.
+   Shows the image/video with a hover overlay.
+   Supports local file upload (→ base64 data URL) and remote URLs.
 */
 interface EImgProps {
   src: string;
   alt?: string;
   onChange: (url: string) => void;
+  onTypeChange?: (type: "image" | "video") => void;
   className?: string;
   style?: React.CSSProperties;
 }
 
-export function EditableImage({ src, alt = "", onChange, className = "", style }: EImgProps) {
+const IMAGE_EXTS = /\.(jpe?g|png|gif|webp|svg|avif|bmp)$/i;
+const VIDEO_EXTS = /\.(mp4|webm|mov|ogg|mkv|avi)$/i;
+
+function guessMediaType(url: string): "image" | "video" | null {
+  if (IMAGE_EXTS.test(url)) return "image";
+  if (VIDEO_EXTS.test(url)) return "video";
+  return null;
+}
+
+export function EditableImage({ src, alt = "", onChange, onTypeChange, className = "", style }: EImgProps) {
   const [open, setOpen] = useState(false);
-  const [draft, setDraft] = useState(src);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [tab, setTab] = useState<"upload" | "url">("upload");
+  const [urlDraft, setUrlDraft] = useState(src);
+  const [preview, setPreview] = useState(src);
+  const [fileLabel, setFileLabel] = useState("");
+  const [sizeWarn, setSizeWarn] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+  const urlRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { setDraft(src); }, [src]);
-  useEffect(() => { if (open) inputRef.current?.focus(); }, [open]);
+  useEffect(() => { setUrlDraft(src); setPreview(src); }, [src]);
+  useEffect(() => { if (open && tab === "url") urlRef.current?.focus(); }, [open, tab]);
 
-  const apply = () => { onChange(draft); setOpen(false); };
+  const apply = () => {
+    if (!preview) return;
+    onChange(preview);
+    const t = guessMediaType(preview);
+    if (t && onTypeChange) onTypeChange(t);
+    setOpen(false);
+  };
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSizeWarn("");
+    setFileLabel(file.name);
+    const isVideo = file.type.startsWith("video/");
+    const isImage = file.type.startsWith("image/");
+    if (!isImage && !isVideo) { setSizeWarn("Unsupported file type."); return; }
+    if (isVideo && file.size > 20 * 1024 * 1024) {
+      setSizeWarn("Video files over 20 MB may make site-content.json very large. Consider using a hosted URL instead.");
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target?.result as string;
+      setPreview(dataUrl);
+      if (onTypeChange) onTypeChange(isVideo ? "video" : "image");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleUrlChange = (v: string) => {
+    setUrlDraft(v);
+    setPreview(v);
+  };
+
+  const isVideo = preview.startsWith("data:video") || VIDEO_EXTS.test(preview);
 
   return (
     <div className={`${s.editableImgWrap} ${className}`} style={style}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src || "https://placehold.co/1920x1080/111/333?text=No+image"} alt={alt} className={s.editableImg} />
+      {src && (VIDEO_EXTS.test(src) || src.startsWith("data:video"))
+        ? <video src={src} className={s.editableImg} muted playsInline />
+        : /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={src || "https://placehold.co/1920x1080/111/333?text=No+media"} alt={alt} className={s.editableImg} />
+      }
       <div className={s.imgOverlay} onClick={() => setOpen(true)}>
         <span className={s.imgOverlayBtn}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M13 2.5a1.5 1.5 0 010 2.12L5.83 11.8 2 12.5l.7-3.83L10.88 1A1.5 1.5 0 0113 2.5z" stroke="currentColor" strokeWidth="1.3" fill="none"/>
           </svg>
-          Change {src ? "image" : "→ add image"}
+          {src ? "Change media" : "Add media"}
         </span>
       </div>
       {open && (
         <div className={s.imgDialog}>
-          <p className={s.imgDialogLabel}>Image or video URL</p>
-          <input
-            ref={inputRef}
-            type="url"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") apply(); if (e.key === "Escape") setOpen(false); }}
-            className={s.imgDialogInput}
-            placeholder="https://..."
-          />
-          {draft && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={draft} alt="preview" className={s.imgDialogPreview} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          {/* Tabs */}
+          <div className={s.imgDialogTabs}>
+            <button className={`${s.imgDialogTab} ${tab === "upload" ? s.imgDialogTabActive : ""}`} onClick={() => setTab("upload")}>
+              ↑ Upload file
+            </button>
+            <button className={`${s.imgDialogTab} ${tab === "url" ? s.imgDialogTabActive : ""}`} onClick={() => { setTab("url"); setTimeout(() => urlRef.current?.focus(), 0); }}>
+              🔗 Paste URL
+            </button>
+          </div>
+
+          {tab === "upload" && (
+            <div className={s.imgUploadArea} onClick={() => fileRef.current?.click()}>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/avif,image/bmp,video/mp4,video/webm,video/mov,video/ogg,video/*"
+                style={{ display: "none" }}
+                onChange={handleFile}
+              />
+              <span className={s.imgUploadIcon}>📁</span>
+              <span className={s.imgUploadLabel}>{fileLabel || "Click to choose a file"}</span>
+              <span className={s.imgUploadHint}>JPEG · PNG · GIF · WebP · SVG · MP4 · WebM · MOV</span>
+              {sizeWarn && <span className={s.imgUploadWarn}>{sizeWarn}</span>}
+            </div>
           )}
+
+          {tab === "url" && (
+            <>
+              <p className={s.imgDialogLabel}>Image or video URL</p>
+              <input
+                ref={urlRef}
+                type="url"
+                value={urlDraft}
+                onChange={(e) => handleUrlChange(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") apply(); if (e.key === "Escape") setOpen(false); }}
+                className={s.imgDialogInput}
+                placeholder="https://example.com/photo.jpg"
+              />
+            </>
+          )}
+
+          {preview && (
+            <div className={s.imgDialogPreviewWrap}>
+              {isVideo
+                ? <video src={preview} className={s.imgDialogPreview} muted playsInline controls />
+                : /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={preview} alt="preview" className={s.imgDialogPreview} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+              }
+            </div>
+          )}
+
           <div className={s.imgDialogActions}>
-            <button className={s.applyBtn} onClick={apply}>Apply</button>
-            <button className={s.cancelBtn} onClick={() => setOpen(false)}>Cancel</button>
+            <button className={s.applyBtn} onClick={apply} disabled={!preview}>Apply</button>
+            <button className={s.cancelBtn} onClick={() => { setOpen(false); setSizeWarn(""); setFileLabel(""); }}>Cancel</button>
           </div>
         </div>
       )}

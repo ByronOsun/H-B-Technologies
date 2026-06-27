@@ -13,6 +13,35 @@ export interface NavSection {
   ctaHref: string;
 }
 
+export interface AboutCard {
+  title: string;
+  type: "paragraph" | "list" | "numbered-list";
+  content?: string;
+  items?: string[];
+}
+
+export interface AboutSection {
+  heading: string;
+  lead: string;
+  cards: AboutCard[];
+}
+
+export interface ServicePageItem {
+  slug: string;
+  name: string;
+  summary: string;
+  full_description: string;
+  technologies: string[];
+  benefits: string[];
+  case_examples: string[];
+}
+
+export interface ServicesPageSection {
+  heading: string;
+  lead: string;
+  items: ServicePageItem[];
+}
+
 export interface TeamMember {
   name: string;
   role: string;
@@ -109,6 +138,8 @@ export interface SiteContent {
     phones: string[];
   };
   team: TeamSection;
+  about: AboutSection;
+  services_page: ServicesPageSection;
 }
 
 /* ── Server-side loader ───────────────────────────────────────────── */

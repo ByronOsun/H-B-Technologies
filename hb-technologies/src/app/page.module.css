@@ -5,38 +5,92 @@
 /* ─── Stats Bar ──────────────────────────────────────────────────── */
 
 .statsBar {
-  background: var(--color-surface);
-  border-top: 1px solid var(--red-border);
-  border-bottom: 1px solid var(--color-border);
-  padding: var(--space-5) 0;
+  background: rgba(200,16,46,.08);
+  border-top: 1px solid rgba(200,16,46,.25);
+  border-bottom: 1px solid rgba(200,16,46,.15);
+  padding: 10px 0;
+  overflow: hidden;
+  position: relative;
 }
 
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-4);
-  text-align: center;
+/* Fade edges */
+.statsBar::before,
+.statsBar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.statsBar::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-surface), transparent);
+}
+.statsBar::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-surface), transparent);
+}
+
+.statsTicker {
+  display: flex;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Single track — doubled items, animate -50% = one full cycle */
+.statsTrack {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: statsTicker 20s linear infinite;
+}
+
+@keyframes statsTicker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.statsBar:hover .statsTrack {
+  animation-play-state: paused;
 }
 
 .statItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: var(--space-2);
+  gap: 2px;
+  padding: 6px 48px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Separator dot between items */
+.statItem::after {
+  content: "·";
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--red-border);
+  font-size: 24px;
+  line-height: 1;
 }
 
 .statValue {
   font-family: var(--font-heading);
-  font-size: clamp(36px, 4.5vw, 52px);
+  font-size: clamp(20px, 2.2vw, 28px);
   font-weight: 700;
   color: var(--red);
   line-height: 1;
   letter-spacing: -.02em;
+  white-space: nowrap;
 }
 
 .statLabel {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--color-muted);
   text-transform: uppercase;
@@ -47,6 +101,7 @@
 
 .sectionHeading {
   margin: var(--space-2) 0 0 0;
+  color: inherit;
 }
 
 .sectionIntro {
@@ -154,15 +209,16 @@
 
 .stackCard {
   padding: var(--space-3) var(--space-4) var(--space-4);
+  border-left: 3px solid var(--red) !important;
 }
 
 .stackTitle {
   font-size: 16px;
   font-weight: 700;
-  color: var(--color-text);
+  color: inherit;
   margin: 0 0 var(--space-3) 0;
   padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--red-border);
+  border-bottom: 1px solid rgba(200,16,46,.2);
 }
 
 .stackList {
@@ -178,12 +234,15 @@
   align-items: center;
   gap: 10px;
   font-size: 14px;
-  color: var(--color-muted);
+  color: #666;
   transition: color .2s;
 }
 
+.sectionLight .stackItem { color: #555; }
+.sectionTech .stackItem { color: var(--color-muted); }
+
 .stackItem:hover {
-  color: var(--color-text);
+  color: var(--red);
 }
 
 .stackDot {
@@ -324,6 +383,103 @@
   margin: 0;
 }
 
+/* ─── Section modifiers ──────────────────────────────────────────── */
+
+/* ─── Deliver section background image ──────────────────────── */
+
+/* ─── Organic background image sections ──────────────────────── */
+
+/* Shared base for all photo-backed sections */
+.photoBg {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #ffffff;
+}
+
+/* Deliver — gaming keyboard in dark room, blue backlight glowing */
+.deliverSection {
+  background-image:
+    linear-gradient(to bottom, rgba(0,6,24,.55) 0%, rgba(0,6,24,.40) 60%, rgba(0,6,24,.65) 100%),
+    url('https://images.unsplash.com/photo-1593640408182-31c228209559?w=1920&q=80');
+  background-position: center 40%;
+}
+
+/* Stack / Tech — developer hands on keyboard at night */
+.stackSection {
+  background-image:
+    linear-gradient(to bottom, rgba(6,0,1,.65) 0%, rgba(6,0,1,.55) 100%),
+    url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1920&q=80');
+}
+
+/* Team — collaborative office workspace */
+.teamSection {
+  background-image:
+    linear-gradient(to bottom, rgba(6,0,1,.60) 0%, rgba(6,0,1,.50) 100%),
+    url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1920&q=80');
+}
+
+/* Glass cards used on all photo-bg sections */
+.photoBgCard {
+  background: rgba(8,1,2,.52) !important;
+  border-color: rgba(200,16,46,.28) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff !important;
+}
+.photoBgCard:hover {
+  background: rgba(200,16,46,.18) !important;
+  border-color: rgba(200,16,46,.55) !important;
+}
+.photoBgCard .cardTitle,
+.photoBgCard .stackTitle { color: #ffffff !important; }
+.photoBgCard .cardDesc,
+.photoBgCard .stackItem { color: rgba(255,255,255,.78) !important; }
+
+/* Diagonal bottom cut — transition into next dark section */
+.sectionDiagBottom::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #080808;
+  clip-path: polygon(0 100%, 100% 0%, 100% 100%);
+  pointer-events: none;
+}
+
+/* Light heading override for dark-on-dark sections */
+.lightHeading { color: #ffffff !important; }
+
+/* Tech card — slightly lighter than bg for contrast on dark sections */
+.techCard {
+  background: rgba(255,255,255,.04) !important;
+  border-color: rgba(200,16,46,.15) !important;
+  backdrop-filter: blur(4px);
+}
+.techCard:hover {
+  border-color: rgba(200,16,46,.4) !important;
+  background: rgba(255,255,255,.07) !important;
+}
+
+/* Red-dark section card */
+.redDarkCard {
+  background: rgba(200,16,46,.06) !important;
+  border-color: rgba(200,16,46,.2) !important;
+}
+.redDarkCard:hover {
+  background: rgba(200,16,46,.12) !important;
+  border-color: rgba(200,16,46,.5) !important;
+}
+.redDarkCard .cardTitle { color: #ffffff !important; }
+
+/* Light section stack card fix */
+.stackCard { border-left: 3px solid var(--red); }
+.stackTitle { color: inherit; }
+.stackItem { color: inherit; }
+
 /* ─── CTA section ────────────────────────────────────────────────── */
 
 .ctaCard {
@@ -347,6 +503,29 @@
   pointer-events: none;
 }
 
+/* New: CTA on red section background */
+.ctaInner {
+  text-align: center;
+  padding: clamp(var(--space-6), 4vw, var(--space-8)) 0;
+  position: relative;
+  z-index: 1;
+}
+
+.ctaHeadingWhite {
+  color: #ffffff !important;
+  margin: var(--space-3) auto var(--space-2);
+  max-width: 620px;
+  font-size: clamp(28px, 4vw, 48px);
+}
+
+.ctaCopyWhite {
+  color: rgba(255,255,255,.85);
+  margin: 0 auto;
+  font-size: 18px;
+  max-width: 52ch;
+  line-height: 1.65;
+}
+
 .ctaHeading {
   margin: var(--space-3) auto var(--space-2);
   max-width: 600px;
@@ -367,16 +546,49 @@
   margin-top: var(--space-4);
 }
 
+.ctaBtnLight {
+  background: #ffffff !important;
+  color: var(--red-dark) !important;
+  border-color: #ffffff !important;
+  font-weight: 700;
+}
+.ctaBtnLight:hover { background: #f0f0f0 !important; }
+
+.ctaBtnOutline {
+  background: transparent !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255,255,255,.6) !important;
+}
+.ctaBtnOutline:hover {
+  background: rgba(255,255,255,.12) !important;
+  border-color: #ffffff !important;
+}
+
 /* ─── Responsive ─────────────────────────────────────────────────── */
 
 @media (min-width: 640px) {
-  .statsGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
 }
 
 @media (max-width: 480px) {
   .grid3 {
     grid-template-columns: 1fr;
+  }
+
+  .statsBar {
+    padding: 6px 0;
+  }
+
+  .statItem {
+    padding: 4px 18px;
+    gap: 1px;
+  }
+
+  .statValue {
+    font-size: clamp(14px, 4vw, 18px);
+  }
+
+  .statLabel {
+    font-size: 9px;
+    letter-spacing: .04em;
   }
 }

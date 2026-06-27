@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import fs from "fs/promises";
 import path from "path";
 
@@ -30,6 +31,13 @@ export async function POST(req: NextRequest) {
 
   try {
     await fs.writeFile(FILE, JSON.stringify(body, null, 2), "utf-8");
+
+    // Purge Next.js cache for all public pages immediately
+    const paths = ["/", "/services", "/about", "/contact", "/blog"];
+    for (const p of paths) revalidatePath(p);
+    // Also purge all service detail pages
+    revalidatePath("/services/[slug]", "page");
+
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json(

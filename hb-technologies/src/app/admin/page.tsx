@@ -3,7 +3,8 @@
 import { useState, useCallback, useEffect } from "react";
 import type {
   SiteContent,
-  NavLink,
+  AboutCard,
+  ServicePageItem,
   DeliverCard,
   WhyItem,
   IndustryItem,
@@ -11,6 +12,8 @@ import type {
   TestimonialItem,
   TeamMember,
 } from "@/lib/content";
+
+type AdminPage = "home" | "services" | "service-detail" | "about" | "contact";
 import type { HeroSlide } from "@/components/HeroSection";
 import { EditableText, EditableImage, SectionShell } from "./EditorComponents";
 import pageStyles from "../page.module.css";
@@ -42,6 +45,8 @@ export default function AdminPage() {
   const [saveState, setSaveState] = useState<"idle" | "saving" | "ok" | "error">("idle");
   const [saveMsg, setSaveMsg] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
+  const [activePage, setActivePage] = useState<AdminPage>("home");
+  const [selectedServiceSlug, setSelectedServiceSlug] = useState<string | null>(null);
 
   /* Hide site chrome while in visual editor */
   useEffect(() => {
@@ -141,13 +146,6 @@ export default function AdminPage() {
       const items = [...c.testimonials.items];
       items[i] = { ...items[i], ...patch };
       return { ...c, testimonials: { ...c.testimonials, items } };
-    });
-
-  const patchNavLink = (i: number, patch: Partial<NavLink>) =>
-    mutate(c => {
-      const links = [...c.nav.links];
-      links[i] = { ...links[i], ...patch };
-      return { ...c, nav: { ...c.nav, links } };
     });
 
   const patchTeamMember = (i: number, patch: Partial<TeamMember>) =>
@@ -263,6 +261,13 @@ export default function AdminPage() {
         <div className={s.adminBarInner}>
           <span className={s.adminLogo}>
             <span className={s.logoV}>V</span>IZIA Admin
+            {activePage !== "home" && (
+              <span className={s.adminPageCrumb}>
+                {activePage === "service-detail"
+                  ? `› Services › ${c.services_page.items.find(s => s.slug === selectedServiceSlug)?.name ?? selectedServiceSlug}`
+                  : `› ${activePage.charAt(0).toUpperCase() + activePage.slice(1)}`}
+              </span>
+            )}
           </span>
           {dirty && <span className={s.unsaved}>● Unsaved changes</span>}
           <div className={s.adminBarActions}>
@@ -286,69 +291,35 @@ export default function AdminPage() {
 
         {/* ══ NAV ═══════════════════════════════════════════════ */}
         <div className={s.adminNavEditor}>
-          <div className={s.adminNavEditorInner}>
-            {/* Brand — not editable (it's the logo) */}
-            <span className={s.adminNavBrand}>
+          {/* Visual preview — links switch the active page editor */}
+          <div className={s.adminNavPreview}>
+            <button className={s.adminNavBrand} onClick={() => setActivePage("home")}>
               <span className={s.logoV}>V</span>IZIA Technologies
-            </span>
-
-            {/* Nav links */}
-            <div className={s.adminNavLinks}>
-              {c.nav.links.map((link, i) => (
-                <SectionShell
-                  key={i}
-                  label={link.href}
-                  onRemove={() =>
-                    mutate(c => ({
-                      ...c,
-                      nav: { ...c.nav, links: c.nav.links.filter((_, idx) => idx !== i) },
-                    }))
-                  }
-                >
-                  <div className={s.adminNavLinkWrap}>
-                    <EditableText
-                      value={link.label}
-                      onChange={v => patchNavLink(i, { label: v })}
-                      className={s.adminNavLinkLabel}
-                      placeholder="Label"
-                    />
-                    <EditableText
-                      value={link.href}
-                      onChange={v => patchNavLink(i, { href: v })}
-                      className={s.adminNavLinkHref}
-                      placeholder="/path"
-                    />
-                  </div>
-                </SectionShell>
-              ))}
-              <button
-                className={s.adminNavToggle}
-                onClick={() =>
-                  mutate(c => ({
-                    ...c,
-                    nav: {
-                      ...c.nav,
-                      links: [...c.nav.links, { label: "New Link", href: "/new" }],
-                    },
-                  }))
-                }
-              >
-                + Add link
-              </button>
+            </button>
+            <div className={s.adminNavPreviewLinks}>
+              {c.nav.links.map((link, i) => {
+                const page = link.href.replace("/", "") as AdminPage;
+                const known: AdminPage[] = ["home", "services", "about", "contact"];
+                const target = known.includes(page) ? page : null;
+                const isActive = activePage === target || (target === "services" && activePage === "service-detail");
+                return (
+                  <button
+                    key={i}
+                    className={`${s.adminNavPreviewLink} ${isActive ? s.adminNavPreviewLinkActive : ""}`}
+                    onClick={() => { if (target) { setActivePage(target); setSelectedServiceSlug(null); } }}
+                    title={target ? `Edit ${link.label} page` : link.href}
+                  >
+                    {link.label}
+                  </button>
+                );
+              })}
             </div>
-
-            {/* CTA button */}
-            <div className={s.adminNavCtaWrap}>
-              <EditableText
-                value={c.nav.ctaLabel}
-                onChange={v => ps("nav", { ctaLabel: v })}
-                className={`btn btnPrimary ${s.ctaBtn ?? ""}`}
-                placeholder="CTA label"
-              />
-            </div>
+            <span className={`btn btnPrimary ${s.adminNavPreviewCta}`}>{c.nav.ctaLabel}</span>
           </div>
+
         </div>
 
+        {activePage === "home" && <>
         {/* ══ HERO ══════════════════════════════════════════════ */}
         <section
           className={heroStyles.hero}
@@ -360,6 +331,7 @@ export default function AdminPage() {
               src={slide.mediaUrl}
               alt="Hero background"
               onChange={url => patchSlide(activeSlide, { mediaUrl: url })}
+              onTypeChange={type => patchSlide(activeSlide, { type })}
               style={{ position: "absolute", inset: 0, borderRadius: 0 }}
             />
           )}
@@ -502,48 +474,58 @@ export default function AdminPage() {
         </section>
 
         {/* ══ STATS ═════════════════════════════════════════════ */}
-        <section className={pageStyles.statsBar} aria-label="Key statistics">
-          <div className={`container ${pageStyles.statsGrid}`}>
-            {c.stats.map((stat, i) => (
-              <SectionShell key={i} label={`Stat ${i + 1}`}>
-                <div className={pageStyles.statItem}>
-                  <div className={pageStyles.statValue}>
-                    <EditableText
-                      value={String(stat.value)}
-                      onChange={v =>
-                        mutate(c => {
-                          const stats = [...c.stats];
-                          stats[i] = { ...stats[i], value: Number(v) || 0 };
-                          return { ...c, stats };
-                        })
-                      }
+        <section className={pageStyles.statsBar}>
+          <SectionShell
+            label="Stats ticker"
+            onAdd={() => mutate(c => ({ ...c, stats: [...c.stats, { value: 0, suffix: "+", label: "New Stat" }] }))}
+            addLabel="Add stat"
+            className={s.statsEditorShell}
+          >
+            <div className={s.statsEditorGrid}>
+              {c.stats.map((stat, i) => (
+                <div key={i} className={s.statsEditorCard}>
+                  <button
+                    className={s.statsRemoveBtn}
+                    title="Remove"
+                    onClick={() => mutate(c => ({ ...c, stats: c.stats.filter((_, idx) => idx !== i) }))}
+                  >×</button>
+                  <div className={s.statsEditorValue}>
+                    <input
+                      className={s.statsInput}
+                      type="number"
+                      value={stat.value}
+                      onChange={e => mutate(c => {
+                        const stats = [...c.stats];
+                        stats[i] = { ...stats[i], value: Number(e.target.value) || 0 };
+                        return { ...c, stats };
+                      })}
+                      placeholder="0"
                     />
-                    <EditableText
+                    <input
+                      className={`${s.statsInput} ${s.statsSuffixInput}`}
                       value={stat.suffix}
-                      onChange={v =>
-                        mutate(c => {
-                          const stats = [...c.stats];
-                          stats[i] = { ...stats[i], suffix: v };
-                          return { ...c, stats };
-                        })
-                      }
+                      onChange={e => mutate(c => {
+                        const stats = [...c.stats];
+                        stats[i] = { ...stats[i], suffix: e.target.value };
+                        return { ...c, stats };
+                      })}
+                      placeholder="+, %, /7"
                     />
                   </div>
-                  <EditableText
+                  <input
+                    className={`${s.statsInput} ${s.statsLabelInput}`}
                     value={stat.label}
-                    onChange={v =>
-                      mutate(c => {
-                        const stats = [...c.stats];
-                        stats[i] = { ...stats[i], label: v };
-                        return { ...c, stats };
-                      })
-                    }
-                    className={pageStyles.statLabel}
+                    onChange={e => mutate(c => {
+                      const stats = [...c.stats];
+                      stats[i] = { ...stats[i], label: e.target.value };
+                      return { ...c, stats };
+                    })}
+                    placeholder="Label"
                   />
                 </div>
-              </SectionShell>
-            ))}
-          </div>
+              ))}
+            </div>
+          </SectionShell>
         </section>
 
         {/* ══ DELIVER ═══════════════════════════════════════════ */}
@@ -620,7 +602,20 @@ export default function AdminPage() {
                         className={`muted ${pageStyles.cardDesc}`}
                         multiline
                       />
-                      <span className={pageStyles.cardArrow}>Learn more →</span>
+                      {(() => {
+                        const slug = card.href?.replace("/services/", "").replace("/", "");
+                        const hasDetail = slug && c.services_page.items.some(s => s.slug === slug);
+                        return hasDetail ? (
+                          <button
+                            className={s.viewDetailBtn}
+                            onClick={() => { setSelectedServiceSlug(slug); setActivePage("service-detail"); }}
+                          >
+                            Edit page content →
+                          </button>
+                        ) : (
+                          <span className={pageStyles.cardArrow}>Learn more →</span>
+                        );
+                      })()}
                     </div>
                   </SectionShell>
                 ))}
@@ -1187,6 +1182,398 @@ export default function AdminPage() {
 
         {/* Bottom spacer */}
         <div style={{ height: 80 }} />
+        </>}
+
+        {/* ══ SERVICES PAGE EDITOR ══════════════════════════════ */}
+        {activePage === "services" && (
+          <div className="section">
+            <div className="container">
+              <span className="pill">Services page</span>
+              <EditableText
+                value={c.services_page.heading}
+                onChange={v => ps("services_page", { heading: v })}
+                tag="h1"
+                className={pageStyles.sectionHeading}
+              />
+              <EditableText
+                value={c.services_page.lead}
+                onChange={v => ps("services_page", { lead: v })}
+                tag="p"
+                className={`muted ${pageStyles.sectionIntro}`}
+                multiline
+              />
+              <SectionShell
+                label="Service cards"
+                onAdd={() =>
+                  mutate(c => ({
+                    ...c,
+                    services_page: {
+                      ...c.services_page,
+                      items: [
+                        ...c.services_page.items,
+                        { slug: `new-service-${Date.now()}`, name: "New Service", summary: "Describe this service.", full_description: "Full description of this service.", technologies: [], benefits: [], case_examples: [] },
+                      ],
+                    },
+                  }))
+                }
+                addLabel="Add service"
+              >
+                <div className={pageStyles.grid3} style={{ marginTop: "var(--space-5)" }}>
+                  {c.services_page.items.map((svc, i) => (
+                    <SectionShell
+                      key={i}
+                      label={`Service ${i + 1}`}
+                      onRemove={() =>
+                        mutate(c => ({
+                          ...c,
+                          services_page: {
+                            ...c.services_page,
+                            items: c.services_page.items.filter((_, idx) => idx !== i),
+                          },
+                        }))
+                      }
+                    >
+                      <article className={`card ${pageStyles.deliverCard}`}>
+                        <EditableText
+                          value={svc.name}
+                          onChange={v => mutate(c => {
+                            const items = [...c.services_page.items];
+                            items[i] = { ...items[i], name: v };
+                            return { ...c, services_page: { ...c.services_page, items } };
+                          })}
+                          tag="h2"
+                          className={pageStyles.cardTitle}
+                        />
+                        <EditableText
+                          value={svc.summary}
+                          onChange={v => mutate(c => {
+                            const items = [...c.services_page.items];
+                            items[i] = { ...items[i], summary: v };
+                            return { ...c, services_page: { ...c.services_page, items } };
+                          })}
+                          tag="p"
+                          className={`muted ${pageStyles.cardDesc}`}
+                          multiline
+                        />
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "var(--space-2)" }}>
+                          <span style={{ fontSize: 12, color: "var(--color-subtle)" }}>Slug:</span>
+                          <input
+                            className={s.navInput}
+                            value={svc.slug}
+                            onChange={e => mutate(c => {
+                              const items = [...c.services_page.items];
+                              items[i] = { ...items[i], slug: e.target.value };
+                              return { ...c, services_page: { ...c.services_page, items } };
+                            })}
+                            style={{ fontSize: 12, padding: "3px 8px" }}
+                            placeholder="url-slug"
+                          />
+                        </div>
+                        <button
+                          className={s.viewDetailBtn}
+                          onClick={() => { setSelectedServiceSlug(svc.slug); setActivePage("service-detail"); }}
+                        >
+                          Edit detail page →
+                        </button>
+                      </article>
+                    </SectionShell>
+                  ))}
+                </div>
+              </SectionShell>
+            </div>
+          </div>
+        )}
+
+        {/* ══ SERVICE DETAIL EDITOR ════════════════════════════ */}
+        {activePage === "service-detail" && (() => {
+          const svcIdx = c.services_page.items.findIndex(s => s.slug === selectedServiceSlug);
+          const svc = c.services_page.items[svcIdx];
+          if (!svc) return <div className="section"><div className="container"><p className="muted">Service not found.</p></div></div>;
+          const patchSvc = (patch: Partial<typeof svc>) =>
+            mutate(c => {
+              const items = [...c.services_page.items];
+              items[svcIdx] = { ...items[svcIdx], ...patch };
+              return { ...c, services_page: { ...c.services_page, items } };
+            });
+          const patchSvcList = (field: "technologies" | "benefits" | "case_examples", idx: number, val: string) =>
+            mutate(c => {
+              const items = [...c.services_page.items];
+              const arr = [...(items[svcIdx][field] as string[])];
+              arr[idx] = val;
+              items[svcIdx] = { ...items[svcIdx], [field]: arr };
+              return { ...c, services_page: { ...c.services_page, items } };
+            });
+          const addSvcListItem = (field: "technologies" | "benefits" | "case_examples") =>
+            mutate(c => {
+              const items = [...c.services_page.items];
+              items[svcIdx] = { ...items[svcIdx], [field]: [...(items[svcIdx][field] as string[]), "New item"] };
+              return { ...c, services_page: { ...c.services_page, items } };
+            });
+          const removeSvcListItem = (field: "technologies" | "benefits" | "case_examples", idx: number) =>
+            mutate(c => {
+              const items = [...c.services_page.items];
+              items[svcIdx] = { ...items[svcIdx], [field]: (items[svcIdx][field] as string[]).filter((_, j) => j !== idx) };
+              return { ...c, services_page: { ...c.services_page, items } };
+            });
+
+          return (
+            <div className="section">
+              <div className="container">
+                <button className={s.backBtn} onClick={() => setActivePage("services")}>← Back to Services</button>
+                <span className="pill">{svc.name}</span>
+                <EditableText value={svc.name} onChange={v => patchSvc({ name: v })} tag="h1" className={pageStyles.sectionHeading} />
+                <EditableText value={svc.summary} onChange={v => patchSvc({ summary: v })} tag="p" className={`muted ${pageStyles.sectionIntro}`} multiline />
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-5)", marginTop: "var(--space-5)" }}>
+                  {/* Overview */}
+                  <article className={`card ${pageStyles.pad3 ?? ""}`} style={{ padding: "var(--space-5)" }}>
+                    <h2 style={{ marginBottom: "var(--space-3)" }}>Overview</h2>
+                    <EditableText value={svc.full_description} onChange={v => patchSvc({ full_description: v })} tag="p" className="muted" multiline />
+                  </article>
+
+                  {/* Technologies */}
+                  <article className={`card`} style={{ padding: "var(--space-5)" }}>
+                    <h2 style={{ marginBottom: "var(--space-3)" }}>Technologies used</h2>
+                    <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 8 }}>
+                      {svc.technologies.map((t, ti) => (
+                        <li key={ti} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                          <EditableText value={t} onChange={v => patchSvcList("technologies", ti, v)} tag="span" className="muted" />
+                          <button className={s.inlineRemoveBtn} onClick={() => removeSvcListItem("technologies", ti)}>×</button>
+                        </li>
+                      ))}
+                    </ul>
+                    <button className={s.inlineAddBtn} onClick={() => addSvcListItem("technologies")}>+ Add technology</button>
+                  </article>
+
+                  {/* Benefits */}
+                  <article className={`card`} style={{ padding: "var(--space-5)" }}>
+                    <h2 style={{ marginBottom: "var(--space-3)" }}>Benefits</h2>
+                    <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 8 }}>
+                      {svc.benefits.map((b, bi) => (
+                        <li key={bi} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                          <EditableText value={b} onChange={v => patchSvcList("benefits", bi, v)} tag="span" className="muted" />
+                          <button className={s.inlineRemoveBtn} onClick={() => removeSvcListItem("benefits", bi)}>×</button>
+                        </li>
+                      ))}
+                    </ul>
+                    <button className={s.inlineAddBtn} onClick={() => addSvcListItem("benefits")}>+ Add benefit</button>
+                  </article>
+
+                  {/* Case examples */}
+                  <article className={`card`} style={{ padding: "var(--space-5)" }}>
+                    <h2 style={{ marginBottom: "var(--space-3)" }}>Case examples</h2>
+                    <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 8 }}>
+                      {svc.case_examples.map((ex, ei) => (
+                        <li key={ei} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                          <EditableText value={ex} onChange={v => patchSvcList("case_examples", ei, v)} tag="span" className="muted" />
+                          <button className={s.inlineRemoveBtn} onClick={() => removeSvcListItem("case_examples", ei)}>×</button>
+                        </li>
+                      ))}
+                    </ul>
+                    <button className={s.inlineAddBtn} onClick={() => addSvcListItem("case_examples")}>+ Add example</button>
+                  </article>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ══ ABOUT PAGE EDITOR ═════════════════════════════════ */}
+        {activePage === "about" && (
+          <div className="section">
+            <div className="container">
+              <span className="pill">About page</span>
+              <EditableText
+                value={c.about.heading}
+                onChange={v => ps("about", { heading: v })}
+                tag="h1"
+                className={pageStyles.sectionHeading}
+              />
+              <EditableText
+                value={c.about.lead}
+                onChange={v => ps("about", { lead: v })}
+                tag="p"
+                className={`muted ${pageStyles.sectionIntro}`}
+                multiline
+              />
+              <SectionShell
+                label="Content cards"
+                onAdd={() =>
+                  mutate(c => ({
+                    ...c,
+                    about: {
+                      ...c.about,
+                      cards: [
+                        ...c.about.cards,
+                        { title: "New Section", type: "paragraph", content: "Write your content here." },
+                      ],
+                    },
+                  }))
+                }
+                addLabel="Add card"
+              >
+                <div className={pageStyles.grid3} style={{ marginTop: "var(--space-5)" }}>
+                  {c.about.cards.map((card, i) => (
+                    <SectionShell
+                      key={i}
+                      label={card.title}
+                      onRemove={() =>
+                        mutate(c => ({
+                          ...c,
+                          about: { ...c.about, cards: c.about.cards.filter((_, idx) => idx !== i) },
+                        }))
+                      }
+                    >
+                      <article className={`card ${pageStyles.diffCard}`} style={{ padding: "var(--space-4)" }}>
+                        <EditableText
+                          value={card.title}
+                          onChange={v => mutate(c => {
+                            const cards = [...c.about.cards];
+                            cards[i] = { ...cards[i], title: v };
+                            return { ...c, about: { ...c.about, cards } };
+                          })}
+                          tag="h2"
+                          className={pageStyles.cardTitle}
+                        />
+                        {/* Type selector */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, margin: "8px 0" }}>
+                          <span style={{ fontSize: 11, color: "var(--color-subtle)", textTransform: "uppercase", letterSpacing: ".06em" }}>Type:</span>
+                          <select
+                            value={card.type}
+                            onChange={e => mutate(c => {
+                              const cards = [...c.about.cards];
+                              cards[i] = { ...cards[i], type: e.target.value as AboutCard["type"] };
+                              return { ...c, about: { ...c.about, cards } };
+                            })}
+                            className={s.slideSelect}
+                          >
+                            <option value="paragraph">Paragraph</option>
+                            <option value="list">Bullet list</option>
+                            <option value="numbered-list">Numbered list</option>
+                          </select>
+                        </div>
+                        {card.type === "paragraph" && (
+                          <EditableText
+                            value={card.content ?? ""}
+                            onChange={v => mutate(c => {
+                              const cards = [...c.about.cards];
+                              cards[i] = { ...cards[i], content: v };
+                              return { ...c, about: { ...c.about, cards } };
+                            })}
+                            tag="p"
+                            className={`muted ${pageStyles.cardDesc}`}
+                            multiline
+                          />
+                        )}
+                        {(card.type === "list" || card.type === "numbered-list") && (
+                          <>
+                            {(card.items ?? []).map((item, j) => (
+                              <div key={j} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                                <span style={{ fontSize: 13, color: "var(--color-muted)" }}>
+                                  {card.type === "numbered-list" ? `${j + 1}.` : "•"}
+                                </span>
+                                <EditableText
+                                  value={item}
+                                  onChange={v => mutate(c => {
+                                    const cards = [...c.about.cards];
+                                    const items = [...(cards[i].items ?? [])];
+                                    items[j] = v;
+                                    cards[i] = { ...cards[i], items };
+                                    return { ...c, about: { ...c.about, cards } };
+                                  })}
+                                  tag="span"
+                                  className={`muted ${pageStyles.cardDesc}`}
+                                />
+                                <button
+                                  className={s.inlineRemoveBtn}
+                                  style={{ opacity: 1 }}
+                                  onClick={() => mutate(c => {
+                                    const cards = [...c.about.cards];
+                                    const items = (cards[i].items ?? []).filter((_, idx) => idx !== j);
+                                    cards[i] = { ...cards[i], items };
+                                    return { ...c, about: { ...c.about, cards } };
+                                  })}
+                                >×</button>
+                              </div>
+                            ))}
+                            <button
+                              className={s.inlineAddBtn}
+                              onClick={() => mutate(c => {
+                                const cards = [...c.about.cards];
+                                const items = [...(cards[i].items ?? []), "New item"];
+                                cards[i] = { ...cards[i], items };
+                                return { ...c, about: { ...c.about, cards } };
+                              })}
+                            >+ Add item</button>
+                          </>
+                        )}
+                      </article>
+                    </SectionShell>
+                  ))}
+                </div>
+              </SectionShell>
+            </div>
+          </div>
+        )}
+
+        {/* ══ CONTACT PAGE EDITOR ═══════════════════════════════ */}
+        {activePage === "contact" && (
+          <div className="section">
+            <div className="container">
+              <span className="pill">Contact page</span>
+              <h1 className={pageStyles.sectionHeading}>Contact Details</h1>
+              <p className={`muted ${pageStyles.sectionIntro}`}>
+                These details appear on the Contact page and throughout the site.
+              </p>
+              <div className={s.contactGrid} style={{ marginTop: "var(--space-5)" }}>
+                <div className={s.contactField}>
+                  <span className={s.contactLabel}>Email address</span>
+                  <EditableText
+                    value={c.contact.email}
+                    onChange={v => ps("contact", { email: v })}
+                    className={s.contactValue}
+                    placeholder="your@email.com"
+                  />
+                </div>
+                <div className={s.contactField}>
+                  <span className={s.contactLabel}>Phone numbers</span>
+                  <div className={s.phoneList}>
+                    {c.contact.phones.map((ph, i) => (
+                      <div key={i} className={s.phoneRow}>
+                        <EditableText
+                          value={ph}
+                          onChange={v => mutate(c => {
+                            const phones = [...c.contact.phones];
+                            phones[i] = v;
+                            return { ...c, contact: { ...c.contact, phones } };
+                          })}
+                          className={s.contactValue}
+                          placeholder="+1 555 000 0000"
+                        />
+                        <button
+                          className={s.inlineRemoveBtn}
+                          style={{ opacity: 1 }}
+                          onClick={() => mutate(c => ({
+                            ...c,
+                            contact: { ...c.contact, phones: c.contact.phones.filter((_, idx) => idx !== i) },
+                          }))}
+                        >×</button>
+                      </div>
+                    ))}
+                    <button
+                      className={s.inlineAddBtn}
+                      onClick={() => mutate(c => ({
+                        ...c,
+                        contact: { ...c.contact, phones: [...c.contact.phones, ""] },
+                      }))}
+                    >+ Add phone</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );

@@ -1,0 +1,145 @@
+/* ─── Flip-card shell ──────────────────────────────────────── */
+
+.outer {
+  perspective: 1000px;
+  height: 340px;
+  cursor: pointer;
+  border-radius: var(--radius-3, 12px);
+  /* Reset any inherited card padding */
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--radius-3, 12px);
+}
+
+.outer:hover .inner,
+.flipped .inner {
+  transform: rotateY(180deg);
+}
+
+.front,
+.back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius-3, 12px);
+  overflow: hidden;
+}
+
+/* ─── Front face ───────────────────────────────────────────── */
+
+.imgWrap {
+  position: absolute;
+  inset: 0;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: transform 0.65s ease;
+}
+
+.outer:hover .img {
+  transform: scale(1.04);
+}
+
+.initial {
+  width: 100%;
+  height: 100%;
+  background: #110205;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 96px;
+  font-weight: 700;
+  color: #C8102E;
+}
+
+.nameBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 64px 18px 18px;
+  background: linear-gradient(to top, rgba(4,0,1,.96) 0%, rgba(4,0,1,.55) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.role {
+  font-size: 10px;
+  font-weight: 700;
+  color: #C8102E;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+/* ─── Back face ────────────────────────────────────────────── */
+
+.back {
+  transform: rotateY(180deg);
+  background: rgba(8,1,2,.88);
+  border: 1px solid rgba(200,16,46,.3);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backInner {
+  padding: 28px 22px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.backName {
+  display: block;
+  font-size: 19px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.backRole {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #C8102E;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(200,16,46,.28);
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.bio {
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(255,255,255,.82);
+  margin: 0;
+}

@@ -43,20 +43,37 @@
 
 .brand {
   display: inline-flex;
-  align-items: baseline;
-  gap: 2px;
+  flex-direction: column;
+  align-items: center;
   text-decoration: none;
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 26px;
-  line-height: 1;
-  letter-spacing: .01em;
   transition: opacity .2s;
+  gap: 4px;
 }
 
 .brand:hover {
   opacity: .8;
   text-decoration: none;
+}
+
+.logoImg {
+  height: 80px;
+  width: auto;
+  display: block;
+}
+
+.brandLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.15;
+}
+
+.brandName {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: .04em;
+  color: var(--color-text);
 }
 
 .brandV {
@@ -65,13 +82,11 @@
 
 .brandTag {
   font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 13px;
-  color: var(--color-muted);
-  margin-left: 8px;
-  letter-spacing: .05em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  align-self: center;
+  color: var(--color-muted);
 }
 
 .tagline {

@@ -30,7 +30,7 @@
         "type": "image",
         "mediaUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=80",
         "poster": "",
-        "overlayOpacity": 0.8,
+        "overlayOpacity": 0.65,
         "badge": "Security-first · AI-powered · Enterprise-grade",
         "heading": "Build Secure, Scalable Systems That Outperform in Production.",
         "subheading": "VIZIA Technologies delivers security-first product development, AI-powered automation, and resilient enterprise infrastructure.",
@@ -101,6 +101,16 @@
       "value": 24,
       "suffix": "/7",
       "label": "Support Coverage"
+    },
+    {
+      "value": 30,
+      "suffix": "+",
+      "label": "projects underway"
+    },
+    {
+      "value": 100,
+      "suffix": "%",
+      "label": "efficient"
     }
   ],
   "deliver": {
@@ -289,16 +299,352 @@
     ]
   },
   "team": {
-    "enabled": false,
+    "enabled": true,
     "badge": "Our Team",
     "heading": "Meet the People Behind VIZIA",
     "intro": "A tight-knit team of engineers, designers, and strategists obsessed with building technology that lasts.",
     "members": [
       {
-        "name": "Byron Osun",
-        "role": "Founder & Lead Engineer",
+        "name": "Osun Byron",
+        "role": "CEO and Chief Technologist Officer",
         "photo": "",
         "bio": "Security-first software architect with expertise in enterprise systems and AI integration."
+      },
+      {
+        "name": "Hashim Nasoro",
+        "role": "DevOps Engineer",
+        "photo": "",
+        "bio": "Short bio."
+      }
+    ]
+  },
+  "about": {
+    "heading": "About VIZIA Technologies",
+    "lead": "A security-first software engineering company delivering production-ready systems across web, mobile, AI, and infrastructure.",
+    "cards": [
+      {
+        "title": "Who We Are",
+        "type": "paragraph",
+        "content": "VIZIA Technologies is a software engineering company focused on building secure, scalable, and maintainable systems for enterprises and startups.\n\nWe combine engineering rigour with practical delivery — shipping production systems with clear documentation, governance, and measurable outcomes."
+      },
+      {
+        "title": "Our Approach",
+        "type": "list",
+        "items": [
+          "Security-by-default architecture",
+          "OWASP-aligned coding standards",
+          "Threat modelling at the design stage",
+          "CI/CD and observability as standard",
+          "Clear documentation and handover"
+        ]
+      },
+      {
+        "title": "Our Mission",
+        "type": "paragraph",
+        "content": "To make enterprise-grade engineering accessible to organisations of all sizes — without compromising on security, reliability, or delivery speed."
+      },
+      {
+        "title": "Core Values",
+        "type": "list",
+        "items": [
+          "Security first — always",
+          "Transparent communication",
+          "Measurable outcomes",
+          "Long-term thinking",
+          "Continuous improvement"
+        ]
+      },
+      {
+        "title": "What We Build",
+        "type": "list",
+        "items": [
+          "Web and mobile applications",
+          "API platforms and microservices",
+          "AI and ML systems",
+          "Network and IoT infrastructure",
+          "Smart CCTV and automation"
+        ]
+      },
+      {
+        "title": "Our Process",
+        "type": "numbered-list",
+        "items": [
+          "Discovery and requirements scoping",
+          "Architecture and threat modelling",
+          "Iterative delivery with review gates",
+          "Testing, security review, and QA",
+          "Deployment, handover, and support"
+        ]
+      }
+    ]
+  },
+  "services_page": {
+    "heading": "Our Services",
+    "lead": "Security-first engineering services across web, mobile, AI, infrastructure, and cyber security.",
+    "items": [
+      {
+        "slug": "web-development",
+        "name": "Web Development",
+        "summary": "Full-stack web applications built with Next.js, React, and Node.js — secure, performant, and SEO-ready.",
+        "full_description": "We build high-performance, SEO-ready web applications using a security-by-design approach. Every application is developed with OWASP-aligned controls, input validation, and least-privilege access patterns built in from the start — not bolted on at the end.",
+        "technologies": [
+          "Next.js (App Router)",
+          "TypeScript",
+          "Node.js + Express",
+          "Supabase Postgres + Storage"
+        ],
+        "benefits": [
+          "90+ Lighthouse-ready foundations (performance, SEO, accessibility)",
+          "Secure architecture aligned to OWASP Top 10",
+          "Scalable codebase and clear delivery milestones"
+        ],
+        "case_examples": [
+          "Discovery and architecture workshop",
+          "Secure API + data model implementation",
+          "Deployment, monitoring, and maintenance plan"
+        ]
+      },
+      {
+        "slug": "mobile-development",
+        "name": "Mobile Development",
+        "summary": "Cross-platform mobile apps for iOS and Android with React Native — built for reliability and security.",
+        "full_description": "We deliver reliable mobile experiences with secure APIs and production-grade release practices. Our mobile-first planning covers API contract design, JWT-based auth with robust session policies, and observability-ready backend patterns for faster incident response.",
+        "technologies": [
+          "React Native",
+          "REST APIs",
+          "JWT Authentication",
+          "Supabase Postgres"
+        ],
+        "benefits": [
+          "Fewer production defects via validated inputs and stable APIs",
+          "Stronger security posture for customer data",
+          "Clear rollout plan and maintenance strategy"
+        ],
+        "case_examples": [
+          "Mobile-first product scoping and API contract design",
+          "Secure auth and offline data handling",
+          "Performance testing and production release"
+        ]
+      },
+      {
+        "slug": "cyber-security",
+        "name": "Cyber Security",
+        "summary": "Penetration testing, threat modelling, OWASP-aligned reviews, and 24/7 incident response.",
+        "full_description": "We provide OWASP-aligned security controls, penetration testing, and infrastructure hardening for applications and networks. Our security reviews identify vulnerabilities before they reach production, and our incident response plans ensure you can recover quickly when things go wrong.",
+        "technologies": [
+          "OWASP testing methodology",
+          "Threat modelling frameworks",
+          "Vulnerability scanners",
+          "SIEM and log analysis"
+        ],
+        "benefits": [
+          "Reduced attack surface across web, API, and network layers",
+          "Clear risk register and remediation roadmap",
+          "Compliance-ready documentation and audit trails"
+        ],
+        "case_examples": [
+          "Web application penetration test and OWASP Top 10 review",
+          "Network vulnerability assessment and hardening",
+          "Incident response plan and runbook development"
+        ]
+      },
+      {
+        "slug": "artificial-intelligence",
+        "name": "Artificial Intelligence",
+        "summary": "Applied ML, NLP pipelines, and intelligent automation designed for measurable business outcomes.",
+        "full_description": "We build applied AI and machine learning systems focused on measurable outcomes and safe data boundaries. From NLP pipelines to predictive models, every system is built with observability, explainability, and production reliability in mind.",
+        "technologies": [
+          "Python",
+          "scikit-learn / PyTorch",
+          "LLM APIs (OpenAI, Anthropic)",
+          "Vector databases"
+        ],
+        "benefits": [
+          "Automatable decisions backed by data, not guesswork",
+          "Safe data boundaries and explainable outputs",
+          "Measurable ROI with clear evaluation metrics"
+        ],
+        "case_examples": [
+          "Document classification and NLP pipeline",
+          "Predictive analytics dashboard",
+          "LLM-powered internal tooling and automation"
+        ]
+      },
+      {
+        "slug": "data-engineering",
+        "name": "Data Engineering",
+        "summary": "Data pipelines, warehouses, and analytics platforms built for scale and compliance.",
+        "full_description": "We design and build data pipelines, warehouses, and analytics platforms that handle scale without sacrificing compliance or data integrity. Our data engineering solutions are built for reliability, with clear lineage, monitoring, and governance from day one.",
+        "technologies": [
+          "PostgreSQL",
+          "dbt",
+          "Apache Airflow",
+          "Supabase / BigQuery"
+        ],
+        "benefits": [
+          "Reliable data pipelines with clear lineage and monitoring",
+          "Compliance-ready data governance and access controls",
+          "Analytics-ready data models for faster business decisions"
+        ],
+        "case_examples": [
+          "ETL pipeline design and implementation",
+          "Data warehouse migration and modelling",
+          "Real-time analytics dashboard build"
+        ]
+      },
+      {
+        "slug": "network-engineering",
+        "name": "Network Engineering",
+        "summary": "Enterprise network infrastructure, VPNs, and secure connectivity solutions.",
+        "full_description": "We design and deploy enterprise network infrastructure built for reliability, security, and scale. From VPN configuration and firewall hardening to network segmentation and monitoring, our solutions are built to meet enterprise and regulatory requirements.",
+        "technologies": [
+          "Cisco / MikroTik",
+          "OpenVPN / WireGuard",
+          "VLAN segmentation",
+          "Network monitoring (Zabbix, Grafana)"
+        ],
+        "benefits": [
+          "Reduced network attack surface through segmentation and hardening",
+          "High availability and fault-tolerant connectivity",
+          "Clear network documentation and change management"
+        ],
+        "case_examples": [
+          "Enterprise LAN/WAN design and deployment",
+          "VPN and remote access implementation",
+          "Network security audit and hardening"
+        ]
+      },
+      {
+        "slug": "cloud-infrastructure",
+        "name": "Cloud Infrastructure",
+        "summary": "Cloud architecture, DevOps pipelines, and infrastructure hardening on AWS, GCP, and Azure.",
+        "full_description": "We design cloud infrastructure that is secure, cost-efficient, and built for production from day one. Our DevOps pipelines automate testing, deployment, and monitoring so your team can ship faster without sacrificing reliability or security compliance.",
+        "technologies": [
+          "AWS / GCP / Azure",
+          "Terraform / Pulumi",
+          "Docker + Kubernetes",
+          "GitHub Actions / CI/CD"
+        ],
+        "benefits": [
+          "Infrastructure as code for repeatable, auditable deployments",
+          "Reduced downtime with automated rollbacks and health checks",
+          "Security hardening aligned to cloud provider best practices"
+        ],
+        "case_examples": [
+          "Cloud architecture design and migration",
+          "CI/CD pipeline setup and automation",
+          "Cost optimisation and infrastructure audit"
+        ]
+      },
+      {
+        "slug": "iot-solutions",
+        "name": "IoT Solutions",
+        "summary": "Connected device ecosystems, IoT firmware, and real-time data collection platforms.",
+        "full_description": "We build connected device ecosystems that collect, transmit, and act on real-time data securely. From firmware development to cloud integration and dashboards, our IoT solutions are designed for reliability in demanding environments.",
+        "technologies": [
+          "MQTT / CoAP",
+          "Raspberry Pi / Arduino",
+          "AWS IoT / Azure IoT Hub",
+          "Time-series databases"
+        ],
+        "benefits": [
+          "Secure device communication with encryption and authentication",
+          "Real-time data collection and alerting",
+          "Scalable platform that grows with your device fleet"
+        ],
+        "case_examples": [
+          "Industrial sensor network and dashboard",
+          "Smart building automation system",
+          "Remote asset monitoring platform"
+        ]
+      },
+      {
+        "slug": "smart-cctv",
+        "name": "Smart CCTV",
+        "summary": "AI-powered surveillance systems with real-time analytics, alerts, and remote management.",
+        "full_description": "We design and deploy AI-powered CCTV systems that go beyond recording. Our solutions include real-time object detection, motion analytics, automated alerts, and remote management dashboards — all built with privacy and compliance considerations.",
+        "technologies": [
+          "OpenCV / YOLO",
+          "RTSP camera integration",
+          "Cloud storage and archiving",
+          "Remote management dashboards"
+        ],
+        "benefits": [
+          "Real-time threat detection and automated alerts",
+          "Reduced manual monitoring overhead",
+          "Privacy-compliant storage and access controls"
+        ],
+        "case_examples": [
+          "Multi-site CCTV system with AI analytics",
+          "Perimeter intrusion detection setup",
+          "Remote monitoring dashboard for security teams"
+        ]
+      },
+      {
+        "slug": "automation",
+        "name": "Automation",
+        "summary": "Business process automation, RPA, and workflow orchestration to reduce manual overhead.",
+        "full_description": "We automate repetitive business processes so your team can focus on work that matters. From RPA bots to workflow orchestration and API integrations, our automation solutions are built to be maintainable, monitored, and auditable.",
+        "technologies": [
+          "n8n / Zapier / Make",
+          "Python scripting",
+          "REST API integrations",
+          "Scheduled task management"
+        ],
+        "benefits": [
+          "Reduced manual overhead and human error",
+          "Faster turnaround on routine business operations",
+          "Auditable automation with logging and alerting"
+        ],
+        "case_examples": [
+          "Invoice and document processing automation",
+          "CRM and email workflow orchestration",
+          "Multi-system data sync and reporting"
+        ]
+      },
+      {
+        "slug": "ui-ux-design",
+        "name": "UI/UX Design",
+        "summary": "User research, wireframing, and high-fidelity design for web and mobile products.",
+        "full_description": "We design interfaces that are clear, accessible, and built around how your users actually work. Our process covers user research, wireframing, prototyping, and high-fidelity design — all aligned to your brand and engineering constraints.",
+        "technologies": [
+          "Figma",
+          "User research and testing",
+          "Design systems",
+          "Accessibility (WCAG) review"
+        ],
+        "benefits": [
+          "Reduced development rework through validated designs",
+          "Accessible interfaces that meet WCAG standards",
+          "Design system that scales across your product"
+        ],
+        "case_examples": [
+          "End-to-end product design sprint",
+          "Design system creation and documentation",
+          "Usability testing and redesign"
+        ]
+      },
+      {
+        "slug": "it-consulting",
+        "name": "IT Consulting",
+        "summary": "Strategic technology advisory, architecture reviews, and digital transformation planning.",
+        "full_description": "We help organisations make better technology decisions — whether that's evaluating a new platform, reviewing an existing architecture, or planning a digital transformation. Our advisory work is practical, vendor-neutral, and grounded in real engineering experience.",
+        "technologies": [
+          "Architecture review frameworks",
+          "Cloud provider evaluation",
+          "Security and compliance assessment",
+          "Technology roadmapping"
+        ],
+        "benefits": [
+          "Clear technology strategy aligned to business goals",
+          "Reduced risk from poor vendor or architecture choices",
+          "Practical roadmap with prioritised, costed initiatives"
+        ],
+        "case_examples": [
+          "Technology stack evaluation and recommendation",
+          "Architecture review and remediation plan",
+          "Digital transformation roadmap workshop"
+        ]
       }
     ]
   }

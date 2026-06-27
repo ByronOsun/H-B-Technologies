@@ -39,15 +39,11 @@
 
 .brand {
   display: inline-flex;
-  align-items: baseline;
-  gap: 2px;
+  flex-direction: column;
+  align-items: center;
   text-decoration: none;
-  letter-spacing: .01em;
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: clamp(22px, 2.5vw, 28px);
-  line-height: 1;
   transition: opacity .2s;
+  gap: 2px;
 }
 
 .brand:hover {
@@ -55,24 +51,43 @@
   text-decoration: none;
 }
 
-.brandV {
-  color: var(--red);
-  font-size: 1.1em;
+.logoImg {
+  height: 40px;
+  width: auto;
+  display: block;
+  transition: height .4s var(--ease-out);
 }
 
-.brandFull {
+.scrolled .logoImg {
+  height: 32px;
+}
+
+.brandLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+.brandName {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(14px, 1.8vw, 18px);
+  letter-spacing: .04em;
   color: var(--color-text);
 }
 
-.tagline {
-  display: none;
-  color: var(--color-muted);
+.brandV {
+  color: var(--red);
+}
+
+.brandSub {
   font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 13px;
-  margin-left: 8px;
-  letter-spacing: .04em;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .14em;
   text-transform: uppercase;
+  color: var(--color-muted);
 }
 
 /* ── Desktop Nav ────────────────────────────────────────────── */

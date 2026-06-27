@@ -30,11 +30,11 @@
   --red-subtle: rgba(200, 16, 46, 0.10);
   --red-border: rgba(200, 16, 46, 0.20);
 
-  /* Backgrounds */
-  --color-bg: #080808;
-  --color-surface: #111111;
-  --color-surface-2: #1A1A1A;
-  --color-surface-3: #222222;
+  /* Backgrounds — dark crimson base */
+  --color-bg: #080102;
+  --color-surface: #110205;
+  --color-surface-2: #1a0306;
+  --color-surface-3: #240409;
 
   /* Text */
   --color-text: #FFFFFF;
@@ -176,7 +176,11 @@ html, body {
 body {
   min-height: 100%;
   margin: 0;
-  background: var(--color-bg);
+  /* Persistent dark-crimson gradient background across the entire site */
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(135deg, #0a0102 0%, #1c0307 35%, #0a0102 65%, #150204 100%);
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-sans);
   line-height: var(--line);
@@ -184,6 +188,23 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Persistent diagonal red accent — upper-right corner, site-wide */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 45%;
+  height: 100vh;
+  background: linear-gradient(135deg, rgba(200,16,46,.10) 0%, transparent 60%);
+  clip-path: polygon(40% 0%, 100% 0%, 100% 100%, 0% 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure page content sits above the body::before */
+#__next, main { position: relative; z-index: 1; }
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -264,8 +285,8 @@ ul { padding-left: 20px; }
 /* ─── Cards ──────────────────────────────────────────────────────────────── */
 
 .card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(200,16,46,.12);
   border-radius: var(--radius-2);
   transition:
     transform .35s var(--ease-out),
@@ -432,14 +453,97 @@ ul { padding-left: 20px; }
   transform: scale(1);
 }
 
-/* ─── Section alternate backgrounds ──────────────────────────────────────── */
+/* ─── Section backgrounds ─────────────────────────────────────────────────── */
 
 .sectionAlt {
-  background: var(--color-surface);
+  background: rgba(255,255,255,.025);
 }
 
 .sectionDeep {
-  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-surface) 100%);
+  background: rgba(0,0,0,.15);
+}
+
+/* White / light section — like the white panel of the business card */
+.sectionLight {
+  background: #ffffff;
+  color: #111111;
+}
+.sectionLight h1, .sectionLight h2, .sectionLight h3, .sectionLight h4 { color: #111111; }
+.sectionLight .muted { color: #555555; }
+.sectionLight .pill {
+  border-color: rgba(200,16,46,.25);
+  background: rgba(200,16,46,.06);
+  color: var(--red-dark);
+}
+.sectionLight .card {
+  background: #ffffff;
+  border-color: rgba(0,0,0,.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+  color: #111;
+}
+.sectionLight .card:hover {
+  box-shadow: 0 12px 40px rgba(200,16,46,.15), 0 2px 8px rgba(0,0,0,.08);
+  border-color: rgba(200,16,46,.3);
+}
+
+/* Tech section — subtle grid on top of the global bg */
+.sectionTech {
+  background-image:
+    linear-gradient(rgba(200,16,46,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,16,46,.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-color: transparent;
+  position: relative;
+}
+.sectionTech::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(200,16,46,.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Red-dark section — slightly stronger red accent strip */
+.sectionRedDark {
+  background: rgba(200,16,46,.04);
+  position: relative;
+  overflow: hidden;
+}
+.sectionRedDark::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 70%;
+  height: 140%;
+  background: linear-gradient(135deg, rgba(200,16,46,.14) 0%, transparent 60%);
+  clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 0% 100%);
+  pointer-events: none;
+}
+
+/* CTA section — full bold red */
+.sectionCta {
+  background: linear-gradient(135deg, #9B0D22 0%, #C8102E 50%, #E0122C 100%);
+  position: relative;
+  overflow: hidden;
+}
+.sectionCta::before {
+  content: "";
+  position: absolute;
+  bottom: -30%;
+  right: -10%;
+  width: 55%;
+  height: 200%;
+  background: rgba(0,0,0,.2);
+  clip-path: polygon(40% 0%, 100% 0%, 100% 100%, 0% 100%);
+  pointer-events: none;
+}
+.sectionCta h1, .sectionCta h2, .sectionCta h3 { color: #ffffff; }
+.sectionCta .muted { color: rgba(255,255,255,.8); }
+.sectionCta .pill {
+  background: rgba(255,255,255,.15);
+  border-color: rgba(255,255,255,.3);
+  color: #fff;
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */

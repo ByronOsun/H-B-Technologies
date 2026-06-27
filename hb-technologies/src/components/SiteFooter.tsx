@@ -38,9 +38,11 @@ export function SiteFooter() {
         {/* ── Brand column ── */}
         <div className={styles.brandCol}>
           <Link href="/" className={styles.brand}>
-            <span className={styles.brandV}>V</span>
-            <span>IZIA</span>
-            <span className={styles.brandTag}>Technologies</span>
+            <img src="/vizia-logo.png" alt="VIZIA Technologies" className={styles.logoImg} />
+            <span className={styles.brandLabel}>
+              <span className={styles.brandName}><span className={styles.brandV}>V</span>IZIA</span>
+              <span className={styles.brandTag}>Technologies</span>
+            </span>
           </Link>
 
           <p className={styles.tagline}>
