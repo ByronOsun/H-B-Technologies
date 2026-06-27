@@ -2,7 +2,7 @@
 
 .outer {
   perspective: 1000px;
-  height: 340px;
+  height: 420px;
   cursor: pointer;
   border-radius: var(--radius-3, 12px);
   /* Reset any inherited card padding */
@@ -46,7 +46,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 20%;
   display: block;
   transition: transform 0.65s ease;
 }
