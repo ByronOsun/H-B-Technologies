@@ -2,7 +2,7 @@
 
 .hero {
   position: relative;
-  min-height: 100svh;
+  min-height: 52svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
