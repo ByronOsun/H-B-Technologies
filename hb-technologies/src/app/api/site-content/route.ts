@@ -6,13 +6,11 @@ import path from "path";
 
 const FILE = path.join(process.cwd(), "public", "site-content.json");
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "vizia-admin";
-const BUCKET = "vizia-media";
-const STORAGE_PATH = "admin/site-content.json";
 
 function getSupabaseAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
-  if (!url || !key) return null;
+  if (!url || !key || url.includes("YOUR_PROJECT_ID")) return null;
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
@@ -30,17 +28,18 @@ export async function GET(req: NextRequest) {
 
   const supabase = getSupabaseAdmin();
   if (supabase) {
-    try {
-      const { data, error } = await supabase.storage.from(BUCKET).download(STORAGE_PATH);
-      if (!error && data) {
-        const text = await data.text();
-        return NextResponse.json(JSON.parse(text), { headers: { "Cache-Control": "no-store" } });
-      }
-    } catch {
-      // Fall through to local file
+    const { data, error } = await supabase
+      .from("site_content")
+      .select("content")
+      .eq("id", 1)
+      .single();
+
+    if (!error && data?.content) {
+      return NextResponse.json(data.content, { headers: { "Cache-Control": "no-store" } });
     }
   }
 
+  // Fallback: local file (dev)
   try {
     const raw = await fs.readFile(FILE, "utf-8");
     return NextResponse.json(JSON.parse(raw), { headers: { "Cache-Control": "no-store" } });
@@ -53,35 +52,38 @@ export async function POST(req: NextRequest) {
   if (req.headers.get("x-admin-password") !== ADMIN_PASSWORD) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
   let body: unknown;
   try { body = await req.json(); }
   catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
 
-  const jsonStr = JSON.stringify(body, null, 2);
-
   const supabase = getSupabaseAdmin();
+
   if (supabase) {
-    try {
-      const blob = new Blob([jsonStr], { type: "application/json" });
-      const { error } = await supabase.storage
-        .from(BUCKET)
-        .upload(STORAGE_PATH, blob, { upsert: true, contentType: "application/json" });
-      if (!error) {
-        revalidateAllPages();
-        return NextResponse.json({ ok: true });
-      }
-    } catch {
-      // Fall through to local write
+    const { error } = await supabase
+      .from("site_content")
+      .upsert({ id: 1, content: body, updated_at: new Date().toISOString() });
+
+    if (error) {
+      // Return the real Supabase error so we can diagnose it
+      return NextResponse.json(
+        { error: `Supabase error: ${error.message} (code: ${error.code})` },
+        { status: 500 }
+      );
     }
+
+    revalidateAllPages();
+    return NextResponse.json({ ok: true });
   }
 
+  // Fallback: local filesystem (dev without Supabase)
   try {
-    await fs.writeFile(FILE, jsonStr, "utf-8");
+    await fs.writeFile(FILE, JSON.stringify(body, null, 2), "utf-8");
     revalidateAllPages();
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json(
-      { error: "Write failed — add SUPABASE_SERVICE_ROLE_KEY to your Vercel environment variables." },
+      { error: "No Supabase configured and filesystem is read-only. Add NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to Vercel." },
       { status: 500 }
     );
   }
