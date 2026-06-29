@@ -216,8 +216,8 @@ export default function AdminPage() {
           <div className={s.loginLogo}>
             <span className={s.logoV}>V</span>IZIA
           </div>
-          <h1 className={s.loginTitle}>Visual Editor</h1>
-          <p className={s.loginSub}>
+          <h1 className={s.loginTitle} style={{ display: "none" }}>Visual Editor</h1>
+          <p className={s.loginSub} style={{ display: "none" }}>
             Sign in to edit your site content directly — no coding required.
           </p>
           <div className={s.loginField}>
@@ -241,7 +241,7 @@ export default function AdminPage() {
             {saveState === "saving" ? "Signing in…" : "Sign In →"}
           </button>
           {saveState === "error" && <p className={s.error}>{saveMsg}</p>}
-          <p className={s.loginHint}>
+          <p className={s.loginHint} style={{ display: "none" }}>
             Default: <code>vizia-admin</code> · Set <code>ADMIN_PASSWORD</code> env var to change.
           </p>
         </div>
