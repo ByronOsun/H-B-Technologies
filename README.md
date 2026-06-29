@@ -1,4 +1,4 @@
-﻿# H&B Technologies
+﻿# Vizia Technologies
 
 Enterprise-grade website + API scaffold (Next.js App Router + Node/Express + Supabase).
 
