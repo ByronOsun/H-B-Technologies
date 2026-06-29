@@ -2,8 +2,8 @@
   "slides": [
     {
       "id": "slide-1",
-      "type": "image",
-      "mediaUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=80",
+      "type": "video",
+      "mediaUrl": "/videos/vid1.mp4",
       "poster": "",
       "overlayOpacity": 0.80,
       "badge": "Security-first · AI-powered · Enterprise-grade",

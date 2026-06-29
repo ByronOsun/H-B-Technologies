@@ -26,9 +26,9 @@
     "interval": 6000,
     "slides": [
       {
-        "id": "yt-main",
-        "type": "youtube",
-        "mediaUrl": "0x5mf8BUJZY",
+        "id": "vid-main",
+        "type": "video",
+        "mediaUrl": "/videos/vid1.mp4",
         "overlayOpacity": 0.55,
         "badge": "Security-first \u00b7 AI-powered \u00b7 Enterprise-grade",
         "heading": "Build Secure, Scalable Systems That Outperform in Production.",
