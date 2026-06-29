@@ -144,7 +144,34 @@ export interface SiteContent {
 
 /* ── Server-side loader ───────────────────────────────────────────── */
 
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+  if (!url || !key || url.includes("YOUR_PROJECT_ID")) return null;
+  // Dynamic import to avoid bundling supabase into client-side code
+  const { createClient } = require("@supabase/supabase-js");
+  return createClient(url, key, { auth: { persistSession: false } });
+}
+
 export async function loadSiteContent(): Promise<SiteContent> {
+  // Try Supabase DB first (production)
+  try {
+    const supabase = getSupabaseAdmin();
+    if (supabase) {
+      const { data, error } = await supabase
+        .from("site_content")
+        .select("content")
+        .eq("id", 1)
+        .single();
+      if (!error && data?.content) {
+        return data.content as SiteContent;
+      }
+    }
+  } catch {
+    /* fall through */
+  }
+
+  // Fallback: static public file (local dev or first deploy before any save)
   try {
     const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
     const res = await fetch(`${base}/site-content.json`, {
@@ -154,6 +181,6 @@ export async function loadSiteContent(): Promise<SiteContent> {
   } catch {
     /* fall through to default */
   }
-  /* Inline fallback so the site never crashes */
+
   return (await import("../../public/site-content.json")) as unknown as SiteContent;
 }
