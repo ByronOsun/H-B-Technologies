@@ -335,6 +335,7 @@ export default function AdminPage() {
                 onChange={url => patchSlide(activeSlide, { mediaUrl: url })}
                 onTypeChange={type => patchSlide(activeSlide, { type })}
                 style={{ position: "absolute", inset: 0, borderRadius: 0 }}
+                adminPassword={pw}
               />
               {/* Supabase upload panel — floats bottom-left in edit mode */}
               <div style={{ position: "absolute", bottom: 12, left: 12, zIndex: 20, width: 300, background: "rgba(8,1,2,.88)", borderRadius: 10, padding: 12, border: "1px solid rgba(200,16,46,.3)", backdropFilter: "blur(12px)" }}>
@@ -344,6 +345,7 @@ export default function AdminPage() {
                   currentUrl={slide.mediaUrl}
                   label="Hero slide"
                   onUploaded={url => patchSlide(activeSlide, { mediaUrl: url })}
+                  adminPassword={pw}
                 />
               </div>
             </>
@@ -1061,6 +1063,7 @@ export default function AdminPage() {
                               currentUrl={m.photo}
                               label={m.name}
                               onUploaded={v => patchTeamMember(i, { photo: v })}
+                              adminPassword={pw}
                             />
                           </div>
                           <EditableText

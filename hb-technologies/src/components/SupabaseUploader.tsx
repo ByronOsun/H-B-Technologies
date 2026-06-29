@@ -1,6 +1,5 @@
 'use client';
 import { useRef, useState } from 'react';
-import { uploadToSupabase } from '@/lib/supabase';
 import styles from './SupabaseUploader.module.css';
 
 type Folder = 'hero' | 'team';
@@ -10,9 +9,10 @@ interface Props {
   currentUrl?: string;
   onUploaded: (url: string) => void;
   label?: string;
+  adminPassword?: string;
 }
 
-export default function SupabaseUploader({ folder, currentUrl, onUploaded, label = 'Image' }: Props) {
+export default function SupabaseUploader({ folder, currentUrl, onUploaded, label = 'Image', adminPassword = '' }: Props) {
   const [tab, setTab] = useState<'upload' | 'url'>('upload');
   const [url, setUrl] = useState(currentUrl ?? '');
   const [uploading, setUploading] = useState(false);
@@ -24,10 +24,22 @@ export default function SupabaseUploader({ folder, currentUrl, onUploaded, label
     setError('');
     setUploading(true);
     try {
-      const publicUrl = await uploadToSupabase(file, folder);
-      setPreview(publicUrl);
-      setUrl(publicUrl);
-      onUploaded(publicUrl);
+      const form = new FormData();
+      form.append('file', file);
+      form.append('folder', folder);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'x-admin-password': adminPassword },
+        body: form,
+      });
+
+      const data = await res.json() as { url?: string; error?: string };
+      if (!res.ok || !data.url) throw new Error(data.error ?? 'Upload failed');
+
+      setPreview(data.url);
+      setUrl(data.url);
+      onUploaded(data.url);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Upload failed');
     } finally {

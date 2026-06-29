@@ -30,7 +30,7 @@
         "type": "video",
         "mediaUrl": "/videos/vid1.mp4",
         "overlayOpacity": 0.55,
-        "badge": "Security-first \u00b7 AI-powered \u00b7 Enterprise-grade",
+        "badge": "Security-first · AI-powered · Enterprise-grade",
         "heading": "Build Secure, Scalable Systems That Outperform in Production.",
         "subheading": "VIZIA Technologies delivers security-first product development, AI-powered automation, and resilient enterprise infrastructure.",
         "ctaPrimary": {
@@ -79,22 +79,22 @@
   "deliver": {
     "badge": "What we deliver",
     "heading": "End-to-End Engineering Solutions",
-    "intro": "From secure product engineering to AI automation \u2014 we cover every layer of your technology stack.",
+    "intro": "From secure product engineering to AI automation — we cover every layer of your technology stack.",
     "cards": [
       {
-        "icon": "\ud83d\udd10",
+        "icon": "🔐",
         "title": "Secure Product Engineering",
         "desc": "Web, mobile, and API development with OWASP-aligned controls and security-by-default architecture.",
         "href": "/services/web-development"
       },
       {
-        "icon": "\ud83e\udde0",
+        "icon": "🧠",
         "title": "Data & AI Systems",
         "desc": "Data science, machine learning, and NLP pipelines to automate decisions and unlock business intelligence.",
         "href": "/services/artificial-intelligence"
       },
       {
-        "icon": "\ud83c\udf10",
+        "icon": "🌐",
         "title": "Infrastructure & IoT",
         "desc": "Networks, automation systems, IoT solutions, and Smart CCTV for connected enterprise environments.",
         "href": "/services/iot-solutions"
@@ -104,30 +104,30 @@
   "why": {
     "badge": "Why VIZIA",
     "heading": "Built for Security, Reliability & Speed",
-    "intro": "A software engineering company built for security, reliability, and delivery speed \u2014 without sacrificing compliance or quality.",
+    "intro": "A software engineering company built for security, reliability, and delivery speed — without sacrificing compliance or quality.",
     "items": [
       {
-        "icon": "\ud83d\udd12",
+        "icon": "🔒",
         "title": "Security-first Engineering",
-        "copy": "Secure coding standards, threat modelling, and OWASP-aligned defaults built into every delivery \u2014 not added as an afterthought."
+        "copy": "Secure coding standards, threat modelling, and OWASP-aligned defaults built into every delivery — not added as an afterthought."
       },
       {
-        "icon": "\ud83e\udd16",
+        "icon": "🤖",
         "title": "AI-powered Innovation",
         "copy": "Applied AI and automation focused on measurable outcomes, safe data boundaries, and observability in production environments."
       },
       {
-        "icon": "\u26a1",
+        "icon": "⚡",
         "title": "Scalable Enterprise Systems",
         "copy": "Architecture that stays maintainable as your product grows: clean interfaces, reliable APIs, and resilient infrastructure."
       },
       {
-        "icon": "\ud83c\udfc6",
+        "icon": "🏆",
         "title": "Certified Professionals",
         "copy": "Experienced engineers who ship production systems with governance, documentation, and predictable delivery practices."
       },
       {
-        "icon": "\ud83d\udd50",
+        "icon": "🕐",
         "title": "24/7 Support",
         "copy": "Operational readiness, incident response workflows, and maintenance plans designed for uptime and business continuity."
       }
@@ -136,36 +136,36 @@
   "industries": {
     "badge": "Industries served",
     "heading": "Experience Across Regulated Sectors",
-    "intro": "Deep expertise in regulated and high-availability environments \u2014 where quality is not negotiable.",
+    "intro": "Deep expertise in regulated and high-availability environments — where quality is not negotiable.",
     "items": [
       {
         "name": "Finance",
-        "icon": "\ud83d\udcb3",
+        "icon": "💳",
         "desc": "Secure payment systems and regulatory compliance solutions."
       },
       {
         "name": "Healthcare",
-        "icon": "\ud83c\udfe5",
+        "icon": "🏥",
         "desc": "HIPAA-compliant platforms and health data management."
       },
       {
         "name": "Government",
-        "icon": "\ud83c\udfdb\ufe0f",
+        "icon": "🏛️",
         "desc": "Enterprise systems built for public-sector governance."
       },
       {
         "name": "Retail",
-        "icon": "\ud83d\uded2",
+        "icon": "🛒",
         "desc": "E-commerce platforms and supply-chain automation."
       },
       {
         "name": "Telecommunications",
-        "icon": "\ud83d\udce1",
+        "icon": "📡",
         "desc": "Network infrastructure and IoT connectivity."
       },
       {
         "name": "Education",
-        "icon": "\ud83c\udf93",
+        "icon": "🎓",
         "desc": "Learning management and digital transformation."
       }
     ]
@@ -250,7 +250,7 @@
   "cta": {
     "badge": "Ready to build?",
     "heading": "Ready to Scope a Secure Build?",
-    "copy": "Get a clear plan, timeline, and risk assessment \u2014 from a team that treats compliance-driven engineering as a default, not an add-on."
+    "copy": "Get a clear plan, timeline, and risk assessment — from a team that treats compliance-driven engineering as a default, not an add-on."
   },
   "contact": {
     "email": "htechnob@gmail.com",
@@ -288,7 +288,7 @@
       {
         "title": "Who We Are",
         "type": "paragraph",
-        "content": "VIZIA Technologies is a software engineering company focused on building secure, scalable, and maintainable systems for enterprises and startups.\n\nWe combine engineering rigour with practical delivery \u2014 shipping production systems with clear documentation, governance, and measurable outcomes."
+        "content": "VIZIA Technologies is a software engineering company focused on building secure, scalable, and maintainable systems for enterprises and startups.\n\nWe combine engineering rigour with practical delivery — shipping production systems with clear documentation, governance, and measurable outcomes."
       },
       {
         "title": "Our Approach",
@@ -304,13 +304,13 @@
       {
         "title": "Our Mission",
         "type": "paragraph",
-        "content": "To make enterprise-grade engineering accessible to organisations of all sizes \u2014 without compromising on security, reliability, or delivery speed."
+        "content": "To make enterprise-grade engineering accessible to organisations of all sizes — without compromising on security, reliability, or delivery speed."
       },
       {
         "title": "Core Values",
         "type": "list",
         "items": [
-          "Security first \u2014 always",
+          "Security first — always",
           "Transparent communication",
           "Measurable outcomes",
           "Long-term thinking",
@@ -348,8 +348,8 @@
       {
         "slug": "web-development",
         "name": "Web Development",
-        "summary": "Full-stack web applications built with Next.js, React, and Node.js \u2014 secure, performant, and SEO-ready.",
-        "full_description": "We build high-performance, SEO-ready web applications using a security-by-design approach. Every application is developed with OWASP-aligned controls, input validation, and least-privilege access patterns built in from the start \u2014 not bolted on at the end.",
+        "summary": "Full-stack web applications built with Next.js, React, and Node.js — secure, performant, and SEO-ready.",
+        "full_description": "We build high-performance, SEO-ready web applications using a security-by-design approach. Every application is developed with OWASP-aligned controls, input validation, and least-privilege access patterns built in from the start — not bolted on at the end.",
         "technologies": [
           "Next.js (App Router)",
           "TypeScript",
@@ -370,7 +370,7 @@
       {
         "slug": "mobile-development",
         "name": "Mobile Development",
-        "summary": "Cross-platform mobile apps for iOS and Android with React Native \u2014 built for reliability and security.",
+        "summary": "Cross-platform mobile apps for iOS and Android with React Native — built for reliability and security.",
         "full_description": "We deliver reliable mobile experiences with secure APIs and production-grade release practices. Our mobile-first planning covers API contract design, JWT-based auth with robust session policies, and observability-ready backend patterns for faster incident response.",
         "technologies": [
           "React Native",
@@ -525,7 +525,7 @@
         "slug": "smart-cctv",
         "name": "Smart CCTV",
         "summary": "AI-powered surveillance systems with real-time analytics, alerts, and remote management.",
-        "full_description": "We design and deploy AI-powered CCTV systems that go beyond recording. Our solutions include real-time object detection, motion analytics, automated alerts, and remote management dashboards \u2014 all built with privacy and compliance considerations.",
+        "full_description": "We design and deploy AI-powered CCTV systems that go beyond recording. Our solutions include real-time object detection, motion analytics, automated alerts, and remote management dashboards — all built with privacy and compliance considerations.",
         "technologies": [
           "OpenCV / YOLO",
           "RTSP camera integration",
@@ -569,7 +569,7 @@
         "slug": "ui-ux-design",
         "name": "UI/UX Design",
         "summary": "User research, wireframing, and high-fidelity design for web and mobile products.",
-        "full_description": "We design interfaces that are clear, accessible, and built around how your users actually work. Our process covers user research, wireframing, prototyping, and high-fidelity design \u2014 all aligned to your brand and engineering constraints.",
+        "full_description": "We design interfaces that are clear, accessible, and built around how your users actually work. Our process covers user research, wireframing, prototyping, and high-fidelity design — all aligned to your brand and engineering constraints.",
         "technologies": [
           "Figma",
           "User research and testing",
@@ -591,7 +591,7 @@
         "slug": "it-consulting",
         "name": "IT Consulting",
         "summary": "Strategic technology advisory, architecture reviews, and digital transformation planning.",
-        "full_description": "We help organisations make better technology decisions \u2014 whether that's evaluating a new platform, reviewing an existing architecture, or planning a digital transformation. Our advisory work is practical, vendor-neutral, and grounded in real engineering experience.",
+        "full_description": "We help organisations make better technology decisions — whether that's evaluating a new platform, reviewing an existing architecture, or planning a digital transformation. Our advisory work is practical, vendor-neutral, and grounded in real engineering experience.",
         "technologies": [
           "Architecture review frameworks",
           "Cloud provider evaluation",

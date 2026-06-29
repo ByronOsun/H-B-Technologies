@@ -81,6 +81,7 @@ interface EImgProps {
   onTypeChange?: (type: "image" | "video") => void;
   className?: string;
   style?: React.CSSProperties;
+  adminPassword?: string;
 }
 
 const IMAGE_EXTS = /\.(jpe?g|png|gif|webp|svg|avif|bmp)$/i;
@@ -92,12 +93,13 @@ function guessMediaType(url: string): "image" | "video" | null {
   return null;
 }
 
-export function EditableImage({ src, alt = "", onChange, onTypeChange, className = "", style }: EImgProps) {
+export function EditableImage({ src, alt = "", onChange, onTypeChange, className = "", style, adminPassword = "" }: EImgProps) {
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"upload" | "url">("upload");
   const [urlDraft, setUrlDraft] = useState(src);
   const [preview, setPreview] = useState(src);
   const [fileLabel, setFileLabel] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [sizeWarn, setSizeWarn] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const urlRef = useRef<HTMLInputElement>(null);
@@ -113,7 +115,7 @@ export function EditableImage({ src, alt = "", onChange, onTypeChange, className
     setOpen(false);
   };
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setSizeWarn("");
@@ -121,16 +123,26 @@ export function EditableImage({ src, alt = "", onChange, onTypeChange, className
     const isVideo = file.type.startsWith("video/");
     const isImage = file.type.startsWith("image/");
     if (!isImage && !isVideo) { setSizeWarn("Unsupported file type."); return; }
-    if (isVideo && file.size > 20 * 1024 * 1024) {
-      setSizeWarn("Video files over 20 MB may make site-content.json very large. Consider using a hosted URL instead.");
-    }
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const dataUrl = ev.target?.result as string;
-      setPreview(dataUrl);
+
+    setUploading(true);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("folder", isVideo ? "hero" : "media");
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "x-admin-password": adminPassword },
+        body: form,
+      });
+      const data = await res.json() as { url?: string; error?: string };
+      if (!res.ok || !data.url) throw new Error(data.error ?? "Upload failed");
+      setPreview(data.url);
       if (onTypeChange) onTypeChange(isVideo ? "video" : "image");
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      setSizeWarn(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleUrlChange = (v: string) => {
@@ -168,7 +180,7 @@ export function EditableImage({ src, alt = "", onChange, onTypeChange, className
           </div>
 
           {tab === "upload" && (
-            <div className={s.imgUploadArea} onClick={() => fileRef.current?.click()}>
+            <div className={s.imgUploadArea} onClick={() => !uploading && fileRef.current?.click()}>
               <input
                 ref={fileRef}
                 type="file"
@@ -176,8 +188,8 @@ export function EditableImage({ src, alt = "", onChange, onTypeChange, className
                 style={{ display: "none" }}
                 onChange={handleFile}
               />
-              <span className={s.imgUploadIcon}>📁</span>
-              <span className={s.imgUploadLabel}>{fileLabel || "Click to choose a file"}</span>
+              <span className={s.imgUploadIcon}>{uploading ? "⏳" : "📁"}</span>
+              <span className={s.imgUploadLabel}>{uploading ? "Uploading…" : (fileLabel || "Click to choose a file")}</span>
               <span className={s.imgUploadHint}>JPEG · PNG · GIF · WebP · SVG · MP4 · WebM · MOV</span>
               {sizeWarn && <span className={s.imgUploadWarn}>{sizeWarn}</span>}
             </div>
@@ -209,7 +221,7 @@ export function EditableImage({ src, alt = "", onChange, onTypeChange, className
           )}
 
           <div className={s.imgDialogActions}>
-            <button className={s.applyBtn} onClick={apply} disabled={!preview}>Apply</button>
+            <button className={s.applyBtn} onClick={apply} disabled={!preview || uploading}>{uploading ? "Uploading…" : "Apply"}</button>
             <button className={s.cancelBtn} onClick={() => { setOpen(false); setSizeWarn(""); setFileLabel(""); }}>Cancel</button>
           </div>
         </div>
