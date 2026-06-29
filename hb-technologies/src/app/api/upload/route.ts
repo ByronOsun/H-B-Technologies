@@ -12,11 +12,16 @@ export async function POST(req: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
 
-  if (!supabaseUrl || !serviceKey) {
-    return NextResponse.json(
-      { error: "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to your Vercel environment variables." },
-      { status: 500 }
-    );
+  // Local dev fallback: no Supabase configured → return base64 data URL
+  if (!supabaseUrl || !serviceKey || supabaseUrl.includes("YOUR_PROJECT_ID")) {
+    let formData: FormData;
+    try { formData = await req.formData(); }
+    catch { return NextResponse.json({ error: "Invalid form data." }, { status: 400 }); }
+    const file = formData.get("file") as File | null;
+    if (!file) return NextResponse.json({ error: "No file provided." }, { status: 400 });
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const dataUrl = `data:${file.type};base64,${buffer.toString("base64")}`;
+    return NextResponse.json({ url: dataUrl });
   }
 
   let formData: FormData;
