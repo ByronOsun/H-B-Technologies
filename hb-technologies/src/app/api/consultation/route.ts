@@ -53,8 +53,10 @@ export async function POST(req: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Forward a minimal user agent for diagnostics.
         "User-Agent": "hb-technologies-frontend/1.0",
+        ...(process.env.INTERNAL_API_SECRET
+          ? { "X-Internal-Secret": process.env.INTERNAL_API_SECRET }
+          : {}),
         ...(siteOrigin
           ? {
               Origin: siteOrigin,

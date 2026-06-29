@@ -96,7 +96,14 @@ export async function postConsultation(payload: unknown): Promise<ApiResult<void
 
     if (!res.ok) {
       const text = await res.text();
-      return { ok: false, error: text || "Request failed.", status: res.status };
+      let message = "Submission failed. Please try again.";
+      try {
+        const json = JSON.parse(text) as { message?: string; error?: string };
+        message = json.message ?? json.error ?? message;
+      } catch {
+        if (text) message = text;
+      }
+      return { ok: false, error: message, status: res.status };
     }
 
     return { ok: true, data: undefined };
