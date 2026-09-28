@@ -11,7 +11,9 @@ import {
 
 const globalSecurityHeaders = [
   ...SECURITY_HEADER_ENTRIES,
-  { key: "Strict-Transport-Security", value: HSTS_HEADER_VALUE },
+  ...(process.env.NODE_ENV === "production"
+    ? [{ key: "Strict-Transport-Security", value: HSTS_HEADER_VALUE }]
+    : []),
 ];
 
 const noCacheHeaders = [

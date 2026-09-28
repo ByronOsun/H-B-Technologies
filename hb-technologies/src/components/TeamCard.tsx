@@ -49,8 +49,10 @@ export default function TeamCard({ member }: Props) {
         {/* ── Front: full-cover photo + name bar ── */}
         <div className={styles.front}>
           <div className={styles.imgWrap}>
-            {member.photo
-              ? <Image src={member.photo} alt={member.name} className={styles.img} width={1200} height={900} sizes="(max-width: 768px) 100vw, 33vw" unoptimized />
+            {member.photo && member.photo.startsWith("/")
+              ? <Image src={member.photo} alt={member.name} className={styles.img} width={960} height={1280} sizes="(max-width: 768px) 100vw, 33vw" />
+              : member.photo
+                ? <img src={member.photo} alt={member.name} className={styles.img} />
               : <div className={styles.initial}>{member.name.charAt(0)}</div>}
           </div>
           <div className={styles.nameBar}>

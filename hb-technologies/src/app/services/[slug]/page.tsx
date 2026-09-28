@@ -9,6 +9,9 @@ import marketing from "@/styles/marketing.module.css";
 import {
   absoluteUrl,
   buildBreadcrumbJsonLd,
+  buildSchemaGraph,
+  buildServiceJsonLd,
+  buildWebPageJsonLd,
   createServiceMetadata,
 } from "@/lib/seo";
 
@@ -88,23 +91,25 @@ export default async function ServiceDetailPage({
     .slice(0, 3)
     .map((s) => ({ slug: s.slug, title: s.name }));
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    name: `VIZIA Technologies — ${service.title}`,
-    url: absoluteUrl(`/services/${service.slug}`),
-    serviceType: service.title,
-    description: service.short_description,
-    areaServed: "Global",
-    provider: {
-      "@type": "Organization",
-      name: "VIZIA Technologies",
-    },
-  };
+  const serviceUrl = absoluteUrl(`/services/${service.slug}`);
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
     { name: service.title, path: `/services/${service.slug}` },
+  ]);
+  const jsonLd = buildSchemaGraph([
+    buildWebPageJsonLd({
+      name: `${service.title} Services`,
+      description: service.short_description,
+      path: `/services/${service.slug}`,
+      mainEntityId: `${serviceUrl}#service`,
+    }),
+    buildServiceJsonLd({
+      slug: service.slug,
+      title: service.title,
+      description: service.short_description,
+    }),
+    breadcrumbJsonLd,
   ]);
 
   return (

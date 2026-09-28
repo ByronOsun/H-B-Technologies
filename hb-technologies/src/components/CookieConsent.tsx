@@ -65,10 +65,14 @@ export function CookieConsent() {
 
   return (
     <div className={styles.cookieConsentOverlay}>
-      <div className={styles.cookieConsentBanner}>
+      <section
+        className={styles.cookieConsentBanner}
+        role="region"
+        aria-labelledby="cookie-consent-title"
+      >
         {/* Header */}
         <div className={styles.header}>
-          <h2>Privacy & Cookie Preferences</h2>
+          <h2 id="cookie-consent-title">Privacy & Cookie Preferences</h2>
           <button
             className={styles.closeButton}
             onClick={() => setIsVisible(false)}
@@ -198,7 +202,7 @@ export function CookieConsent() {
             </div>
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

@@ -140,7 +140,7 @@ export function validateEnvironment(
     // Domain Configuration
     if (!env.VIZIA_DOMAIN_NAME) {
       warnings.push(
-        "VIZIA_DOMAIN_NAME not explicitly set (will fallback to VERCEL_URL or default)"
+        "VIZIA_DOMAIN_NAME not explicitly set (will use the production canonical host)"
       );
       missingOptional.push("VIZIA_DOMAIN_NAME");
     } else if (!isValidDomain(env.VIZIA_DOMAIN_NAME)) {

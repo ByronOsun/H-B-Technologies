@@ -2,10 +2,10 @@
  * Shared production security configuration for Next.js headers and proxy.
  */
 
-export const PRODUCTION_CANONICAL_HOST = "www.vizia.co.ke";
+export const PRODUCTION_CANONICAL_HOST = "vizia.co.ke";
 
 export const APEX_HOST_REDIRECTS: Record<string, string> = {
-  "vizia.co.ke": PRODUCTION_CANONICAL_HOST,
+  "www.vizia.co.ke": PRODUCTION_CANONICAL_HOST,
 };
 
 export const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -163,15 +163,20 @@ export function isSecureRequest(protocol: string, forwardedProto: string | null)
 }
 
 export function getCanonicalHost(): string {
+  if (process.env.NODE_ENV === "production") {
+    return PRODUCTION_CANONICAL_HOST;
+  }
+
   const configured =
     process.env.VIZIA_DOMAIN_NAME ||
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
-  if (configured) {
-    return configured.replace(/^https?:\/\//, "").replace(/\/$/, "");
-  }
+  if (!configured) return PRODUCTION_CANONICAL_HOST;
 
-  return PRODUCTION_CANONICAL_HOST;
+  const hostname = configured.replace(/^https?:\/\//, "").replace(/\/$/, "").split(":")[0].toLowerCase();
+  return hostname === "www.vizia.co.ke" || hostname === "vizia.co.ke"
+    ? PRODUCTION_CANONICAL_HOST
+    : configured.replace(/^https?:\/\//, "").replace(/\/$/, "");
 }
 
 export function getApexRedirectHost(host: string): string | null {

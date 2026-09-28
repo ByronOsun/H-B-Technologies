@@ -115,8 +115,11 @@ export default function HeroSection({ config }: Props) {
             src={slide.mediaUrl}
             alt=""
             className={styles.img}
+            width={1920}
+            height={1080}
             loading="eager"
             fetchPriority="high"
+            decoding="async"
           />
         )}
         <div className={styles.overlay} style={overlayStyle} />
@@ -166,14 +169,13 @@ export default function HeroSection({ config }: Props) {
 
       {/* ── Slide dots ── */}
       {slides.length > 1 && (
-        <div className={styles.dots} role="tablist" aria-label="Hero slides">
+        <div className={styles.dots} aria-label="Choose hero slide">
           {slides.map((s, i) => (
             <button
               key={s.id}
               type="button"
-              role="tab"
-              aria-selected={i === active}
-              aria-label={`Slide ${i + 1}`}
+              aria-pressed={i === active}
+              aria-label={`Show slide ${i + 1}`}
               className={`${styles.dot} ${i === active ? styles.dotActive : ""}`}
               onClick={() => {
                 if (timerRef.current) clearInterval(timerRef.current);

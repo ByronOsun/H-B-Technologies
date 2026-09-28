@@ -1,12 +1,4 @@
-export const SERVICE_REDIRECTS: Record<string, string> = {
-  "mobile-app-development": "mobile-development",
-  "data-science": "data-engineering",
-  "smart-cctv-installation": "smart-cctv",
-  "automation-systems": "automation",
-  "it-consultation": "it-consulting",
-  "machine-learning": "artificial-intelligence",
-  "natural-language-processing": "artificial-intelligence",
-};
+export const SERVICE_REDIRECTS: Record<string, string> = {};
 
 export const TEMPORARY_REDIRECTS = [
   {

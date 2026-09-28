@@ -5,6 +5,7 @@ import {
   HSTS_HEADER_VALUE,
   isSecureRequest,
   MAX_REDIRECT_CHAIN,
+  API_RATE_LIMIT_MAX_REQUESTS,
   RATE_LIMIT_MAX_REQUESTS,
   RATE_LIMIT_WINDOW_MS,
   SECURITY_HEADER_ENTRIES,
@@ -180,21 +181,26 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  const clientIp = getClientIp(request);
-  const rateLimitMax = pathname.startsWith("/api/") ? 40 : RATE_LIMIT_MAX_REQUESTS;
-
-  if (!checkRateLimit(clientIp, rateLimitMax)) {
-    return rateLimitedResponse();
-  }
-
   const response = NextResponse.next();
-  const remaining = Math.max(
-    0,
-    rateLimitMax - (rateLimitStore.get(clientIp)?.count || 0)
-  );
 
-  response.headers.set("X-RateLimit-Limit", rateLimitMax.toString());
-  response.headers.set("X-RateLimit-Remaining", remaining.toString());
+  if (pathname.startsWith("/api/") || pathname.startsWith("/admin")) {
+    const clientIp = getClientIp(request);
+    const rateLimitMax = pathname.startsWith("/api/")
+      ? API_RATE_LIMIT_MAX_REQUESTS
+      : RATE_LIMIT_MAX_REQUESTS;
+
+    if (!checkRateLimit(clientIp, rateLimitMax)) {
+      return rateLimitedResponse();
+    }
+
+    const remaining = Math.max(
+      0,
+      rateLimitMax - (rateLimitStore.get(clientIp)?.count || 0)
+    );
+
+    response.headers.set("X-RateLimit-Limit", rateLimitMax.toString());
+    response.headers.set("X-RateLimit-Remaining", remaining.toString());
+  }
 
   return applySecurityHeaders(response, { includeHsts });
 }

@@ -216,6 +216,10 @@ export function createRootMetadata(): Metadata {
       imageLabel: "Secure engineering partner",
     }),
     metadataBase: getSiteUrl(),
+    icons: {
+      icon: [{ url: "/vizia-logo.png", type: "image/png" }],
+      apple: [{ url: "/vizia-logo.png", type: "image/png" }],
+    },
     title: {
       default: "VIZIA Technologies | Secure Software, AI & Cybersecurity",
       template: `%s | ${siteConfig.name}`,
@@ -277,6 +281,12 @@ export function buildOrganizationJsonLd() {
     "@id": `${absoluteUrl("/")}#organization`,
     ...organization,
     url: absoluteUrl("/"),
+    logo: {
+      "@type": "ImageObject",
+      "@id": `${absoluteUrl("/")}#logo`,
+      url: absoluteUrl("/vizia-logo.png"),
+      contentUrl: absoluteUrl("/vizia-logo.png"),
+    },
   };
 }
 
@@ -360,7 +370,6 @@ export function buildServiceJsonLd(service: ServiceSeoInput) {
     url: serviceUrl,
     serviceType: service.title,
     description: service.description,
-    areaServed: "Global",
     provider: {
       "@type": "Organization",
       "@id": `${absoluteUrl("/")}#organization`,
@@ -402,6 +411,8 @@ export function buildArticleJsonLd(input: {
   path: string;
   image?: string | URL | { url: string | URL; width?: number; height?: number; alt?: string };
   author?: string;
+  authorType?: "Organization" | "Person";
+  type?: "Article" | "BlogPosting";
   datePublished?: string | null;
   dateModified?: string | null;
   keywords?: readonly string[];
@@ -418,7 +429,7 @@ export function buildArticleJsonLd(input: {
 
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": input.type ?? "BlogPosting",
     "@id": `${articleUrl}#article`,
     headline: input.name,
     description: input.description,
@@ -429,11 +440,17 @@ export function buildArticleJsonLd(input: {
     mainEntityOfPage: {
       "@id": `${articleUrl}#webpage`,
     },
-    author: {
-      "@type": "Organization",
-      "@id": `${absoluteUrl("/")}#organization`,
-      name: input.author ?? siteConfig.name,
-    },
+    author:
+      (input.authorType ?? "Organization") === "Person"
+        ? {
+            "@type": "Person",
+            name: input.author ?? siteConfig.name,
+          }
+        : {
+            "@type": "Organization",
+            "@id": `${absoluteUrl("/")}#organization`,
+            name: input.author ?? siteConfig.name,
+          },
     publisher: {
       "@type": "Organization",
       "@id": `${absoluteUrl("/")}#organization`,

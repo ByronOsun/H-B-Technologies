@@ -299,6 +299,18 @@
 }
 
 @media (max-width: 768px) {
+  .blob1,
+  .blob2 {
+    filter: blur(48px);
+    animation: none;
+  }
+
+  .ytFrame {
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 768px) {
   .hero {
     min-height: calc(100svh - 70px);
   }

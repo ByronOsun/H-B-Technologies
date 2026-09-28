@@ -187,6 +187,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
+}
+
 /* Persistent diagonal red accent — upper-right corner, site-wide */
 body::before {
   content: "";

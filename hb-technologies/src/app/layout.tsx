@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Rajdhani } from "next/font/google";
 import "./globals.css";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
@@ -12,6 +12,13 @@ import { loadSiteContent } from "@/lib/content";
 import { buildOrganizationJsonLd, buildSchemaGraph, buildWebsiteJsonLd, createRootMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createRootMetadata();
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  colorScheme: "dark",
+  themeColor: "#080102",
+};
 
 const inter = Inter({
   subsets: ["latin"],

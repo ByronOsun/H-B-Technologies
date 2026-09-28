@@ -236,7 +236,7 @@ vercel link
 # Set environment variables
 vercel env add NEXT_PUBLIC_SUPABASE_URL [value]
 vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY [value]
-vercel env add VIZIA_DOMAIN_NAME www.vizia.co.ke
+vercel env add VIZIA_DOMAIN_NAME vizia.co.ke
 
 # Deploy
 vercel deploy --prod

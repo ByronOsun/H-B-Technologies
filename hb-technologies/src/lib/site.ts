@@ -40,21 +40,16 @@ export const siteConfig = {
   },
 } as const;
 
-const PRODUCTION_SITE_URL = "https://www.vizia.co.ke";
+const PRODUCTION_SITE_URL = "https://vizia.co.ke";
 const LOCAL_SITE_URL = "http://localhost:3000";
 
-function fromVercelDomain(value?: string) {
-  if (!value) return "";
-  return value.startsWith("http") ? value : `https://${value}`;
-}
-
 function resolveSiteUrlInput() {
+  if (process.env.NODE_ENV === "production") {
+    return PRODUCTION_SITE_URL;
+  }
+
   const candidates = [
     process.env.NEXT_PUBLIC_SITE_URL,
-    process.env.RENDER_EXTERNAL_URL,
-    fromVercelDomain(process.env.VERCEL_PROJECT_PRODUCTION_URL),
-    fromVercelDomain(process.env.VERCEL_URL),
-    PRODUCTION_SITE_URL,
     LOCAL_SITE_URL,
   ];
 

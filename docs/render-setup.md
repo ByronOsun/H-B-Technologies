@@ -49,10 +49,10 @@ You should see JSON like `{ ok: true, status: "healthy", ... }`.
 
 ### 2.1) Set environment variables (frontend)
 In the Render service → **Environment**:
-- `NEXT_PUBLIC_SITE_URL=https://vizia-technologies.vercel.app`
+- `NEXT_PUBLIC_SITE_URL=https://vizia.co.ke`
 - `API_URL=https://<your-api-domain>`
 
-Use the generated Render/Vercel frontend URL until a custom domain is connected.
+Use `https://vizia.co.ke` as the production frontend origin after the custom domain is connected. Preview deployment URLs must not be used for production canonical URLs.
 Do not point `NEXT_PUBLIC_SITE_URL` at a domain you do not own yet; canonical URLs, Open Graph URLs, Twitter image URLs, sitemap hosts, and structured data URLs all depend on it.
 
 Important:

@@ -21,7 +21,6 @@ export function ConsultationForm({
   const [consent, setConsent] = useState(false);
 
   const statusId = `${source}-form-status`;
-  const privacyErrorId = `${source}-privacy-error`;
   const isSubmitting = status.state === "submitting";
   const isSuccess = status.state === "success";
   const consentError = status.state === "error" && status.message.includes("privacy statement");
@@ -216,7 +215,7 @@ export function ConsultationForm({
           disabled={isSubmitting}
           className={styles.consentCheckbox}
           aria-invalid={consentError}
-          aria-describedby={consentError ? privacyErrorId : undefined}
+          aria-describedby={consentError ? statusId : undefined}
         />
         <label htmlFor={`${source}-consent`} className={styles.consentLabel}>
           I agree to have my information stored for the purpose of responding to my inquiry and providing related updates.
@@ -248,11 +247,6 @@ export function ConsultationForm({
         {statusText}
       </div>
 
-      {consentError ? (
-        <div id={privacyErrorId} className={`${styles.status} ${styles.error}`} role="alert">
-          Please agree to the privacy statement to proceed.
-        </div>
-      ) : null}
     </form>
   );
 }

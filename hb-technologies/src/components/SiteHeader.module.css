@@ -160,8 +160,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   padding: 8px;
   background: rgba(255,255,255,.05);
   border: 1px solid var(--color-border);
@@ -242,7 +242,9 @@
 }
 
 .mobileLink {
-  display: block;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
   padding: 12px 16px;
   border-radius: var(--radius-1);
   text-decoration: none;

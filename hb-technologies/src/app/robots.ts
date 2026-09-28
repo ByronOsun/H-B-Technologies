@@ -19,10 +19,9 @@ import { getSiteUrl } from "@/lib/site";
  * Blocked:
  * - /admin/*
  * - /api/*
- * - /og
  *
  * Sitemap:
- * https://www.vizia.co.ke/sitemap.xml
+ * https://vizia.co.ke/sitemap.xml
  */
 
 export default function robots(): MetadataRoute.Robots {
@@ -34,9 +33,10 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         disallow: [
+          "/admin",
           "/admin/",
+          "/api",
           "/api/",
-          "/og",
         ],
       },
 

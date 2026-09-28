@@ -2,6 +2,7 @@ import type { Service } from "@/content/services";
 import { getServiceBySlug } from "@/content/services";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import marketing from "@/styles/marketing.module.css";
 import { absoluteUrl, buildBreadcrumbJsonLd, buildSchemaGraph, buildServiceJsonLd, buildWebPageJsonLd } from "@/lib/seo";
 import { getCanonicalServiceSlug } from "@/lib/url-governance";
@@ -58,6 +59,13 @@ export default function ServiceDetailPage({ slug }: Props) {
   return (
     <section className="section">
       <div className="container">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Services", href: "/services" },
+            { label: service.name },
+          ]}
+        />
         <div className={marketing.stack2}>
           <p className="eyebrow">Professional service</p>
           <h1>{service.name}</h1>

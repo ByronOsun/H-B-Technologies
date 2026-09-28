@@ -1,4 +1,5 @@
 import type { HeroConfig } from "@/components/HeroSection";
+import { getSiteUrl } from "@/lib/site";
 
 /* ── Types ────────────────────────────────────────────────────────── */
 
@@ -173,7 +174,7 @@ export async function loadSiteContent(): Promise<SiteContent> {
 
   // Fallback: static public file (local dev or first deploy before any save)
   try {
-    const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const base = getSiteUrl();
     const res = await fetch(`${base}/site-content.json`, {
       next: { revalidate: 30 },
     });

@@ -4,15 +4,12 @@ import { blogPosts as staticBlogPosts } from "@/content/blog";
 import { getBlogPosts } from "@/lib/api";
 import { loadSiteContent } from "@/lib/content";
 import { getSiteUrl } from "@/lib/site";
-import { getCanonicalServiceSlug } from "@/lib/url-governance";
+import { cleanPathname, getCanonicalServiceSlug } from "@/lib/url-governance";
 
 /**
  * Production XML Sitemap for VIZIA Technologies
  *
- * Includes:
- * - All public indexable pages (9 static routes + dynamic services + blog posts)
- * - Image metadata for Open Graph social preview images
- * - Video metadata for hero video
+ * Includes all public route-backed pages that are indexable.
  *
  * Excludes (by design):
  * - /admin (marked noindex)
@@ -38,7 +35,7 @@ import { getCanonicalServiceSlug } from "@/lib/url-governance";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
-  const now = new Date();
+  const seenUrls = new Set<string>();
 
   // Static routes with priority and change frequency
   const staticRoutes: Array<{
@@ -54,17 +51,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/book-consultation", priority: 0.7, changeFrequency: "yearly" },
   ];
 
-  const entries: MetadataRoute.Sitemap = staticRoutes.map((route) => {
-    const entry: MetadataRoute.Sitemap[number] = {
-      url: new URL(route.path || "/", base).toString(),
-      lastModified: now,
+  const entries: MetadataRoute.Sitemap = [];
+
+  function addEntry(
+    path: string,
+    options: Pick<MetadataRoute.Sitemap[number], "lastModified" | "changeFrequency" | "priority">
+  ) {
+    const cleanPath = cleanPathname(path);
+    const url = new URL(cleanPath || "/", base).toString();
+    if (seenUrls.has(url)) return;
+    seenUrls.add(url);
+    entries.push({ url, ...options });
+  }
+
+  for (const route of staticRoutes) {
+    addEntry(route.path, {
       changeFrequency: route.changeFrequency,
       priority: route.priority,
-    };
-
-
-    return entry;
-  });
+    });
+  }
 
   // Dynamic routes: prefer API (Supabase-backed) but keep a safe static fallback.
   // Note: sitemap runs server-side; keep failures non-fatal.
@@ -75,27 +80,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Service detail pages
   const serviceSlugs = Array.from(
-    new Set(siteContent.services_page.items.map((s) => getCanonicalServiceSlug(s.slug)))
+    new Set(
+      siteContent.services_page.items
+        .map((s) => getCanonicalServiceSlug(s.slug))
+        .filter(Boolean)
+    )
   );
 
   for (const slug of serviceSlugs) {
-      entries.push({
-      url: new URL(`/services/${slug}`, base).toString(),
-      lastModified: now,
+    addEntry(`/services/${slug}`, {
       changeFrequency: "monthly",
       priority: 0.8,
     });
   }
 
-  // Blog post pages (internal only; external blogs are noindex)
+  // Blog post pages must exist in the static catalog; external and unknown API records are excluded.
+  const indexableBlogSlugs = new Set(staticBlogPosts.map((post) => post.slug));
   const blogPosts = blogRes.ok
     ? blogRes.data
     : staticBlogPosts.map((p) => ({ slug: p.slug, created_at: p.date }));
 
   for (const p of blogPosts) {
-    entries.push({
-      url: new URL(`/blog/${p.slug}`, base).toString(),
-      lastModified: p.created_at ? new Date(p.created_at) : now,
+    if (!indexableBlogSlugs.has(p.slug)) continue;
+
+    const parsedDate = p.created_at ? new Date(p.created_at) : undefined;
+    addEntry(`/blog/${p.slug}`, {
+      ...(parsedDate && !Number.isNaN(parsedDate.getTime())
+        ? { lastModified: parsedDate }
+        : {}),
       changeFrequency: "monthly",
       priority: 0.6,
     });

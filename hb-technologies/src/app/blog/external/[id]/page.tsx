@@ -76,6 +76,8 @@ export default async function ExternalBlogDetailPage({ params }: PageProps) {
       description: article.description || "External article related to VIZIA Technologies service areas.",
       path: localPath,
       author: article.user?.name || "VIZIA Technologies",
+      authorType: article.user?.name ? "Person" : "Organization",
+      type: "Article",
       datePublished: article.published_at,
       keywords: article.tag_list,
       image: article.cover_image

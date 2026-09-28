@@ -18,6 +18,7 @@ const footerLinks = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/book-consultation", label: "Book Consultation" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
 ];
 
 const serviceLinks = [
@@ -89,7 +90,7 @@ export function SiteFooter() {
 
         {/* ── Company links ── */}
         <div>
-          <h4 className={styles.colHeading}>Company</h4>
+          <h2 className={styles.colHeading}>Company</h2>
           <nav aria-label="Footer company" className={styles.linkList}>
             {footerLinks.map((l) => (
               <Link key={l.href} href={l.href} className={styles.link}>
@@ -101,7 +102,7 @@ export function SiteFooter() {
 
         {/* ── Services links ── */}
         <div>
-          <h4 className={styles.colHeading}>Services</h4>
+          <h2 className={styles.colHeading}>Services</h2>
           <nav aria-label="Footer services" className={styles.linkList}>
             {serviceLinks.map((l) => (
               <Link key={l.href} href={l.href} className={styles.link}>

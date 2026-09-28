@@ -40,10 +40,10 @@ Suggested settings:
 - Start Command: `npm start`
 
 ### Required env vars
-- NEXT_PUBLIC_SITE_URL=https://vizia-technologies.vercel.app
+- NEXT_PUBLIC_SITE_URL=https://vizia.co.ke
 - API_URL=https://<your-backend-domain>
 
-Use the current Render/Vercel-generated frontend URL until a custom domain is connected.
+Use `https://vizia.co.ke` as the production frontend origin after the custom domain is connected. Preview deployment URLs must not be used for production canonical URLs.
 Do not set `NEXT_PUBLIC_SITE_URL` to a domain you do not control yet; canonical URLs, Open Graph URLs, Twitter image URLs, sitemap hosts, and structured data URLs are generated from this value.
 
 The frontend uses a server-side proxy route:
@@ -68,7 +68,7 @@ Project settings:
 
 ### Required env vars (Vercel)
 Set these in Vercel → Project → Settings → Environment Variables (apply to Production, and Preview if you use preview URLs):
-- `NEXT_PUBLIC_SITE_URL=https://vizia-technologies.vercel.app`
+- `NEXT_PUBLIC_SITE_URL=https://vizia.co.ke`
 - `API_URL=https://<your-backend-domain>`
 
 Important:
