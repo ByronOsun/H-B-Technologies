@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
-import { getAnalyticsService } from "@/lib/analytics-service";
-import { usePageView } from "@/hooks/useAnalytics";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, ReactNode } from "react";
 
 /**
  * AnalyticsProvider Component
@@ -27,23 +26,48 @@ interface AnalyticsProviderProps {
 }
 
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
-  // Track page views
-  usePageView();
+  const pathname = usePathname();
+  const analyticsRef = useRef<{
+    initialize: () => Promise<void>;
+    trackPageView: () => void;
+  } | null>(null);
 
-  // Initialize analytics on mount
   useEffect(() => {
-    const analytics = getAnalyticsService();
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-    // Initialize analytics platforms
-    analytics.initialize().catch((error) => {
-      console.error("[Analytics] Initialization failed:", error);
-    });
+    const loadAnalytics = async () => {
+      const { getAnalyticsService } = await import("@/lib/analytics-service");
+      if (cancelled) return;
 
-    // Cleanup on unmount
+      const analytics = getAnalyticsService();
+      analyticsRef.current = analytics;
+      await analytics.initialize();
+      analytics.trackPageView();
+    };
+
+    const scheduleLoad = () => {
+      timeoutId = setTimeout(() => void loadAnalytics(), 5000);
+    };
+
+    if (document.readyState === "complete") {
+      scheduleLoad();
+    } else {
+      window.addEventListener("load", scheduleLoad, { once: true });
+    }
+
     return () => {
-      // Analytics service runs in background, no cleanup needed
+      cancelled = true;
+      window.removeEventListener("load", scheduleLoad);
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
     };
   }, []);
+
+  useEffect(() => {
+    if (analyticsRef.current && pathname) {
+      analyticsRef.current.trackPageView();
+    }
+  }, [pathname]);
 
   return <>{children}</>;
 }

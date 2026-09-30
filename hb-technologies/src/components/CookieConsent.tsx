@@ -1,8 +1,39 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useConsentManager } from "@/hooks/useAnalytics";
+import { useState, useSyncExternalStore } from "react";
 import styles from "./CookieConsent.module.css";
+
+type ConsentSettings = {
+  analytics: boolean;
+  marketing: boolean;
+  functional: boolean;
+};
+
+const defaultConsent: ConsentSettings = {
+  analytics: false,
+  marketing: false,
+  functional: true,
+};
+
+function getStoredConsent(): ConsentSettings {
+  if (typeof window === "undefined") return defaultConsent;
+
+  try {
+    const stored = window.localStorage.getItem("analytics_consent");
+    return stored ? { ...defaultConsent, ...JSON.parse(stored) } : defaultConsent;
+  } catch {
+    return defaultConsent;
+  }
+}
+
+function subscribeToConsent(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function hasConsentChoice() {
+  return Boolean(window.localStorage.getItem("analytics_consent"));
+}
 
 /**
  * CookieConsent Component
@@ -25,42 +56,42 @@ import styles from "./CookieConsent.module.css";
  */
 
 export function CookieConsent() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const { consent, acceptAll, rejectAll, setConsent } = useConsentManager();
+  const [consent, setConsentState] = useState<ConsentSettings>(getStoredConsent);
+  const isVisible = !useSyncExternalStore(subscribeToConsent, hasConsentChoice, () => true) && !dismissed;
 
-  useEffect(() => {
-    // Check if user has already made a consent choice
-    const hasConsentChoice = localStorage.getItem("analytics_consent");
-    if (!hasConsentChoice) {
-      setIsVisible(true);
-    }
-  }, []);
+  const applyConsent = (updates: Partial<ConsentSettings>) => {
+    setConsentState((current) => ({ ...current, ...updates }));
+    void import("@/lib/analytics-service").then(({ getAnalyticsService }) => {
+      getAnalyticsService().setConsent(updates);
+    });
+  };
 
   if (!isVisible) {
     return null;
   }
 
   const handleAcceptAll = () => {
-    acceptAll();
-    setIsVisible(false);
+    applyConsent({ analytics: true, marketing: true, functional: true });
+    setDismissed(true);
   };
 
   const handleRejectAll = () => {
-    rejectAll();
-    setIsVisible(false);
+    applyConsent({ analytics: false, marketing: false, functional: true });
+    setDismissed(true);
   };
 
   const handleSavePreferences = () => {
-    setIsVisible(false);
+    setDismissed(true);
   };
 
   const toggleAnalytics = () => {
-    setConsent({ ...consent, analytics: !consent.analytics });
+    applyConsent({ analytics: !consent.analytics });
   };
 
   const toggleMarketing = () => {
-    setConsent({ ...consent, marketing: !consent.marketing });
+    applyConsent({ marketing: !consent.marketing });
   };
 
   return (
@@ -75,7 +106,7 @@ export function CookieConsent() {
           <h2 id="cookie-consent-title">Privacy & Cookie Preferences</h2>
           <button
             className={styles.closeButton}
-            onClick={() => setIsVisible(false)}
+            onClick={() => setDismissed(true)}
             aria-label="Close cookie consent banner"
           >
             ×
@@ -123,7 +154,7 @@ export function CookieConsent() {
         ) : (
           <div className={styles.detailsContent}>
             <p className={styles.description}>
-              Select which types of cookies you'd like to accept.
+              Select which types of cookies you&apos;d like to accept.
             </p>
 
             {/* Consent Categories */}
