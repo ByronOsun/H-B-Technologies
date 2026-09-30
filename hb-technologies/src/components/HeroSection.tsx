@@ -1,8 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useSyncExternalStore } from "react";
 import styles from "./HeroSection.module.css";
+
+type NetworkInformation = {
+  saveData?: boolean;
+  effectiveType?: string;
+  addEventListener?: (type: string, listener: () => void) => void;
+  removeEventListener?: (type: string, listener: () => void) => void;
+};
+
+function canPlayHeroVideo() {
+  if (typeof window === "undefined") return false;
+
+  const connection = (navigator as Navigator & { connection?: NetworkInformation }).connection;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const narrowViewport = window.matchMedia("(max-width: 768px)").matches;
+  const constrainedConnection =
+    connection?.saveData ||
+    connection?.effectiveType === "slow-2g" ||
+    connection?.effectiveType === "2g";
+
+  return !reducedMotion && !narrowViewport && !constrainedConnection;
+}
+
+function subscribeToHeroVideo(callback: () => void) {
+  if (typeof window === "undefined") return () => {};
+
+  const viewportQuery = window.matchMedia("(max-width: 768px)");
+  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const connection = (navigator as Navigator & { connection?: NetworkInformation }).connection;
+  const handleChange = () => callback();
+
+  viewportQuery.addEventListener("change", handleChange);
+  motionQuery.addEventListener("change", handleChange);
+  connection?.addEventListener?.("change", handleChange);
+
+  return () => {
+    viewportQuery.removeEventListener("change", handleChange);
+    motionQuery.removeEventListener("change", handleChange);
+    connection?.removeEventListener?.("change", handleChange);
+  };
+}
 
 export interface HeroSlide {
   id: string;
@@ -31,6 +71,11 @@ export default function HeroSection({ config }: Props) {
   const { slides, autoPlay = true, interval = 6000 } = config;
   const [active, setActive] = useState(0);
   const [animating, setAnimating] = useState(false);
+  const heroVideoEnabled = useSyncExternalStore(
+    subscribeToHeroVideo,
+    canPlayHeroVideo,
+    () => false
+  );
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -94,7 +139,7 @@ export default function HeroSection({ config }: Props) {
               title="Hero background video"
             />
           </div>
-        ) : slide.type === "video" ? (
+        ) : slide.type === "video" && heroVideoEnabled ? (
           <video
             ref={videoRef}
             className={styles.video}
@@ -112,7 +157,7 @@ export default function HeroSection({ config }: Props) {
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={slide.id}
-            src={slide.mediaUrl}
+            src={slide.type === "video" ? heroPoster ?? "/vizia-logo.png" : slide.mediaUrl}
             alt=""
             className={styles.img}
             width={1920}
