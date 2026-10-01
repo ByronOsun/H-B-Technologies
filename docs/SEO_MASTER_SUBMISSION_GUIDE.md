@@ -117,7 +117,7 @@ File content:
 **Environment variables** (set in your hosting platform dashboard):
 ```
 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=<content value from Google Search Console>
-NEXT_PUBLIC_BING_SITE_VERIFICATION=<content value from Bing Webmaster Tools>
+BING_SITE_VERIFICATION=<content value from Bing Webmaster Tools>
 ```
 
 **Rendered HTML output** (when env vars are set):
@@ -238,7 +238,7 @@ Click **Add**.
 5. Click **"Verify"** in Bing dashboard
 
 #### ▶ Option B: Meta Tag
-1. Set env var: `NEXT_PUBLIC_BING_SITE_VERIFICATION=YOUR_CODE`
+1. Set env var: `BING_SITE_VERIFICATION=YOUR_CODE`
 2. Redeploy
 3. Confirm `msvalidate.01` meta tag in page source
 4. Click **"Verify"** in Bing
@@ -433,7 +433,7 @@ All OG images are generated dynamically at `/og` — 1200×630 px PNG.
 | `<html lang="en">` | From `siteConfig.language` | ✅ |
 | `<link rel="canonical">` | Per-page absolute URL | ✅ every page |
 | `<meta name="google-site-verification">` | From `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` env var | When set |
-| `<meta name="msvalidate.01">` | From `NEXT_PUBLIC_BING_SITE_VERIFICATION` env var | When set |
+| `<meta name="msvalidate.01">` | From `BING_SITE_VERIFICATION` env var | When set |
 
 ---
 
@@ -510,7 +510,7 @@ Execute these steps in order before submitting to search engines.
 In your hosting provider's environment variable configuration:
 ```
 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION = <code from Google Search Console>
-NEXT_PUBLIC_BING_SITE_VERIFICATION   = <code from Bing Webmaster Tools>
+BING_SITE_VERIFICATION   = <code from Bing Webmaster Tools>
 ```
 
 ### Step 2 — Populate & Commit Verification Files

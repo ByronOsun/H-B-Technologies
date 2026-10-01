@@ -200,10 +200,10 @@ export function createPageMetadata(input: PageMetadataInput): Metadata {
 export function createRootMetadata(): Metadata {
   // ─── Search Engine Verification ──────────────────────────────────────────
   // Set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION in your environment to activate.
-  // Set NEXT_PUBLIC_BING_SITE_VERIFICATION in your environment to activate.
+  // Set BING_SITE_VERIFICATION in your environment to activate.
   // Never hard-code these values — use environment variables.
   const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
-  const bingVerification = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
+  const bingVerification = process.env.BING_SITE_VERIFICATION;
 
   return {
     ...createPageMetadata({
