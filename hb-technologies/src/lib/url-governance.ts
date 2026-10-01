@@ -4,7 +4,7 @@ export const TEMPORARY_REDIRECTS = [
   {
     source: "/consultation",
     destination: "/book-consultation",
-    statusCode: 302,
+    statusCode: 301,
   },
 ] as const;
 
