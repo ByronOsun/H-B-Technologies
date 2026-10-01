@@ -48,6 +48,10 @@
   object-position: center;
 }
 
+.videoPoster {
+  transition: opacity .2s ease;
+}
+
 /* YouTube full-bleed background */
 .ytWrap {
   position: absolute;
@@ -303,6 +307,10 @@
   .blob2 {
     filter: blur(48px);
     animation: none;
+  }
+
+  .videoPoster {
+    opacity: 0;
   }
 
   .ytFrame {

@@ -159,7 +159,7 @@ export default function HeroSection({ config }: Props) {
             key={slide.id}
             src={slide.type === "video" ? heroPoster ?? "/vizia-logo.png" : slide.mediaUrl}
             alt=""
-            className={styles.img}
+            className={`${styles.img} ${slide.type === "video" ? styles.videoPoster : ""}`}
             width={1920}
             height={1080}
             loading="eager"
