@@ -191,7 +191,7 @@
       {
         "title": "Cloud Infrastructure",
         "items": [
-          "Vercel",
+          "Edge & serverless hosting",
           "Render",
           "Cloud-ready architecture",
           "Secure networking"
