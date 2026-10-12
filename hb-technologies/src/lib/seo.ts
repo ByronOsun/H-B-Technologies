@@ -216,10 +216,8 @@ export function createRootMetadata(): Metadata {
       imageLabel: "Secure engineering partner",
     }),
     metadataBase: getSiteUrl(),
-    icons: {
-      icon: [{ url: "/vizia-logo.png", type: "image/png" }],
-      apple: [{ url: "/vizia-logo.png", type: "image/png" }],
-    },
+    // Icons come from the file conventions in src/app:
+    // favicon.ico, icon.png and apple-icon.png.
     title: {
       default: "VIZIA Technologies | Secure Software, AI & Cybersecurity",
       template: `%s | ${siteConfig.name}`,

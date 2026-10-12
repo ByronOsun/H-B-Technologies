@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json(
-      { error: "No Supabase configured and filesystem is read-only. Add NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to Vercel." },
+      { error: "No Supabase configured and filesystem is read-only. Add NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to the hosting environment variables." },
       { status: 500 }
     );
   }

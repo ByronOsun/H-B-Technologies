@@ -1,12 +1,20 @@
+import { readFileSync } from "fs";
+import path from "path";
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
+import { PRODUCTION_CANONICAL_HOST } from "@/lib/security";
 import { siteConfig } from "@/lib/site";
 
 const size = {
   width: 1200,
   height: 630,
 };
+
+// Official logo (349×285), embedded so the image never depends on a network fetch.
+const LOGO_SRC = `data:image/png;base64,${readFileSync(
+  path.join(process.cwd(), "public", "vizia-logo.png")
+).toString("base64")}`;
 
 function getParam(req: NextRequest, key: string, fallback: string) {
   const value = req.nextUrl.searchParams.get(key)?.trim();
@@ -17,8 +25,7 @@ export function GET(req: NextRequest) {
   const title = getParam(req, "title", siteConfig.name);
   const description = getParam(req, "description", siteConfig.description);
   const label = getParam(req, "label", siteConfig.name);
-  const path = getParam(req, "path", "/");
-  const host = req.nextUrl.host;
+  const pagePath = getParam(req, "path", "/");
 
   return new ImageResponse(
     (
@@ -67,21 +74,8 @@ export function GET(req: NextRequest) {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-            <div
-              style={{
-                width: 70,
-                height: 70,
-                borderRadius: 18,
-                background: "#c8102e",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 44,
-                fontWeight: 900,
-              }}
-            >
-              V
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse renders plain <img> only */}
+            <img src={LOGO_SRC} width={98} height={80} alt="" />
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ fontSize: 32, fontWeight: 800 }}>{siteConfig.name}</div>
               <div style={{ fontSize: 18, color: "rgba(255,255,255,0.74)" }}>
@@ -138,8 +132,8 @@ export function GET(req: NextRequest) {
             zIndex: 1,
           }}
         >
-          <span>{host}</span>
-          <span>{path}</span>
+          <span>{PRODUCTION_CANONICAL_HOST}</span>
+          <span>{pagePath}</span>
         </div>
       </div>
     ),

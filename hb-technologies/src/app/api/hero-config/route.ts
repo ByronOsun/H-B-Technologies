@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json(
-      { error: "Write failed – file system may be read-only (Vercel). Use env vars or a database for production." },
+      { error: "Write failed – the server file system may be read-only in this environment. Use env vars or a database for production." },
       { status: 500 }
     );
   }
